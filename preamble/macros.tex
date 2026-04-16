@@ -1,0 +1,30 @@
+\newcommand{\TODO}[1]{\textcolor{red}{[TODO: #1]}}
+
+% Shared mathematical notation used in the current thesis chapters.
+\newcommand{\RR}{\mathbb{R}}
+
+\DeclareMathOperator{\Emb}{Emb}
+\DeclareMathOperator{\KL}{KL}
+\DeclareMathOperator{\SW}{SW}
+\DeclareMathOperator{\TV}{TV}
+
+% CP-Fuse notation shared by the chapter and its appendix.
+\newcommand{\dataset}{\mathcal D}
+\newcommand{\domainconcepts}{\mathcal C}
+\newcommand{\model}{p}
+\newcommand{\modeli}{p^{(i)}}
+\newcommand{\modelone}{p^{(1)}}
+\newcommand{\modeltwo}{p^{(2)}}
+\newcommand{\cpdelta}{\text{CP-}\Delta}
+
+\newenvironment{proofsketch}[1][Proof sketch]
+  {\begin{proof}[#1]}
+  {\end{proof}}
+
+\newcommand{\placeholderfigure}[1]{
+  \begin{figure}[htbp]
+    \centering
+    \fbox{\rule{0pt}{2in}\rule{0.8\textwidth}{0pt}}
+    \caption{#1}
+  \end{figure}
+}

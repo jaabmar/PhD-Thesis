@@ -1,0 +1,30 @@
+\begin{titlepage}
+\thispagestyle{empty}
+
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[chaptercolor] (current page.south west) rectangle (current page.north east);
+
+  \node[
+    anchor=north west,
+    text=white,
+    align=left,
+    text width=0.62\paperwidth
+  ] at ([xshift=1.45cm,yshift=-1.8cm]current page.north west) {%
+    {\fontsize{18}{22}\selectfont\bfseries \myTitle\par}
+    \vspace{0.45cm}
+    {\fontsize{10.5}{13}\selectfont \mySubtitle\par}
+    \vspace{0.65cm}
+    {\fontsize{11}{13}\selectfont \myName\par}
+  };
+
+  \node[
+    anchor=south east,
+    text=white,
+    align=right
+  ] at ([xshift=-1.35cm,yshift=1.55cm]current page.south east) {%
+    {\fontsize{9.5}{11}\selectfont\bfseries Diss.\ No.\ \myDissNumber}
+  };
+\end{tikzpicture}
+
+\null
+\end{titlepage}

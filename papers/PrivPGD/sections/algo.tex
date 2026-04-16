@@ -1,0 +1,154 @@
+
+
+\section{PrivPGD: a particle gradient descent-based generation method}
+
+We introduce \textit{PrivPGD} (Algorithm~\ref{alg:pgd}), a novel approach for solving the generation step in marginal-based tabular data synthesis (Algorithm~\ref{alg:mainalgo}).
+Unlike other marginal-based methods \citep{zhang2017privbayes,mckenna2019graphical}, PrivPGD does not construct a dataset by sampling from a learned distribution. Instead, it directly propagates particles in an embedding space to minimize the sliced Wasserstein distance. A distinct advantage is that, through particle gradient descent, we can easily enforce domain-specific constraints by adding a penalization term $\hat \queryloss$ to the loss. A similar approach for incorporating domain-specific constraints has recently been proposed for generator-based data synthesis algorithms \citep{vero2023programmable}, where the authors provide various examples of such losses. 
+
+In summary, our data generation method returns a DP-dataset $\dpdata$ given the following inputs:
+\begin{enumerate}
+\item A set of differentially private finite signed measures {$ \{\measuredmarginal{S}\}_{ S \in \mathcal S}$}  constructed as in Algorithm~\ref{alg:mainalgo}.
+    \item  A differentially private regularization loss $\hat \queryloss$ incorporating domain-specific constraints.
+    \end{enumerate}
+
+% We motivate and provide details on PrivPGD below. 
+
+
+\subsection{Preliminaries: Embedding}
+\label{sec:embedding}
+%In the first step, we transform the discretized data in $\domain$ to data in the hypercube with a fixed grid.
+PrivPGD crucially relies on an embedding ${\embed: \domain \to \domainP}$ of the (discretized) domain $\domain$ into a compact Euclidean product space $\domainP= \domainP_1 \times \cdots \times \domainP_d$.
+%, where every dimension is mapped to a corresponding subspace $\domain_i \to \domainP_i$ . \fy{is this so relevant?}
+We simply choose $\domainP = [0,1]^d$ and map every $x \in \domain$ to equally-spaced centers
+\begin{equation}
+\label{eq:embedding}
+    \embed(x)_i = \frac{ 2 x_i -  1}{2 k_i} \in [0,1].
+\end{equation}
+This choice of embedding preserves the order in $\domain$, which is essential for variables such as age or any discretized continuous variables. In line with common practices in the literature \citep{mst,tao2021benchmarking}, we discretize continuous data using equally spaced bins. This method ensures that the embedding accurately represents the scaled distances between the centers.
+
+We acknowledge that features like race, where imposing an ordering might be inappropriate, could be embedded into the space $[0,1]^2$ so that the centers are equidistant. Similarly, when embedding categorical variables representing locations, an embedding that preserves geographical distances might be preferable. While it would be interesting to explore other embeddings, we leave it to future work.
+
+%While the embedding from~\Eqref{eq:embedding} is a natural choice for continuous or ordered categorical features, it is important to note that in some cases, a different embedding may be more suitable. For instance, for features like race, where imposing an ordering might be inappropriate, these could be embedded into the space $[0,1]^2$ in a way that ensures the centers are equidistant. Similarly, when embedding categorical variables representing locations, an embedding that preserves geographical distances might be preferable.
+% \fy{my question last time was - do you also use these or not. to incorporate it you can easily add a sentence at the end: While its interesting to explore ..., in this manuscript we focus on (4).}
+
+
+\paragraph{Particles} PrivPGD aims to construct $m$ data points in the embedding space, ensuring their empirical distribution closely approximates the projection of the privatized signed measure $\hat \nu_S $. For any set of points $\particles \in \domainP^m$, which we also refer to as the $m$ \textit{particles}, we define $\particles_S \in \Omega_S^m$ as the projection of these particles onto the embedding $\Omega_S$ of $\domain_S$.
+  Moreover, we define $S$-marginals over $\Omega$ as:
+\begin{definition}
+% (Analogous to Definition~\ref{def:marginal})
+    % The $S$-marginal of $\particles$ is the empirical measure $\marginalemb{S}[\particles]  \in \mathcal P(\domainP_S)$  of $\particles_S$ over $\domainP_S$.
+    We denote by $\marginalemb{S}[\particles] \in \mathcal P(\domainP_S)$ the $S$-marginal of  the particles $\particles$, defined as the empirical measure of $\particles_S$ over the domain $\domainP_S$.
+\end{definition}
+% \fy{similar to definition 2}
+%\paragraph{Preserving data structures} 
+
+% \fy{algorithm 3 how is it related to algorithm 1?}
+% \begin{wrapfigure}{l}{0.5\textwidth}
+% \vspace{-0.0mm}
+% \begin{minipage}{0.5\textwidth}
+\begin{figure}[!t]
+  \begin{algorithm}[H]
+\caption{\textbf{Priv}ate \textbf{P}article \textbf{G}radient \textbf{D}escent }\label{alg:pgd}
+\begin{algorithmic}[1]
+\Require  DP marginals $ \{\measuredmarginal{S}\}_{ S \in \mathcal S}$, regularizer  $\hat \queryloss$ , number of particles $m$ 
+
+\State \textbf{projection:} $\forall S \in \mathcal S$, construct  the empirical measures $ \measuredempmarg{S}$ from $ \measuredmarginal{S}$ %\fy{doesn't the projection step use the embedding (instead of there being a separate embedding step)?}
+
+ \State \textbf{optimization:} randomly initialize $\particles^{(0)} \in \Omega^m$
+
+\For{$t = 1, \cdots, T$}
+\State \textit{select} batch $\mathcal S_{\text{batch}} \subset \mathcal S$ 
+\State \textit{compute} the gradient at $\particles^{(t-1)}$ of 
+    %\begin{equation*}
+       $\sum_{S \in \mathcal S_{\text{batch}}} \swd_2^2(\marginalemb{S}[\particles],  \measuredempmarg{S}) + \lambda \hat \queryloss(\particles)$
+   % \end{equation*}
+
+% \State  \textit{set} $p \%$ of the entries of the gradient to $0$ 
+\State \textit{update} $Z^{(t)}$ using any first order optimizer
+
+\EndFor
+ \State \textbf{finalization step:} construct $\dpdata$ from $\particles^{(T)}$
+ \Statex \Return $\dpdata$
+\end{algorithmic}
+\end{algorithm}
+\vspace{-0.3in}
+\end{figure}
+%     %\vspace{-5.0mm}
+% \end{minipage}
+% \end{wrapfigure}
+%\paragraph{Pre-processing privatized marginals $\measuredmarginal{S}$}
+% \red{This can be improved }The embedding $\embed$ naturally defines corresponding finite signed measures $\hat \omega_S$ over $\embed(\domain)_S \subset \domainP_S$ for each measured marginal $\measuredmarginal{S}$. Nevertheless, to use these marginals in combination with the sliced Wasserstein distance (\Eqref{eq:def_sliced_wasserstein}) in the optimization step (\Cref{subsec:optimization}), we need to turn these signed measures into probability measures. Inspired by \citep{boedihardjo2022private} (see also \citep{donhauser2023certified}), we  extend the sliced Wasserstein-1 ($q=1$) distance to signed measures using~\Eqref{eq:vallander}. 
+
+
+\subsection{Projection step}
+\label{sec:projection}
+
+The preliminary embedding step allows us to define the particles $Z$ within a convenient domain $\domainP$, which we choose to be the hypercube with a fixed grid. In the projection step, the goal is to transform the privatized signed measure $\measuredmarginal{S}$ into a proper probability measure $\measuredempmarg{S}$ that can be ``plugged into" the Wasserstein distance. Further, since we aim to find particles whose empirical distribution closely approximates the signed measure, we quantize $\measuredempmarg{S}$ using the same number of particles, $m$.
+%for all $S \in \mathcal S$, we construct the marginals $\measuredempmarg{S} \in \mathcal P(\domainP_S)$ \fy{you never define $\mathcal P$, somewhere you need to do it - i'm actually confused i thought mu is a true probability measure and P is the set of prob. measures and nu is a signed measure? what is P? i also don't feel you really need it here yet} from %the original privatized marginals $\measuredmarginal{S} \in \mathcal P(\domain_S)$. In particular, we apply a transformation that ensures that the marginals define a suitable measure for the Wasserstein distance. \fy{i would move this up}
+%and that aims to improve its computational efficiency.
+
+\paragraph{Projection} First, note that the embedding $\embed$ from  \Cref{eq:embedding} defines corresponding finite signed measures $\hat \omega_S$ over $\embed(\domain)_S \subset \domainP_S$ for each privatized signed measure $\measuredmarginal{S}$. By default, the sliced Wasserstein distance that we minimize in the optimization step (\Cref{subsec:optimization}) is defined for probability measures. For $q=1$ we can extend the sliced 1-Wasserstein distance from~\Cref{eq:vallander} to signed measures and obtain a probability measure.
+Inspired by \citet{boedihardjo2022private} (see also \citep{donhauser2023certified}), we transform 
+%the finite signed measures $\hat \omega_S$ into probability measures using the closed-form expression of the sliced 1-Wasserstein distance from~\Eqref{eq:vallander} and utilizing its natural extension to signed measures (via the natural extension of the cumulative function)  \fy{bibliography is not updated! - also in some journal articles theres "doi" and "ISSN" - also the months are in small letters - capitalize also "Gaussian" in Kolouri et al.. also "Near, J - what is this? a website? then provide URL}). 
+%We set $q=1$ since the identity only holds for this choice. \fy{the causality here is a bit unclear - you mean: However, observe you choose $q=1$ because it allows } 
+%In particular, we obtain the probability measures $\hat \omega_{S, \mathbb P} \in \mathcal P(\embed(\domain)_S)$ 
+by solving %the optimization problem
+\begin{equation}
+    \hat \omega_{S, \mathbb P} = \arg\min_{w \in \mathcal P(\embed(\domain)_S) } \swd_1( w, \hat \omega_S).
+    \label{eq:objective_preprocessing}
+\end{equation}
+% This procedure is similar to \citet{boedihardjo2022private} and \citep{donhauser2023certified}.
+We solve this convex optimization problem  using gradient descent. We also approximate the integral in $\swd_1$ using Monte Carlo samples. Importantly, minimizing the objective in~\Cref{eq:objective_preprocessing} allows for preserving the geometry from the signed measures in the probability measures.
+
+% To further reduce costs in estimating the sliced Wasserstein distance for the optimization step (see \Cref{subsec:optimization})
+\paragraph{Quantization} We further quantize the finite probability measures $\hat \omega_{S, \mathbb P}$ using $m$ particles 
+$\hat \particles_S \in \Omega^m_S$, i.e., 
+\begin{equation}
+    \measuredempmarg{S} = \frac{1}{m} \sum_{i=1}^m \delta[\hat \particles_S^i],
+    \label{eq:quant}
+\end{equation}
+such that $\hat \mu_S \approx \hat \omega_{S, \mathbb P}$. 
+  This can be achieved by using any standard quantization technique with a negligible error for a sufficiently large number of particles.
+  We apply the quantization in \Cref{eq:quant} with $m$ particles, thus ensuring that both $\marginalemb{S}[\particles]$ and $  \measuredempmarg{S} $ are empirical measures over the same number of particles. 
+  
+\subsection{Optimization and finalization step}
+
+\label{subsec:optimization}
+In the optimization step, we aim to generate a dataset by finding particles $Z \in \domainP^m$  that are close to the differentially private measure $\measuredempmarg{S}$ constructed in the projection step.
+%consisting of $m$ particles
+% \fy{The original first sentence seemed imprecise but also not really helpful for intuition. you can achieve "particle generation" by itself by just sampling zeros... - you mean a dataset that is "good" in some way}
+% from the differentially private ``copies" $\measuredempmarg{S}$ from the previous step. 
+%We achieve this 
+In particular, the final particles should minimize the squared sliced Wasserstein distance $\swd_2^2$ (\Cref{eq:def_sliced_wasserstein}) between the empirical marginal distributions of the particles $\marginalemb{S}[\particles]$ and $\measuredempmarg{S}$
+%and the differentially private ``copies"  $\measuredempmarg{S}$ constructed in the projection step. 
+We additionally incorporate domain-specific constraints via a DP differentiable penalty term $\hat \queryloss: \Omega^m \to \mathbb R$. 
+Formally, for a regularization  strength $\lambda$, we
+ run mini-batch particle gradient descent on
+%minimizing the loss:
+\begin{equation}
+\label{eq:loss_gd}
+   \mathcal L_{\mathcal S}(\particles) :=  \sum_{S \in \mathcal S} \swd_2^2(\marginalemb{S}[\particles], \measuredempmarg{S} )+ \lambda \hat \queryloss(\particles),
+\end{equation}
+where $\swd_2^2$ is the squared sliced Wasserstein distance.  
+\paragraph{Computing the gradient of the $\swd_2^2$ distance} 
+For computing the gradient, we leverage the
+fact that the 1-dimensional $2$-Wasserstein distance between $g^\theta_{\#}\marginalemb{S}[\particles]= \frac{1}{m} \sum_i \delta(y_i)$ and $g^\theta_{\#} \measuredempmarg{S} = \frac{1}{m} \sum_i \delta(y'_i)$ with $y_i, y'_i \in \mathbb R$ has a closed-form expression
+%We leverage the \fy{if you use "the" here i expect it was discussed in \ref{eq:def_wasserstein}} closed-form expression for the 1-dimensional $q$-Wasserstein distance (Equation \ref{eq:def_wasserstein}) with $q=2$ to compute $\swd_2^2$.  This allows us to efficiently compute the $1$-dimensional projections in \Eqref{eq:def_wasserstein}; 
+%specifically, given $g^\theta_{\#}\marginalemb{S}[\particles]= \frac{1}{m} \sum_i \delta(y_i)$ and $g^\theta_{\#} \measuredempmarg{S} = \frac{1}{m} \sum_i \delta(y'_i)$ with $y_i, y'_i \in \mathbb R$,  the squared $1$-dimensional 2-Wasserstein distance  can be  expressed as
+\begin{equation}
+\label{eq:wasserstein_simple}
+     W_2^2(g^\theta_{\#}\marginalemb{S}[\particles],g^\theta_{\#} \measuredempmarg{S})  = \frac{1}{m} \sum_i (y_{[i]}- y'_{[i]})^2,  
+\end{equation}
+where $y_{[i]}$ (resp.~$y'_{[i]}$) denotes the $i$-th largest element. 
+\Cref{eq:wasserstein_simple} and its gradient can be computed efficiently by running a sorting algorithm, which is parallelizable on modern GPU architectures. We then approximate the $\swd_2^2$ using $\mcsamples$ Monte Carlo samples for $\theta$. Consequently, we achieve a runtime complexity of $O(\vert \mathcal S \vert \cdot \mcsamples \cdot m \log m)$ for obtaining the gradient of the first term in \Cref{eq:loss_gd}.
+
+\paragraph{Finalization step} Finally, after running particle gradient descent for $T$ iterations, we obtain the dataset $\dpdata \in \domain^m$ by mapping every final particle in $\particles^{(T)}$ to the closest point in $\embed(\domain) \subset \domainP$. 
+
+
+\subsection{Privacy guarantees}
+We outline the privacy guarantees for the dataset $\dpdata$ generated using PrivPGD. Leveraging the data post-processing property \citep{gauss_mechanism}, we establish the following lemma:
+\begin{lemma}
+    Assume that the noisy marginals $ \{\measuredmarginal{S}\}_{ S \in \mathcal S}$  and the regularization loss $\hat \queryloss$ are generated from two independent $(\epsilon_1, \delta_1)$- and $(\epsilon_2, \delta_2)$-DP mechanisms. Then, the output of Algorithm~\ref{alg:pgd},   $\dpdata$, is $(\epsilon_1 + \epsilon_2, \delta_1+ \delta_2)$-DP.
+\end{lemma}
+Following standard practices in the literature \citep{mst, aim, vietri2022private}, we employ the Gaussian mechanism to generate both the noisy marginals and the (parameterized) regularization loss for the experiments described in the next section. This approach ensures that the synthesized dataset $\dpdata$ adheres to differential privacy guarantees.
+

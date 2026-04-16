@@ -1,0 +1,409 @@
+\section{Extended Experimental Details}
+\label{appendix:datasets}
+\paragraph{Datasets}
+We use a diverse range of real-world datasets, each with associated classification or regression tasks. Notably, our data sources include the American Community Survey (ACS) and various datasets from \cite{grinsztajn2022tree}. 
+
+\begin{itemize}
+    \item \textbf{ACS Income classification dataset (Inc.) ~\citep{ding2021retiring}}. The dataset focuses on predicting whether an individual earns more than 50,000 dollars annually. It is derived from the ACS PUMS data sample, with specific filters applied: only individuals aged above 16, those who reported working for at least 1 hour weekly in the past year, and those with a reported income exceeding 100 dollars were included. We take the data from California over a 5-year horizon and survey year 2018, with $d=11$ dimension and $n=760,157$ data points.
+
+    \item \textbf{ACS Employment classification dataset (Emp.)~\citep{ding2021retiring}}. The dataset is designed to predict an individual's employment status. It's derived from the ACS PUMS data sample but only considers individuals aged between 16 and 90. We take the data from California over a 5-year horizon and survey year 2018, with $d=17$ dimension and $n=1,503,938$ data points.
+    \item \textbf{ACS Mobility classification dataset (Mob.)~\citep{ding2021retiring}}. The goal is to determine if an individual retained the same residential address from the previous year using a filtered subset of the ACS PUMS data. This subset exclusively includes individuals aged between 18 and 35. Filtering for this age range heightens the prediction challenge, as over 90\% of the broader population typically remains at the same address from one year to the next. We take the data from California over a 5-year horizon and survey year 2018, with $d=22$ dimension and $n=318,332$ data points.
+    \item \textbf{ACS Traveltime classification dataset (Tra.)~\citep{ding2021retiring}}. The objective is to predict if an individual's work commute surpasses 20 minutes using a refined subset of the ACS PUMS data. This subset is limited to those who are employed and are older than 16 years. The 20-minute benchmark was selected based on its status as the median travel time to work for the US population in the 2018 ACS PUMS data release. We take the data from California over a 5-year horizon and survey year 2018, with $d=17$ dimension and $n=667,132$ data points.
+    \item \textbf{ACS Public Coverage classification dataset (Pub.)~\citep{ding2021retiring}}. The task is to predict if an individual is enrolled in public health insurance using a specific subset of the ACS PUMS data. This subset is narrowed down to individuals younger than 65 and with an income below 30,000 dollars. By focusing on this group, the prediction centers on low-income individuals who don't qualify for Medicare. We take the data from California over a 5-year horizon and survey year 2018, with $d=20$ dimension and $n=583,545$ data points.
+    % \item \textbf{Electricity classification~\citep{gama2004learning}}. The Australian New South Wales Electricity Market dataset (ELEC2) reflects the fluctuating prices influenced by demand and supply between 7 May 1996 and 5 December 1998. With $n=30,779$ entries, each representing a 30-minute interval, and $d=7$ features, this dataset provides information on the day, time, and electricity demands of New South Wales and Victoria, and scheduled transfers between these states. The class label indicates the price direction in New South Wales based on the past 24-hour moving average, denoting either an upward or downward trend. Electricity exchanges with Victoria helped stabilize these price shifts.
+    % \item \textbf{Diamonds regression~\citep{grinsztajn2022tree}}. The dataset from the tabular benchmark features information on $n=43,152$ diamonds and $d=6$ features. Key attributes include the diamond's price ($326$ to $18,823$), carat ($0.2$ to $5.01$), cut (ranging from Fair to Ideal), color (graded J to D), and clarity (graded I1 to IF). 
+    \item \textbf{Medical charges regression dataset (Med.)~\citep{grinsztajn2022tree}}. The dataset from the tabular benchmark, part of the ``regression on numerical features" benchmark, details inpatient discharges under the Medicare fee-for-service scheme. Known as the Inpatient Utilization and Payment Public Use File (Inpatient PUF), it provides insights into utilization, total and Medicare-specific payments, and hospital-specific charges. The dataset encompasses data from over 3,000 U.S. hospitals under the Medicare Inpatient Prospective Payment System (IPPS) framework. Organized by hospitals and the Medicare Severity Diagnosis Related Group (MS-DRG), this dataset spans from Fiscal Year 2011 to 2016. In total, it contains $n=130,452$ data point with $d=3$ features.
+    \item \textbf{Black Friday regression dataset (Fri.)~\citep{grinsztajn2022tree}}. This dataset contains purchases from $n=133,456$ buyers on black Friday. Each point is described by $d=9$ features, including gender, age, occupation and marital status.
+    % \item \textbf{SGEMM GPU kernel regression~\citep{nugteren2015cltune}}.
+    % A  GPU performance data set with  $n=193,280$ points described by discrete vectors with dimension $d=9$.
+    % The dataset captures the performance metrics of a matrix multiplication operation, specifically \(A \times B = C\), with matrices of dimensions 2048 x 2048. This computation is executed using an SGEMM GPU kernel (Single Precision General Matrix Multiply) that offers 241600 possible parameter combinations. For each combination, the dataset records the results of 4 separate runs, with the outcomes presented in the final four columns, all measured in milliseconds. The 14 parameters in the set consist of the initial 10 ordinal parameters, which accept up to 4 different powers of two, while the last four parameters are binary. Out of a total of 1,327,104 possible combinations, just 241,600 are viable due to kernel constraints, and this dataset contains outcomes for all feasible combinations. The tests were conducted on a desktop with Ubuntu 16.04, equipped with an Intel Core i5 (3.5GHz), 16GB RAM, and an NVidia Geforce GTX 680 4GB GF580 GTX-1.5GB GPU. The used dataset has $n=193,280$ points described by vectors with dimension $d=9$.
+    
+    % \item \textbf{Particulate matter air pollution regression~\citep{grinsztajn2022tree}}. The dataset provides hourly readings of particulate matter air pollution in Great Britain for 2017. Commissioned by the UK Department for Environment, Food and Rural Affairs (DEFRA) and the Devolved Administrations, this data is scraped from Ricardo Energy and Environment and made available on the UK AIR website. The dataset contains $n=315,439$ with $d=6$.
+    % \item \textbf{Cover type classification~\citep{collobert2001parallel}} Classification of $n=453,281$ pixels into 7 forest cover types based on $d=10$ attributes such as elevation, aspect, slope, hillshade, soil-type, and more.
+    \item \textbf{NYC Taxi Green December 2016 regression dataset (Taxi)~\citep{grinsztajn2022tree}}. The dataset, utilized in the ``regression on numerical features" benchmark from the tabular data benchmark, originates from the New York City Taxi and Limousine Commission's (TLC) trip records for the green line in December 2016. In this processed version, string datetime details have been converted to numeric columns. The goal is to predict the ``tip amount". Records exclusively from credit card payments were retained. The dataset contains $n=465,468$ points with $d=9$ features.
+    % \item \textbf{Higgs Boson classification~\citep{baldi2014searching}}. The dataset contains $n=752,128$ samples with $d=24$ features. The dataset was generated through Monte Carlo simulations, focusing on kinematic properties measured by particle detectors in accelerators, captured in the first 21 features. The subsequent features are high-level attributes, derived from the initial 21 by physicists, to differentiate between two classes. The goal is to explore deep learning techniques to eliminate the necessity for manual feature creation by physicists. 
+    \item \textbf{Diabetes 130-US dataset classification dataset (Diab.)~\citep{strack2014impact}}. The dataset encapsulates a decade (1999-2008) of $n=56,872$ clinical observations from 130 US hospitals and integrated delivery systems, comprising over $d=7$ features denoting patient and hospital results. The data was curated based on specific criteria: the record must be of an inpatient hospital admission, be associated with a diabetes diagnosis, have a stay duration ranging from 1 to 14 days, include laboratory tests, and involve medication administration.
+\end{itemize}
+
+
+
+
+\section{Additional Details for Section \ref{sec:domainspecific_exp}}
+\label{appendix:details_domain}
+
+We now give additional descriptions for the experiments in Section~\ref{sec:domainspecific_exp}. We approximate the thresholding function  $    \text{thrs}_{\embed}(\particles) = \frac{1}{m} \sum_i 
+\mathbbm{1}_{\langle \particles_i, \theta \rangle + b>0}$  using the smooth sigmoid approximation
+$
+\text{s-thrsh}_{\embed}(\particles) = \frac{1}{m} \sum_i \left(1 + \exp(-\sigma (\langle \theta, \particles_i\rangle-b))\right)^{-1}
+$ with $\sigma = 5.0$.  
+We then split the privacy budget into two parts; the first part $\epsilon = 0.5$ and $\delta = 2 \times 10^{-6}$ is used for obtaining a DP estimate of 
+$\text{s-thrsh}_{\embed}(\embed(D))$ using the Gaussian mechanim, which we denote by $\widehat{ \text{s-thrsh}}_{\embed}$. 
+Moreover, we use the remaining privacy budget $\epsilon = 2.0$ and $\delta = 8 \times 10^{-6}$ to privatize all $2$-Way marginals using the Gaussian mechanism as in Algorithm~\ref{alg:mainalgo}. As a result, using the simple composition theorem (see e.g., \cite{dwork2004privacy}), the overall algorithm is then DP for $\epsilon= 2.5$ and $\delta = 10^{-5}$. 
+
+Finally, we generate the differentially private dataset $\dpdata$ by running Algorithm~\ref{alg:pgd} with all privatized 2-Way marginals as inputs as well as the DP regularization loss
+\begin{equation}
+         \hat \queryloss(\particles) = \frac{0.01}{0.0001 +  ( \text{s-thrsh}_{\embed}(\particles)-\widehat{\text{s-thrsh}}_{\embed})^2}.
+     \end{equation}
+and regularization strength $\lambda$ reaching from $10^{-2}$ to $10$, as depicted in  Figure~\ref{fig:3}.
+
+\section{Extended Results for Section~\ref{sec:exp_priv_marginals}}
+\label{app:extended_results}
+
+We replicate Figure~\ref{fig:comp} with $\epsilon=1.0$ (see Figure~\ref{fig:comp_1}) and $\epsilon=0.2$ (see Figure~\ref{fig:comp_0.2}). At smaller values of $\epsilon$, PrivPGD is more frequently outperformed by PGM, especially in combination with AIM, and also with MST at $\epsilon=0.2$, as well as more often by Private GSD. PGM-based methods benefit from a strong inductive bias towards maximum entropy solutions, which becomes particularly advantageous when noise levels are high. Nevertheless, PrivPGD still maintains highly competitive performance, especially in larger datasets and with fewer features. A similar trend is observed in the total variation and Wasserstein distance, as shown in Figures \ref{fig:comp_sw_tv_1} and \ref{fig:comp_sw_tv_0.2}. These results underscore that PrivPGD's performance edge diminishes as $\epsilon$ decreases. 
+
+Finally, Tables \ref{table_1} to \ref{table_2} provide the detailed metrics for all our results.
+
+ \begin{figure*}[ht!]
+
+
+    \centering
+  \begin{subfigure}{\linewidth}
+        \centering
+\includegraphics[width=0.9\textwidth]{figures/exp12legend_plot.pdf}
+    \end{subfigure}
+    \includeBenchFigures{figures/plots_datasets/eps_1.0/}
+        \centering
+    \caption{\small
+    Comparison of PrivPGD with all $2$-way marginals against state-of-the-art methods based on metrics from Section~\ref{subsec:expsetting}: 1) downstream error, 2) covariance error, 3) count. queries error, and 4) thresh. queries error, across 9 tabular datasets. For each method, we plot the $\log_2$ ratio of the errors, using PrivPGD's average error as the denominator, and report the mean and standard deviation over 5 runs. We cut at a log ratio of $y=3$ (dashed line) and list all methods exceeding this threshold above this line in order. We set $\epsilon = 1.0$ and $\delta = 10^{-5}$.}
+    
+    \label{fig:comp_1}
+    \vspace{-0.2in}
+\end{figure*}
+
+ \begin{figure*}[ht!]
+
+
+    \centering
+  \begin{subfigure}{\linewidth}
+        \centering
+\includegraphics[width=0.9\textwidth]{figures/exp12legend_plot.pdf}
+    \end{subfigure}
+    \includeBenchFigures{figures/plots_datasets/eps_0.2/}
+        \centering
+ \caption{\small
+    Comparison of PrivPGD with all $2$-way marginals against state-of-the-art methods based on metrics from Section~\ref{subsec:expsetting}: 1) downstream error, 2) covariance error, 3) count. queries error, and 4) thresh. queries error, across 9 tabular datasets. For each method, we plot the $\log_2$ ratio of the errors, using PrivPGD's average error as the denominator, and report the mean and standard deviation over 5 runs. We cut at a log ratio of $y=3$ (dashed line) and list all methods exceeding this threshold above this line in order. We set $\epsilon = 0.2$ and $\delta = 10^{-5}$.}
+    \label{fig:comp_0.2}
+\end{figure*}
+
+
+
+
+\begin{figure*}
+    \centering
+    \begin{subfigure}{\linewidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{figures/exp12legend_plot.pdf}
+    \end{subfigure}
+    \includeDistFigures{figures/plots_distances/eps_1.0/}
+        \centering
+        \caption{\small Comparison of average $\swd_1$ distance (left) and average TV distance (right) for PrivPGD against state-of-the-art methods across 9 tabular datasets. Similar to Figure~\ref{fig:comp}, we report the mean and standard deviation (5 runs) of the $\log_2$ ratio of errors. We set $\epsilon = 1.0$ and $\delta = 10^{-5}$.}
+
+        \label{fig:comp_sw_tv_1}
+\end{figure*}
+
+\begin{figure*}
+    \centering
+    \begin{subfigure}{\linewidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{figures/exp12legend_plot.pdf}
+    \end{subfigure}
+    \includeDistFigures{figures/plots_distances/eps_0.2/}
+        \centering
+        \caption{\small Comparison of average $\swd_1$ distance (left) and average TV distance (right) for PrivPGD against state-of-the-art methods across 9 tabular datasets. Similar to Figure~\ref{fig:comp}, we report the mean and standard deviation (5 runs) of the $\log_2$ ratio of errors. We set $\epsilon = 0.2$ and $\delta = 10^{-5}$.}
+
+        \label{fig:comp_sw_tv_0.2}
+\end{figure*}
+
+
+
+
+\begin{table*}[ht]
+\footnotesize
+\centering
+\begin{tabular}{cccccccc}
+\toprule
+dataset & inference & downstream & covariance & counting query & thresholding query & $\swd_1$ distance & TV distance \\
+\midrule \multirow{4}{*}{Emp. } & PrivPGD&\textbf{0.19}/0.19 & 0.02 & \textbf{0.00087} & \textbf{0.00043} & \textbf{0.00054} & 0.021 \\
+ & PGM+AIM&\textbf{0.19}/0.19 & 0.04 & 0.0025 & 0.0026 & 0.0019 & 0.026 \\
+ & PGM+MST&0.33/0.19 & 0.27 & 0.012 & 0.0075 & 0.0087 & 0.1 \\
+ & Private GSD&0.2/0.19 & \textbf{0.0083} & 0.0013 & 0.00073 & 0.00059 & \textbf{0.013} \\
+\midrule \multirow{6}{*}{Inc. } & PrivPGD&\textbf{0.19}/0.19 & \textbf{0.001} & \textbf{0.00078} & \textbf{0.00031} & \textbf{0.00043} & \textbf{0.028} \\
+ & PGM+AIM&\textbf{0.19}/0.19 & 0.014 & 0.0017 & 0.00034 & 0.0017 & 0.034 \\
+ & PGM+MST&0.24/0.19 & 0.051 & 0.0077 & 0.0024 & 0.0054 & 0.11 \\
+ & Private GSD&0.2/0.19 & 0.0049 & 0.0017 & 0.00083 & 0.00093 & 0.045 \\
+ & GEM&0.22/0.19 & 0.047 & 0.01 & 0.0038 & 0.0099 & 0.17 \\
+ & RAP&0.2/0.19 & 0.0078 & 0.0017 & 0.00056 & 0.0011 & 0.037 \\
+\midrule \multirow{6}{*}{Tra. } & PrivPGD&\textbf{0.37}/0.34 & \textbf{0.0026} & \textbf{0.00065} & \textbf{0.00014} & \textbf{0.00049} & \textbf{0.027} \\
+ & PGM+AIM&\textbf{0.37}/0.34 & 0.037 & 0.0023 & 0.00031 & 0.0019 & 0.035 \\
+ & PGM+MST&0.46/0.34 & 0.091 & 0.0058 & 0.00032 & 0.0038 & 0.061 \\
+ & Private GSD&0.38/0.34 & 0.011 & 0.0017 & 0.00037 & 0.00072 & 0.033 \\
+ & GEM&0.4/0.34 & 0.048 & 0.0052 & 0.0011 & 0.0041 & 0.076 \\
+ & RAP&0.38/0.34 & 0.015 & 0.0019 & 0.00047 & 0.0014 & 0.036 \\
+\midrule \multirow{6}{*}{Pub. } & PrivPGD&\textbf{0.28}/0.27 & 0.06 & \textbf{0.00097} & 0.00033 & 0.00094 & 0.037 \\
+ & PGM+AIM&0.32/0.27 & 0.1 & 0.0051 & 0.0012 & 0.0042 & 0.048 \\
+ & PGM+MST&0.35/0.27 & 0.41 & 0.01 & 0.00074 & 0.0088 & 0.092 \\
+ & Private GSD&0.3/0.27 & \textbf{0.012} & 0.0016 & \textbf{0.00015} & \textbf{0.00057} & \textbf{0.013} \\
+ & GEM&0.29/0.27 & 0.035 & 0.0031 & 0.00042 & 0.0019 & 0.029 \\
+ & RAP&0.29/0.27 & 0.02 & 0.0015 & 0.00054 & 0.0012 & 0.02 \\
+\midrule \multirow{6}{*}{Mob. } & PrivPGD&\textbf{0.23}/0.22 & \textbf{0.0091} & 0.0014 & 0.00051 & 0.0011 & 0.056 \\
+ & PGM+AIM&\textbf{0.23}/0.22 & 0.05 & 0.0029 & \textbf{0.00036} & 0.0025 & 0.035 \\
+ & PGM+MST&0.24/0.22 & 0.29 & 0.0088 & 0.005 & 0.0095 & 0.096 \\
+ & Private GSD&0.24/0.22 & 0.0092 & \textbf{0.0013} & 0.00068 & \textbf{0.00055} & \textbf{0.015} \\
+ & GEM&0.24/0.22 & 0.063 & 0.0074 & 0.0022 & 0.006 & 0.082 \\
+ & RAP&\textbf{0.23}/0.22 & 0.016 & 0.0014 & 0.00066 & 0.0013 & 0.022 \\
+ \bottomrule
+ \end{tabular}
+ \caption{
+    \small The mean of the errors from Section~\ref{subsec:expsetting}  averaged over 5 runs. For the downstream error, we additionally show the test error when training on the original private dataset. We choose $\epsilon =2.5$ and $\delta = 10^{-5}$.}
+    \label{table_1}
+ \end{table*}
+ 
+ \begin{table*}[ht]
+ \footnotesize
+\centering
+\begin{tabular}{cccccccc}
+\toprule
+dataset & inference & downstream & covariance & counting query & thresholding query & $\swd_1$ distance & TV distance \\
+\midrule \multirow{6}{*}{Taxi } & PrivPGD&\textbf{2.3}/2.2 & \textbf{0.00048} & \textbf{0.00051} & \textbf{0.00011} & \textbf{0.00027} & 0.02 \\
+ & PGM+AIM&\textbf{2.3}/2.2 & 0.0013 & 0.00066 & \textbf{0.00011} & 0.0005 & \textbf{0.016} \\
+ & PGM+MST&\textbf{2.3}/2.2 & 0.0029 & 0.0011 & 0.0002 & 0.00058 & 0.028 \\
+ & Private GSD&\textbf{2.3}/2.2 & 0.004 & 0.0019 & 0.00061 & 0.00093 & 0.064 \\
+ & GEM&2.7/2.2 & 0.079 & 0.016 & 0.0037 & 0.018 & 0.36 \\
+ & RAP&\textbf{2.3}/2.2 & 0.0065 & 0.0021 & 0.0005 & 0.0013 & 0.078 \\
+\midrule \multirow{6}{*}{Fri. } & PrivPGD&\textbf{1.5}/1.4 & \textbf{0.00097} & \textbf{0.00064} & \textbf{0.00053} & \textbf{0.00033} & 0.015 \\
+ & PGM+AIM&\textbf{1.5}/1.4 & 0.0014 & \textbf{0.00064} & 0.00058 & 0.00054 & \textbf{0.011} \\
+ & PGM+MST&\textbf{1.5}/1.4 & 0.0057 & 0.0027 & 0.0008 & 0.0014 & 0.047 \\
+ & Private GSD&1.7/1.4 & 0.0032 & 0.0015 & 0.00083 & 0.0006 & 0.021 \\
+ & GEM&2.8/1.4 & 0.031 & 0.0066 & 0.0016 & 0.009 & 0.16 \\
+ & RAP&\textbf{1.5}/1.4 & 0.0038 & 0.0018 & 0.00075 & 0.0011 & 0.034 \\
+\midrule \multirow{6}{*}{Med. } & PrivPGD&2.2/2.1 & 0.00014 & \textbf{0.0012} & \textbf{0.00013} & \textbf{0.00036} & 0.023 \\
+ & PGM+AIM&\textbf{2.1}/2.1 & 0.00066 & \textbf{0.0012} & 0.00034 & 0.00076 & \textbf{0.013} \\
+ & PGM+MST&\textbf{2.1}/2.1 & 0.00061 & \textbf{0.0012} & 0.00035 & 0.0007 & 0.017 \\
+ & Private GSD&2.2/2.1 & \textbf{0.00013} & \textbf{0.0012} & 0.00014 & 0.00076 & 0.02 \\
+ & GEM&75/2.1 & 0.11 & 0.1 & 0.054 & 0.22 & 1.4 \\
+ & RAP&4.5/2.1 & 0.0048 & 0.013 & 0.0023 & 0.007 & 0.062 \\
+ \midrule
+\multirow{6}{*}{Diab. }  & PrivPGD&\textbf{0.4}/0.4 & \textbf{0.0013} & \textbf{0.0013} & 0.00042 & 0.00084 & 0.028 \\
+ & PGM+AIM&\textbf{0.4}/0.4 & 0.0045 & 0.0025 & 0.0015 & 0.0022 & 0.028 \\
+ & PGM+MST&0.41/0.4 & 0.0047 & 0.0083 & 0.00029 & 0.0017 & 0.045 \\
+ & Private GSD&0.41/0.4 & 0.0017 & 0.0017 & \textbf{0.00026} & \textbf{0.00067} & \textbf{0.026} \\
+ & GEM&0.41/0.4 & 0.042 & 0.032 & 0.0084 & 0.032 & 0.23 \\
+ & RAP&0.41/0.4 & 0.0034 & 0.0021 & 0.00097 & 0.0025 & 0.041 \\
+\bottomrule
+\end{tabular}
+\caption{
+    \small The mean of the errors from Section~\ref{subsec:expsetting}  averaged over 5 runs. For the downstream error, we additionally show the test error when training on the original private dataset. We choose $\epsilon =2.5$ and $\delta = 10^{-5}$.}
+    \end{table*}
+
+
+
+
+\begin{table*}[ht]
+\footnotesize
+\centering
+\begin{tabular}{cccccccc}
+\toprule
+dataset & inference & downstream & covariance & counting query & thresholding query & $\swd_1$ distance & TV distance \\
+
+\midrule \multirow{4}{*}{Emp. } & PrivPGD&\textbf{0.19}/0.19 & \textbf{0.0056} & \textbf{0.00077} & \textbf{0.00038} & 0.0006 & 0.027 \\
+ & PGM+AIM&0.2/0.19 & 0.063 & 0.0036 & 0.004 & 0.0042 & 0.057 \\
+ & PGM+MST&0.23/0.19 & 0.48 & 0.098 & 0.081 & 0.14 & 0.7 \\
+ & Private GSD&0.2/0.19 & 0.008 & 0.0014 & 0.00076 & \textbf{0.00059} & \textbf{0.013} \\
+\midrule \multirow{6}{*}{Inc. } & PrivPGD&\textbf{0.19}/0.19 & \textbf{0.0019} & \textbf{0.00092} & \textbf{0.00039} & \textbf{0.0006} & 0.042 \\
+ & PGM+AIM&\textbf{0.19}/0.19 & 0.014 & 0.0015 & 0.00042 & 0.0016 & \textbf{0.033} \\
+ & PGM+MST&0.24/0.19 & 0.052 & 0.0077 & 0.0024 & 0.0054 & 0.11 \\
+ & Private GSD&0.2/0.19 & 0.0061 & 0.0017 & 0.00089 & 0.00095 & 0.046 \\
+ & GEM&0.22/0.19 & 0.047 & 0.01 & 0.0037 & 0.0098 & 0.16 \\
+ & RAP&\textbf{0.19}/0.19 & 0.0074 & 0.0017 & 0.00054 & 0.001 & 0.041 \\
+\midrule \multirow{6}{*}{Tra. } & PrivPGD&\textbf{0.37}/0.34 & \textbf{0.0055} & \textbf{0.0011} & 0.00032 & 0.00091 & 0.05 \\
+ & PGM+AIM&\textbf{0.37}/0.34 & 0.036 & 0.0027 & 0.00033 & 0.0022 & 0.042 \\
+ & PGM+MST&0.44/0.34 & 0.073 & 0.0058 & \textbf{0.00017} & 0.0031 & 0.055 \\
+ & Private GSD&0.38/0.34 & 0.011 & 0.0017 & 0.00028 & \textbf{0.00072} & \textbf{0.033} \\
+ & GEM&0.4/0.34 & 0.048 & 0.0051 & 0.00091 & 0.004 & 0.074 \\
+ & RAP&0.38/0.34 & 0.016 & 0.0019 & 0.0005 & 0.0016 & 0.041 \\
+\midrule \multirow{6}{*}{Pub. } & PrivPGD&\textbf{0.28}/0.27 & \textbf{0.011} & 0.0015 & 0.00061 & 0.0014 & 0.061 \\
+ & PGM+AIM&\textbf{0.28}/0.27 & 0.058 & 0.0024 & 0.00041 & 0.0023 & 0.028 \\
+ & PGM+MST&0.35/0.27 & 0.29 & 0.024 & 0.0092 & 0.04 & 0.21 \\
+ & Private GSD&0.29/0.27 & 0.012 & \textbf{0.0014} & \textbf{0.00012} & \textbf{0.00055} & \textbf{0.013} \\
+ & GEM&0.29/0.27 & 0.031 & 0.0029 & 0.00056 & 0.0017 & 0.025 \\
+ & RAP&0.29/0.27 & 0.022 & 0.0018 & 0.00055 & 0.0014 & 0.023 \\
+\midrule \multirow{6}{*}{Mob. } & PrivPGD&\textbf{0.23}/0.22 & 0.021 & 0.0029 & 0.00085 & 0.0026 & 0.13 \\
+ & PGM+AIM&\textbf{0.23}/0.22 & 0.054 & 0.0028 & 0.00051 & 0.0024 & 0.034 \\
+ & PGM+MST&0.24/0.22 & 0.13 & 0.0077 & 0.0027 & 0.013 & 0.093 \\
+ & Private GSD&0.24/0.22 & \textbf{0.0096} & \textbf{0.0012} & \textbf{0.00049} & \textbf{0.0006} & \textbf{0.016} \\
+ & GEM&0.24/0.22 & 0.062 & 0.0077 & 0.0021 & 0.0062 & 0.083 \\
+ & RAP&\textbf{0.23}/0.22 & 0.021 & 0.0018 & 0.00066 & 0.0017 & 0.031 \\
+
+ \bottomrule
+\end{tabular}
+\caption{
+    \small The mean of the errors from Section~\ref{subsec:expsetting}  averaged over 5 runs. For the downstream error, we additionally show the test error when training on the original private dataset. We choose $\epsilon =1.0$ and $\delta = 10^{-5}$.}
+\end{table*}
+
+
+\begin{table*}[ht]
+\footnotesize
+\centering
+\begin{tabular}{cccccccc}
+\toprule
+dataset & inference & downstream & covariance & counting query & thresholding query & $\swd_1$ distance & TV distance \\
+\midrule \multirow{6}{*}{Taxi } & PrivPGD&\textbf{2.3}/2.2 & \textbf{0.0013} & 0.00077 & 0.00018 & 0.00062 & 0.033 \\
+ & PGM+AIM&\textbf{2.3}/2.2 & 0.0014 & \textbf{0.00057} & \textbf{0.00011} & \textbf{0.00046} & \textbf{0.018} \\
+ & PGM+MST&\textbf{2.3}/2.2 & 0.003 & 0.0011 & 0.00018 & 0.00055 & 0.029 \\
+ & Private GSD&2.4/2.2 & 0.0043 & 0.0018 & 0.00055 & 0.00092 & 0.066 \\
+ & GEM&2.8/2.2 & 0.081 & 0.017 & 0.0045 & 0.021 & 0.36 \\
+ & RAP&\textbf{2.3}/2.2 & 0.0061 & 0.0021 & 0.00052 & 0.0014 & 0.08 \\
+\midrule \multirow{6}{*}{Fri. } & PrivPGD&1.6/1.4 & 0.0022 & 0.00086 & \textbf{0.00053} & 0.00068 & 0.028 \\
+ & PGM+AIM&\textbf{1.5}/1.4 & \textbf{0.0016} & \textbf{0.00071} & 0.00056 & \textbf{0.00061} & \textbf{0.014} \\
+ & PGM+MST&\textbf{1.5}/1.4 & 0.0058 & 0.0027 & 0.00081 & 0.0015 & 0.049 \\
+ & Private GSD&1.6/1.4 & 0.0031 & 0.0015 & 0.00096 & 0.00065 & 0.024 \\
+ & GEM&2.8/1.4 & 0.031 & 0.0068 & 0.0014 & 0.0092 & 0.16 \\
+ & RAP&1.6/1.4 & 0.0048 & 0.002 & 0.00078 & 0.0016 & 0.046 \\
+\midrule \multirow{6}{*}{Med. } & PrivPGD&2.4/2.1 & \textbf{0.00032} & 0.0015 & \textbf{0.00019} & \textbf{0.00061} & 0.03 \\
+ & PGM+AIM&2.3/2.1 & 0.00076 & 0.0024 & 0.00053 & 0.00088 & 0.027 \\
+ & PGM+MST&\textbf{2.1}/2.1 & 0.00088 & 0.0018 & 0.00051 & 0.001 & 0.023 \\
+ & Private GSD&2.2/2.1 & 0.00041 & \textbf{0.0014} & 0.00024 & 0.00095 & \textbf{0.022} \\
+ & GEM&75/2.1 & 0.11 & 0.1 & 0.054 & 0.22 & 1.4 \\
+ & RAP&4.7/2.1 & 0.0051 & 0.013 & 0.0024 & 0.007 & 0.066 \\
+\midrule \multirow{6}{*}{Diab. } & PrivPGD&\textbf{0.4}/0.4 & 0.0033 & 0.0026 & 0.001 & 0.002 & 0.052 \\
+ & PGM+AIM&\textbf{0.4}/0.4 & \textbf{0.0031} & \textbf{0.0019} & 0.0014 & \textbf{0.0019} & \textbf{0.03} \\
+ & PGM+MST&0.41/0.4 & 0.0042 & 0.0067 & \textbf{0.00056} & \textbf{0.0019} & 0.045 \\
+ & Private GSD&0.41/0.4 & 0.0036 & 0.0024 & 0.00096 & 0.0022 & 0.039 \\
+ & GEM&0.41/0.4 & 0.04 & 0.031 & 0.0078 & 0.03 & 0.22 \\
+ & RAP&0.41/0.4 & 0.0073 & 0.0043 & 0.002 & 0.0054 & 0.071 \\
+\bottomrule
+\end{tabular}
+\caption{
+    \small The mean of the errors from Section~\ref{subsec:expsetting}  averaged over 5 runs. For the downstream error, we additionally show the test error when training on the original private dataset. We choose $\epsilon =1.0$ and $\delta = 10^{-5}$.}
+    \end{table*}
+
+
+\begin{table*}[ht]
+\footnotesize
+\centering
+\begin{tabular}{cccccccc}
+\toprule
+dataset & inference & downstream & covariance & counting query & thresholding query & $\swd_1$ distance & TV distance \\
+\midrule \multirow{4}{*}{Emp. } & PrivPGD&\textbf{0.19}/0.19 & 0.015 & 0.0022 & \textbf{0.00078} & 0.0023 & 0.11 \\
+ & PGM+AIM&\textbf{0.19}/0.19 & 0.049 & 0.0027 & 0.0031 & 0.0024 & 0.035 \\
+ & PGM+MST&0.23/0.19 & 0.1 & 0.0067 & 0.0047 & 0.0043 & 0.05 \\
+ & Private GSD&0.2/0.19 & \textbf{0.0088} & \textbf{0.0014} & 0.00083 & \textbf{0.00063} & \textbf{0.014} \\
+\midrule \multirow{6}{*}{Inc. } & PrivPGD&\textbf{0.19}/0.19 & 0.0098 & 0.0027 & 0.00086 & 0.0024 & 0.15 \\
+ & PGM+AIM&\textbf{0.19}/0.19 & 0.019 & 0.0025 & \textbf{0.00053} & 0.0022 & \textbf{0.048} \\
+ & PGM+MST&0.24/0.19 & 0.052 & 0.0077 & 0.0024 & 0.0056 & 0.11 \\
+ & Private GSD&0.2/0.19 & \textbf{0.0058} & \textbf{0.0018} & 0.0008 & \textbf{0.001} & 0.052 \\
+ & GEM&0.22/0.19 & 0.046 & 0.0099 & 0.0035 & 0.0096 & 0.16 \\
+ & RAP&0.2/0.19 & 0.011 & 0.0024 & 0.001 & 0.0019 & 0.072 \\
+\midrule \multirow{6}{*}{Tra. } & PrivPGD&0.38/0.34 & 0.027 & 0.0043 & 0.0012 & 0.004 & 0.19 \\
+ & PGM+AIM&\textbf{0.37}/0.34 & 0.05 & 0.0028 & 0.00027 & 0.0024 & 0.048 \\
+ & PGM+MST&0.44/0.34 & 0.07 & 0.0058 & \textbf{0.00018} & 0.003 & 0.057 \\
+ & Private GSD&0.38/0.34 & \textbf{0.012} & \textbf{0.0019} & 0.00033 & \textbf{0.00097} & \textbf{0.041} \\
+ & GEM&0.4/0.34 & 0.048 & 0.0051 & 0.00093 & 0.004 & 0.073 \\
+ & RAP&0.39/0.34 & 0.026 & 0.003 & 0.00093 & 0.0033 & 0.074 \\
+\midrule \multirow{6}{*}{Pub. } & PrivPGD&\textbf{0.29}/0.27 & 0.048 & 0.0058 & 0.0021 & 0.0064 & 0.24 \\
+ & PGM+AIM&\textbf{0.29}/0.27 & 0.1 & 0.0039 & 0.00093 & 0.0037 & 0.043 \\
+ & PGM+MST&0.31/0.27 & 0.16 & 0.0062 & 0.00031 & 0.0045 & 0.05 \\
+ & Private GSD&\textbf{0.29}/0.27 & \textbf{0.014} & \textbf{0.0017} & \textbf{0.0002} & \textbf{0.00085} & \textbf{0.019} \\
+ & GEM&\textbf{0.29}/0.27 & 0.044 & 0.0039 & 0.00053 & 0.0025 & 0.035 \\
+ & RAP&\textbf{0.29}/0.27 & 0.037 & 0.0033 & 0.0013 & 0.003 & 0.049 \\
+\midrule \multirow{6}{*}{Mob. } & PrivPGD&0.24/0.22 & 0.085 & 0.014 & 0.003 & 0.011 & 0.46 \\
+ & PGM+AIM&\textbf{0.23}/0.22 & 0.14 & 0.0052 & 0.0019 & 0.0049 & 0.068 \\
+ & PGM+MST&0.24/0.22 & 0.12 & 0.006 & 0.0019 & 0.0037 & 0.054 \\
+ & Private GSD&0.24/0.22 & \textbf{0.018} & \textbf{0.0019} & \textbf{0.00076} & \textbf{0.0016} & \textbf{0.035} \\
+ & GEM&0.24/0.22 & 0.062 & 0.0076 & 0.0018 & 0.0058 & 0.078 \\
+ & RAP&0.24/0.22 & 0.048 & 0.0043 & 0.0012 & 0.0048 & 0.08 \\
+ \bottomrule
+ \end{tabular}
+ \caption{
+    \small The mean of the errors from Section~\ref{subsec:expsetting}  averaged over 5 runs. For the downstream error, we additionally show the test error when training on the original private dataset. We choose $\epsilon =0.2$ and $\delta = 10^{-5}$.}
+    \end{table*}
+ 
+\begin{table*}[ht]
+\footnotesize
+\centering
+\begin{tabular}{cccccccc}
+\toprule
+dataset & inference & downstream & covariance & counting query & thresholding query & $\swd_1$ distance & TV distance \\
+\midrule \multirow{6}{*}{Taxi } & PrivPGD&2.4/2.2 & 0.0055 & 0.0025 & 0.00072 & 0.0026 & 0.11 \\
+ & PGM+AIM&\textbf{2.3}/2.2 & 0.0032 & \textbf{0.0011} & 0.00022 & 0.0013 & \textbf{0.037} \\
+ & PGM+MST&\textbf{2.3}/2.2 & \textbf{0.003} & 0.0014 & \textbf{0.0002} & \textbf{0.00087} & 0.046 \\
+ & Private GSD&2.4/2.2 & 0.0071 & 0.0022 & 0.00068 & 0.0015 & 0.087 \\
+ & GEM&2.8/2.2 & 0.082 & 0.017 & 0.0042 & 0.02 & 0.36 \\
+ & RAP&2.4/2.2 & 0.011 & 0.0036 & 0.00086 & 0.0036 & 0.17 \\
+\midrule \multirow{6}{*}{Fri. } & PrivPGD&2.5/1.4 & 0.011 & 0.0031 & 0.00071 & 0.0031 & 0.11 \\
+ & PGM+AIM&\textbf{1.5}/1.4 & \textbf{0.0048} & \textbf{0.0015} & \textbf{0.00061} & \textbf{0.0015} & \textbf{0.036} \\
+ & PGM+MST&1.6/1.4 & 0.0069 & 0.003 & 0.00082 & 0.0021 & 0.065 \\
+ & Private GSD&1.8/1.4 & 0.0077 & 0.0023 & 0.00088 & 0.0023 & 0.061 \\
+ & GEM&2.8/1.4 & 0.031 & 0.0065 & 0.0014 & 0.0083 & 0.15 \\
+ & RAP&2.1/1.4 & 0.017 & 0.0042 & 0.001 & 0.0055 & 0.12 \\
+\midrule \multirow{6}{*}{Med. } & PrivPGD&3/2.1 & \textbf{0.0013} & \textbf{0.0048} & \textbf{0.00082} & \textbf{0.0024} & 0.076 \\
+ & PGM+AIM&3.1/2.1 & 0.0027 & 0.013 & 0.0018 & 0.0033 & 0.12 \\
+ & PGM+MST&\textbf{2.2}/2.1 & 0.0026 & 0.0053 & 0.0013 & 0.0031 & \textbf{0.055} \\
+ & Private GSD&2.3/2.1 & 0.0028 & 0.0078 & 0.0017 & 0.0067 & 0.056 \\
+ & GEM&76/2.1 & 0.11 & 0.1 & 0.054 & 0.21 & 1.4 \\
+ & RAP&4.1/2.1 & 0.0084 & 0.018 & 0.0039 & 0.01 & 0.1 \\
+\midrule \multirow{6}{*}{Diab. } & PrivPGD&0.42/0.4 & \textbf{0.01} & 0.013 & 0.0045 & 0.0082 & 0.17 \\
+ & PGM+AIM&\textbf{0.41}/0.4 & 0.011 & 0.0085 & 0.0042 & \textbf{0.0056} & \textbf{0.071} \\
+ & PGM+MST&\textbf{0.41}/0.4 & 0.012 & 0.01 & 0.0044 & 0.008 & 0.1 \\
+ & Private GSD&\textbf{0.41}/0.4 & 0.014 & \textbf{0.0083} & \textbf{0.0041} & 0.011 & 0.12 \\
+ & GEM&\textbf{0.41}/0.4 & 0.043 & 0.033 & 0.0076 & 0.032 & 0.23 \\
+ & RAP&0.42/0.4 & 0.021 & 0.014 & 0.0061 & 0.018 & 0.19 \\
+\bottomrule
+\end{tabular}
+ \caption{
+    \small The mean of the errors from Section~\ref{subsec:expsetting}  averaged over 5 runs. For the downstream error, we additionally show the test error when training on the original private dataset. We choose $\epsilon =0.2$ and $\delta = 10^{-5}$.}
+    \label{table_2}
+    \end{table*}
+
+
+% \section{Experiments for AP-PGM \citep{mckenna2021relaxed}}
+% \label{app:priv_exps}
+
+% Finally,  we compare PrivPGD with AP-PGM \citep{mckenna2021relaxed}. Unlike PrivPGD, AP-PGM does not release a dataset but a regional graph, which allows answering marginal queries (including unseen marginals). Therefore, we evaluate only the average $\swd_1$ and TV distance over all 2-Way marginals. We ran AP-PGM using the official code provided by the authors\footnote{\hyperlink{https://github.com/ryan112358/private-pgm}{https://github.com/ryan112358/private-pgm}} and selected all 2-Way marginals as the workload. We used the Gaussian mechanism for obtaining DP copies of the marginal queries. Table~\ref{tab:your_transposed_label} and Figure~\ref{fig:appgm} show that PrivPGD outperforms AP-PGM on the $\swd_1$ distance, while AP-PGM outperforms PrivPGD on the total variation distance. This outcome is expected, as PrivPGD optimizes the former, while AP-PGM optimizes the latter.
+
+
+
+
+%  \begin{figure*}
+%     \centering
+%   \begin{subfigure}{\linewidth}
+%         \centering
+% \includegraphics[width=0.3\textwidth]{aistats/figures/appgm/exp12legend_plot.png}
+%     \end{subfigure}
+%  \centering
+%         \begin{subfigure}{0.32\textwidth}
+% \includegraphics[width=\textwidth]{aistats/figures/appgm/0.2.pdf}
+%         \caption{$\epsilon = 0.2$}
+%     \end{subfigure}
+%     \begin{subfigure}{0.32\textwidth}
+%         \centering
+% \includegraphics[width=\textwidth]{aistats/figures/appgm/1.0.pdf}
+%              \caption{$\epsilon = 1.0$}
+%         \end{subfigure}
+%         \begin{subfigure}{0.32\textwidth}
+% \includegraphics[width=\textwidth]{aistats/figures/appgm/2.5.pdf}
+%              \caption{$\epsilon = 2.5$}
+%     \end{subfigure}
+    
+%     \caption{
+%     \small  Comparison of PrivPGD against AP-PGM, illustrated through the $log_{10}$ ratio of the average $\swd_1$ and TV distances from Section~\ref{subsec:expsetting} averaged over $5$ runs over 15 different tabular datasets as a function of the size of the corresponding datasets. We use different choices for $\epsilon$  and set $\delta = 10^{-5}$. For points above $0$  PrivPGD achieves a smaller error on the corresponding metric, while for points below $0$ the opposite holds. 
+% }    
+%     \label{fig:appgm}
+% \end{figure*}
+
+% \begin{table}[t!]
+% \centering
+% \begin{tabular}{cccc}
+% \toprule
+%  Metric &$\epsilon = 0.2$ & $\epsilon = 1.0 $& $\epsilon = 2.5 $\\
+% \midrule
+%  $\swd_1$  dist. & 10 & 10 & 10 \\
+%                                  TV dist.     & 4  & 3  & 2  \\
+% \bottomrule
+% \end{tabular}
+% \caption{Number of times PrivPGD performs better than AP-PGM on the average $\swd_1$ and TV distances from Section~\ref{subsec:expsetting} averaged over $5$ runs evaluated on all 15 different tabular datasets. While PrivPGD wins in most cases for the average $\swd_1$ distance, AP-PGM outperforms PrivPGD on the TV distance.  }
+% \label{tab:your_transposed_label}
+% \end{table}
+
+
+

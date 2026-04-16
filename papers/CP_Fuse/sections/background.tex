@@ -1,0 +1,24 @@
+\section{Related Works on Copyright Protection}
+\label{sec:relatedwork}
+
+Copyright protection measures can be implemented at various stages of the model supply chain \citep{lee2023talkin}. In this section, we provide an overview of existing measures.
+
+
+\paragraph{Data pre-processing stage} Many open-source LLMs are trained on datasets containing copyright-protected material, such as the BookCorpus dataset (e.g., GPT-3 \citep{brown2020language}) and the C4 corpus (e.g., LLaMa \citep{touvron2023llama}). Therefore, efforts have been made to curate datasets with exclusively licensed content \citep{kocetkov2022stack, min2023silo, ippolito2023donottrain}. Moreover, removing duplicate copyrighted samples from the dataset has been shown to reduce their regurgitation \citep{lee2021deduplicating, kandpal2022deduplicating, carlini2023quantifying}. However, these approaches can be resource-intensive and degrade model performance \citep{ippolito2023preventing, Meeus2023DidTN}.
+
+
+\paragraph{Pre-training and fine-tuning stage} Other approaches intervene during the training or fine-tuning of LLMs to prevent memorization \citep{ carlini2023quantifying,zhang2023counterfactual,Somepalli2022DiffusionAO, mm_mem2024}, ensuring that the distribution of the trained model assigns negligible probability to verbatim training data. By design, differentially private (DP) methods \citep{dwork2014algorithmic, abadi2016deep} limit the influence of individual training points on the model's output and have thus been proposed to mitigate memorization issues. However, scaling DP training to LLMs with billions of parameters is computationally challenging and is associated with significant utility degradation \citep{anil2022large}. Furthermore, DP guarantees may lose relevance if samples are duplicated in the training set, and it has been argued that DP's goals differ from those of copyright protection \citep{elkin2023can}. Alternatively, heuristic methods, such as the goldfish loss \citep{hans2024like} or early-stopping \citep{mireshghallah2022memorization,zhang2023counterfactual,mm_mem2024}, have been empirically successful in reducing the likelihood of regurgitating training data.
+
+
+
+\paragraph{Inference and post-training stage} An orthogonal line enforces copyright constraints via post-processing \citep{wei2024evaluating}. Filtering strategies, such as MemFree \citep{ippolito2023donottrain}, can prevent the verbatim reproduction of copyrighted material from a curated blocklist during inference. However, these methods are effective only for exact verbatim matches and may lead to hallucinations due to modifications in the decoding process \citep{liu2024shield}. Other works propose unlearning copyrighted content from trained models \citep{bourtoule2021machine, chen2023unlearn, eldan2023s, jang2023knowledge, zhang2024negative, liu2024rethinking}. However, these approaches are typically computationally impractical and require access to model weights, which is often restrictive in real-world scenarios. Our method draws inspiration from the Near-Access Free (NAF) framework \citep{vyas2023provable} and, unlike purely heuristic approaches, offers a principled theoretical explanation of how it prevents regurgitation (\Cref{lem:balance}). We validate its effectiveness and competitiveness against baselines in extensive real-world experiments with popular language models  (\Cref{sec:experiments}).
+
+% We also validate its effectiveness through extensive experiments (\Cref{sec:experiments}).
+
+
+% Closer to our work, \citet{vyas2023provable} introduce
+% the Near-Access Free (NAF) notion, designed to provide copyright-protection guarantees in the output of generative models. However, practical implementations of the NAF framework either only apply to diffusion models \citep{golatkar2023training, golatkar2024cpr} or require access to a model that is copyright-compliant with respect to every protected material \citep{li2024purifying}. 
+
+
+% \paragraph{Differences between Copyright Protection and Differential Privacy}
+% Aside from the limitations of differential privacy for training LLMs, there are fundamental differences between its goals and those of copyright protection. Importantly, differential privacy focuses on safeguarding individual data points, while copyright protection addresses the unauthorized reproduction of creative works. For extensive discussions on this topic, refer to \citep{elkin2023can}.

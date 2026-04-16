@@ -1,0 +1,202 @@
+% Languages
+\usepackage[main=english,ngerman]{babel}
+
+% classicthesis setup
+\usepackage[overload]{textcase}
+\PassOptionsToPackage{
+  pdfspacing,
+  eulerchapternumbers,
+  floatperchapter,
+  pdfspacing,
+  beramono=false,
+  palatino=false,
+  a5paper,
+}{classicthesis}
+
+% Meta
+\input{preamble/meta}
+
+% Hyphenation
+\input{preamble/hyphenation}
+
+% Finetuning
+\newcounter{dummy}
+\newlength{\abcd}
+
+% Handy packages
+\usepackage{csquotes}
+\usepackage[T1]{fontenc}
+\usepackage{xspace}
+\usepackage{textcomp}
+\usepackage{mparhack}
+\usepackage{relsize}
+
+% Redefine cite command to include space before.
+\let\origcite\cite
+\def\cite#1{\unskip~\origcite{#1}}
+
+% Math
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{isomath}
+\usepackage{dsfont}
+\usepackage{thmtools}
+\usepackage{thm-restate}
+
+% Figures, tables, and captions
+\usepackage{tabularx}
+\usepackage{ltablex}
+\setlength{\extrarowheight}{3pt}
+\newcommand{\tableheadline}[1]{\multicolumn{1}{c}{\spacedlowsmallcaps{#1}}}
+\newcommand{\myfloatalign}{\centering}
+\usepackage{caption}
+\captionsetup[figure]{format=plain, font=footnotesize, labelfont=bf}
+\captionsetup[table]{format=plain, font=footnotesize, labelfont=bf}
+\usepackage{subcaption}
+\captionsetup[subfigure]{format=hang, font=footnotesize, labelfont=bf, labelsep=period, labelformat=simple, justification=justified, singlelinecheck=false}
+
+\usepackage[table, dvipsnames]{xcolor}
+\usepackage{adjustbox}
+\usepackage{float}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{wrapfig}
+\usepackage[section]{placeins}
+\usepackage{lscape}
+\setlength{\abovetopsep}{1ex}
+\setcounter{topnumber}{3}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.8}
+
+% Algorithms
+\usepackage{algorithm}
+\usepackage[algo2e,ruled,vlined,boxed,linesnumbered]{algorithm2e}
+\usepackage[noend]{algorithmic}
+
+% Customize colors
+\definecolor{chaptercolor}{HTML}{5B2A36}
+\definecolor{darkblue}{HTML}{5B2A36}
+\definecolor{linkcolor}{HTML}{8D4F5F}
+\definecolor{citecolor}{HTML}{8D4F5F}
+\definecolor{lightlinkcolor}{HTML}{B7A4AA}
+\definecolor{darklinkcolor}{HTML}{5B2A36}
+\definecolor{pink}{HTML}{C86A78}
+\definecolor{lightblue}{HTML}{D8B8C0}
+\definecolor{red}{HTML}{B84756}
+\definecolor{blue}{HTML}{8D4F5F}
+
+% Graphics
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows.meta}
+\graphicspath{{figures/}{papers/CP_Fuse/figures/}{papers/PrivPGD/figures/}}
+
+% Circled numbers
+\newcommand*\circled[1]{
+  \tikz[baseline=(char.base)]{
+    \node[shape=circle, draw, inner sep=1pt, font=\footnotesize, minimum size=0.8\baselineskip] (char) {\figureversion{lining}#1};
+  }
+}
+
+% Vertical line paragraph helper
+\newcommand\verpar[2]{
+  \par\vskip1ex
+  \noindent\begin{tikzpicture}[paragraph/.style = {inner sep=0pt, text width=\textwidth-\baselineskip}]
+  \node (p1) [paragraph] {#2 \vspace{1pt}};
+  \path ([xshift=-0.75\baselineskip] p1.south west) coordinate (p2)
+    -- node (p3) [sloped] {\color{blue} \footnotesize #1} (p2 |- p1.north);
+  \draw[very thick] (p2) -- (p3.west) (p3.east) -- (p2 |- p1.north);
+  \end{tikzpicture}
+  \vspace{5pt}
+}
+
+% Small colored symbols
+\newcommand{\colcircle}[1]{\tikz\node[circle=3pt, draw=#1, fill=#1, inner sep=1.75pt] (d) at (0,0) {};}
+\newcommand{\colstar}[1]{\tikz\node[star=3pt, draw=#1, fill=#1, inner sep=1.75pt] (d) at (0,0) {};}
+\newcommand{\colcube}[1]{\tikz\node[regular polygon=1pt, draw=#1, fill=#1, inner sep=1.5pt, regular polygon sides=3] (d) at (0,0) {};}
+\newcommand{\coldiamond}[1]{\tikz\node[diamond=3pt, draw=#1, fill=#1, inner sep=1.75pt] (d) at (0,0) {};}
+
+% Cross-references
+\usepackage[hidelinks,unicode]{hyperref}
+\renewcommand*{\figureautorefname}{Figure}
+\renewcommand*{\tableautorefname}{Table}
+\renewcommand*{\partautorefname}{Part}
+\renewcommand*{\chapterautorefname}{Chapter}
+\renewcommand*{\sectionautorefname}{Section}
+\renewcommand*{\subsectionautorefname}{Section}
+\renewcommand*{\subsubsectionautorefname}{Section}
+\providecommand{\subfigureautorefname}{\figureautorefname}
+\usepackage[capitalize,nameinlink,noabbrev]{cleveref}
+\usepackage{nameref}
+
+% Load classicthesis style
+\usepackage{scrhack}
+\usepackage{classicthesis}
+
+% Hyperref colors
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    citecolor=blue,
+    anchorcolor=blue
+}
+
+% Lists
+\usepackage{enumitem}
+
+% Text block geometry tuned toward the reference thesis layout.
+\KOMAoptions{headinclude=true, footinclude=false}
+\setlength{\textwidth}{11.6cm}
+\areaset[current]{\textwidth}{1.618034\textwidth}
+
+% Page numbers in plain style
+\clearplainofpairofpagestyles
+\ofoot[\pagemark]{}
+\setlength{\footskip}{19pt}
+\setlength{\emergencystretch}{1.5em}
+
+% TOC and heading styling
+\renewcommand{\cftpartfont}{\color{chaptercolor}\normalfont}
+\renewcommand{\cftpartpagefont}{\normalfont}
+\renewcommand{\thepart}{\Roman{part}}
+
+\titleformat{\part}[display]
+    {\normalfont\centering\large}
+    {\thispagestyle{empty}\partname~\MakeTextUppercase{\thepart}}{1em}
+    {\color{darklinkcolor}\spacedallcaps}
+\let\chapterNumber\undefined
+\newfont{\chapterNumber}{eurb10 scaled 5500}
+\titleformat{\chapter}[display]
+  {\relax}{\vspace*{-1.2\baselineskip}\makebox[\linewidth][r]{\color{darklinkcolor}\chapterNumber\thechapter}}{1.15\baselineskip}
+  {\raggedright\spacedallcaps}
+
+% Chapter abstract helper
+\def\chapterabstract#1{%
+  \begingroup
+  \baselineskip1.3em
+  \leftskip1em
+  \rightskip\leftskip\itshape#1
+  \par
+  \endgroup
+}
+
+% Chapter quotes
+\setkomafont{dictumtext}{\itshape\small}
+\setkomafont{dictumauthor}{\normalfont}
+\renewcommand*{\dictumwidth}{0.6\textwidth}
+\renewcommand*{\dictumrule}{}
+\renewcommand*\dictumauthorformat[1]{--- #1}
+
+% CV helpers retained from the reference template family
+\newcommand{\cvleft}[1]{\begin{minipage}[t]{2.5cm}\begin{flushright}#1\end{flushright}\end{minipage}\hspace{5mm}}
+\newcommand{\cvright}[1]{\begin{minipage}[t]{8cm}{#1}\end{minipage}}

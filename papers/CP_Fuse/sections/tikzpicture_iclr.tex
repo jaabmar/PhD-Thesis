@@ -1,0 +1,132 @@
+
+
+\begin{tikzpicture}[scale=1.1]
+
+\begin{scope}
+    % \draw[line width=0.5mm, ->] (0,0) -- (3.5,0);
+    % \draw[line width=0.5mm, ->] (0,0) -- (0,3.3);
+    
+    \fill[red] (1.0,0.8) circle (2pt);
+    \fill[red] (1.2,1.1) circle (2pt);
+    \fill[red] (1.1,2.3) circle (2pt);
+    \fill[red] (1.3,1.4) circle (2pt);
+    \fill[red] (1.5,2.4) circle (2pt);
+    \fill[red] (1.4,0.9) circle (2pt);
+    \fill[red] (1.2,2.8) circle (2pt);
+    \fill[red] (1.3,2.2) circle (2pt);
+    \fill[red] (1.55,1.5) circle (2pt);
+    \fill[red] (1.85,1.6) circle (2pt);
+    \fill[red] (1.8,2.3) circle (2pt);
+    \fill[red] (1.7,2.1) circle (2pt);
+
+    \fill[blue] (2.4,1.4) circle (2pt);
+    \fill[blue] (1.9,1.9) circle (2pt);
+    \fill[blue] (2.1,1.6) circle (2pt);
+    \fill[blue] (2.2,1.2) circle (2pt);
+    \fill[blue] (2.2,2.1) circle (2pt);
+    \fill[blue] (2.2,2.5) circle (2pt);
+    \fill[blue] (2.1,1.6) circle (2pt);
+    \fill[blue] (1.85,2.1) circle (2pt);
+    \fill[blue] (1.7,1.9) circle (2pt);
+
+    \draw[red, thick, dashed, rotate around={350:(1.2, 1.8)}] (1.2, 1.8) ellipse (0.8 and 1.2);
+    \draw[blue, thick, dashed, rotate around={40:(2.4, 1.8)}] (2.35, 1.9) ellipse (0.7 and 1.0);
+
+    \fill[lightred] (0.8,1.8) rectangle ++(0.15,0.15);
+    \fill[lightred] (0.6,1.9) rectangle ++(0.15,0.15);
+    \fill[lightred] (0.7,1.6) rectangle ++(0.15,0.15);
+
+    \fill[lightblue] (2.8,1.6) rectangle ++(0.15,0.15);
+    \fill[lightblue] (2.7,1.9) rectangle ++(0.15,0.15);
+
+    \draw[lightblue, ultra thick, dashed] (2.8, 1.8) ellipse (0.2 and 0.4);
+    \draw[lightred, ultra thick, dashed] (0.74, 1.8) circle (0.28);
+
+    % Add arrow pointing to one of the light red squares
+    \draw[lightred, very thick, ->] (2.0, 0.4) -- (0.95, 1.55);
+    \node[lightred] at (1.8, 0.2) {\small \textbf{Harry Potter books}};
+
+
+    \draw[lightblue, very thick, ->] (2.3, 3.1) -- (2.7, 2.2);
+     \node[lightblue] at (2.0, 3.3) {\small \textbf{The Hobbit books}};
+    
+    \node[red] at (0.5, 2.9) {\(\mathcal{X}_1\)};
+    \node[lightred] at (0.25, 2.0) {\(\mathcal{C}_1\)};
+    \node[blue] at (2.9, 0.75) {\(\mathcal{X}_2\)};
+    \node[lightblue] at (3.1, 2.3) {\(\mathcal{C}_2\)};
+\end{scope}
+
+\draw[ultra thick, ->, >=stealth] (3.25, 1.7) to (3.82, 1.7);
+
+\begin{scope}[shift={(3.87, 0)}]
+
+    % \node[align=center, font=\large\bfseries] at (2.5, 3.8) {Copyright-Protecting Fusion};
+
+    \draw[thick, fill=gray!10, rounded corners] (0, 0.0) rectangle (4.8, 3.4);
+
+    % Adding "Algorithm" header inside the box
+    \node[align=center, font=\bfseries] at (2.4, 2.9) {CP-Fuse Algorithm};
+
+    \node[align=left, text width=4.8cm] at (2.5, 2.3) {(1) Train \textcolor{red}{\(\mathbf{p}^{(1)}\)} on \textcolor{red}{\(\mathcal{X}_1\)}};
+    %(\textcolor{lightred}{\(\mathcal{C}_1\)} \(\subset\) \textcolor{red}{\(\mathcal{X}_1\)})};
+    \node[align=left, text width=4.8cm] at (2.5, 1.7) {(2) Train \textcolor{blue}{\(\mathbf{p}^{(2)}\)} on \textcolor{blue}{\(\mathcal{X}_2\)}}; %(\textcolor{lightblue}{\(\mathcal{C}_2\)} \(\subset\) \textcolor{blue}{\(\mathcal{X}_2\)})};
+    \node[align=left, text width=4.8cm] at (2.5, 1.1) {(3) At inference, output};
+    \node[align=center] at (2.5, 0.5) {\(\displaystyle \textcolor{darkgreen}{\mathbf{p}} = \argmin_{\textcolor{darkgreen}{p}^*}\max_{i \in \{1,2\}} \text{KL}\big( \textcolor{darkgreen}{p}^*\,\big\|\, \mathbf{p}^{(i)}\big)\)};
+    
+\end{scope}
+
+\draw[ultra thick, ->, >=stealth] (8.75, 1.7) to (9.32, 1.7);
+
+\begin{scope}[shift={(9.0, 0)}]
+
+    % \draw[line width=0.5mm, ->] (0,0) -- (3.5,0);
+    % \draw[line width=0.5mm, ->] (0,0) -- (0,3.3);
+
+    \shade[inner color=red!90, outer color=red!20, rotate around={350:(1.2, 1.8)}, opacity=0.8] 
+        (1.2, 1.8) ellipse (0.8 and 1.2);
+    \draw[red, thick, rotate around={350:(1.2, 1.8)}] 
+        (1.2, 1.8) ellipse (0.8 and 1.2);
+
+    \shade[inner color=blue!90, outer color=blue!20, rotate around={40:(2.4, 1.8)}, opacity=0.8] 
+        (2.35, 1.9) ellipse (0.7 and 1.0);
+    \draw[blue, thick, rotate around={40:(2.4, 1.8)}] 
+        (2.35, 1.9) ellipse (0.7 and 1.0);
+
+
+    \shade[inner color=darkgreen!40, outer color=darkgreen!20, rotate around={350:(1.75, 1.75)}, opacity=0.7] 
+        (1.75, 1.75) ellipse (1.4 and 1.4);
+
+    \draw[darkgreen, thick, rotate around={350:(1.75, 1.75)}] 
+        (1.75, 1.75) ellipse (1.4 and 1.4);
+
+    \shade[inner color=darkgreen!40, outer color=darkgreen!20, rotate around={350:(1.75, 1.75)}, opacity=0.6] 
+        (1.75, 1.75) ellipse (1.2 and 1.4);
+
+    \shade[inner color=darkgreen!70, outer color=darkgreen!40, rotate around={0:(1.8, 1.7)}, opacity=0.6] 
+        (1.8, 1.7) ellipse (0.9 and 1.15);
+    
+    \shade[inner color=darkgreen!90, outer color=darkgreen!70, rotate around={0:(1.8, 2.0)}, opacity=0.7] 
+        (1.8, 2.0) ellipse (0.35 and 0.65);
+
+
+        
+    \draw[lightblue, very thick, dashed] (2.8, 1.8) ellipse (0.2 and 0.4);
+    \fill[lightblue, very thick, pattern=north east lines, pattern color=lightblue, opacity=1.0] (2.8, 1.8) ellipse (0.2 and 0.4);
+
+    \draw[lightred, very thick, dashed] (0.74, 1.8) circle (0.28);
+    \fill[lightblue, very thick, pattern=north east lines, pattern color=lightred, opacity=1.0] (0.74, 1.8) circle (0.28);
+
+    \draw[red,  semithick, dashed, rotate around={350:(1.2, 1.8)}] 
+        (1.2, 1.8) ellipse (0.8 and 1.2);
+    \draw[blue, semithick, dashed, rotate around={40:(2.4, 1.8)}] 
+        (2.35, 1.9) ellipse (0.7 and 1.0);
+
+    \node[red] at (0.7, 3.1) {\(\mathbf{p}^{(1)}\)};
+    \node[blue] at (3.5, 1.4) {\(\mathbf{p}^{(2)}\)};
+    \node[darkgreen] at (2.7, 3.1) {\(\mathbf{p}\)};
+    
+\end{scope}
+
+
+
+\end{tikzpicture}

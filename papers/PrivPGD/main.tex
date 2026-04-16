@@ -1,0 +1,243 @@
+\documentclass{article}
+\usepackage[a4paper, total={6.5in,8.5in}]{geometry}
+
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{booktabs} 
+\usepackage{multirow} 
+\usepackage[numbers, sort, comma, square]{natbib}
+\usepackage{authblk}
+\usepackage{wrapfig}
+\usepackage{subcaption}
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{subcaption}
+\usepackage{rotating}
+\usepackage{caption}
+\usepackage{amsmath,amsfonts,bm}
+\usepackage{amsmath}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{placeins}
+\usepackage{lscape}
+
+
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+
+
+\author[1]{Konstantin Donhauser\footnote{Equal contribution.}}
+\author[1]{Javier Abad$^*$}
+\author[2]{Neha Hulkund}
+\author[1]{Fanny Yang}
+% \affil[1]{ETH AI Center}
+\affil[1]{Department of Computer Science, ETH Zürich}
+\affil[2]{MIT CSAIL}
+
+\input{macros}
+
+\title{Privacy-preserving data release leveraging optimal transport \\ and particle gradient descent}
+
+\date{}
+
+\begin{document}
+
+
+\maketitle
+
+
+
+
+\newcommand{\includeSubFigures}[1]{
+            \begin{subfigure}{0.16\textwidth}
+\includegraphics[width=\textwidth]{#1exp1_wdist_2_2Way_avg.pdf}
+        \caption{$\swd_2^2$ dist.}
+    \end{subfigure}
+            \begin{subfigure}{0.16\textwidth}
+\includegraphics[width=\textwidth]{#1exp1_l1_2Way_avg.pdf}
+        \caption{TV dist.}
+    \end{subfigure}
+        \begin{subfigure}{0.16\textwidth}
+\includegraphics[width=\textwidth]{#1exp1_synth_gradboost_test.pdf}
+        \caption{downstream}
+    \end{subfigure}
+    \begin{subfigure}{0.16\textwidth}
+        \centering
+\includegraphics[width=\textwidth]{#1exp1_cov_fixed_frobenius_norm.pdf}
+             \caption{cov. mat.}
+        \end{subfigure}
+        \begin{subfigure}{0.16\textwidth}
+\includegraphics[width=\textwidth]{#1exp1_rand_coun_new_mean_dist.pdf}
+             \caption{cout. queries}
+    \end{subfigure}
+        \begin{subfigure}{0.16\textwidth}
+    \centering
+\includegraphics[width=\textwidth]{#1exp1_rand_thrs_query_mean_dist.pdf}
+             \caption{thresh. queries}
+    \end{subfigure}
+     \hspace{15mm} % Adjust this to your desired horizontal spacing
+}
+
+
+
+
+\newcommand{\includeTimeFigures}[2]{
+            \begin{subfigure}{0.16\textwidth}
+\includegraphics[width=\textwidth]{#1exp1_elapsed_time.pdf}
+\caption*{#2}
+\end{subfigure}
+}
+
+    
+%     \begin{subfigure}{0.19\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{#1exp1_wdist_2_2Way_avg.pdf}
+%         \caption{avg $\swd_2^2$ dist.}
+%     \end{subfigure}%
+%     \begin{subfigure}{0.19\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{#1exp1_synth_gradboost_test.pdf}
+%         \caption{downstream error}
+%     \end{subfigure}%
+%     \begin{subfigure}{0.19\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{#1exp1_cov_fixed_frobenius_norm.pdf}
+%         \caption{cov. mat. error}
+%     \end{subfigure}%
+%     \begin{subfigure}{0.19\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{#1exp1_rand_coun_new_mean_dist.pdf}
+%         \caption{counting queries}
+%     \end{subfigure}%
+%     \begin{subfigure}{0.19\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{#1exp1_rand_thrs_query_mean_dist.pdf}
+%         \caption{thresh. queries}
+%     \end{subfigure}%
+%     \hspace{15mm} % Adjust this to your desired horizontal spacing
+% }
+
+
+
+
+\newcommand{\includeBenchFigures}[1]{
+    \centering
+        \begin{subfigure}{\textwidth}
+\includegraphics[width=\textwidth]{#11.pdf}
+    \end{subfigure}\\
+    \begin{subfigure}{\textwidth}
+        \centering
+\includegraphics[width=\textwidth]{#12.pdf}
+        \end{subfigure}
+       
+}
+
+
+
+
+
+\newcommand{\includeDistFigures}[1]{
+    \centering
+        \begin{subfigure}{0.47\textwidth}
+\includegraphics[width=\textwidth]{#1wdist_1_2Way_avg.pdf}
+    \end{subfigure}
+    \begin{subfigure}{0.47\textwidth}
+        \centering
+\includegraphics[width=\textwidth]{#1newl1_2Way_avg.pdf}
+        \end{subfigure}
+       
+}
+
+% \newcommand{\includeBenchFigures}[1]{
+%     \centering
+%         \begin{subfigure}{0.48\textwidth}
+%                 \caption{downstream}
+% \includegraphics[width=\textwidth]{#1synth_gradboost_test.pdf}
+%     \end{subfigure}
+%     \begin{subfigure}{0.48\textwidth}
+%         \centering
+%                      \caption{covariance error}
+% \includegraphics[width=\textwidth]{#1cov_fixed_frobenius_norm.pdf}
+%         \end{subfigure}\\
+%         \begin{subfigure}{0.48\textwidth}
+%                      \caption{count. queries}
+% \includegraphics[width=\textwidth]{#1rand_counting_query_mean_dist.pdf}
+%     \end{subfigure}
+%         \begin{subfigure}{0.48\textwidth}
+%     \centering
+%                  \caption{thresh. queries}
+% \includegraphics[width=\textwidth]{#1rand_thresholding_query_mean_dist.pdf}
+%     \end{subfigure}\\
+% \begin{subfigure}{0.48\textwidth}
+%         \caption{avg. $\swd_1$ distance}
+% \includegraphics[width=\textwidth]{#1wdist_1_2Way_avg.pdf}
+%     \end{subfigure}
+% %     \begin{subfigure}{0.24\textwidth}
+% % \includegraphics[width=\textwidth]{#1wdist_1_3Way_avg.pdf}
+% %         \caption{$\swd_1$ 3-Way}
+% %     \end{subfigure}
+%             \begin{subfigure}{0.48\textwidth}
+%                     \caption{avg. TV distance}
+
+% \includegraphics[width=\textwidth]{#1newl1_2Way_avg.pdf}
+%     \end{subfigure}
+% %                 \begin{subfigure}{0.24\textwidth}
+% % \includegraphics[width=\textwidth]{#1newl1_3Way_avg.pdf}
+% %         \caption{TV 3-Way}
+% %     \end{subfigure}
+% }
+
+% \newcommand{\includeRelFigures}[1]{
+%     \centering
+%             \begin{subfigure}{0.16\textwidth}
+%                     \caption{$\swd_2^2$ dist.}
+
+% \includegraphics[width=\textwidth]{#1dataset_n_wdist_2_2Way_avg.pdf}
+%     \end{subfigure}
+%             \begin{subfigure}{0.16\textwidth}
+%                     \caption{TV dist.}
+% \includegraphics[width=\textwidth]{#1dataset_n_l1_2Way_avg.pdf}
+%     \end{subfigure}
+%         \begin{subfigure}{0.16\textwidth}
+% \includegraphics[width=\textwidth]{#1dataset_n_synth_gradboost_test.pdf}
+%         \caption{downstream}
+%     \end{subfigure}
+%     \begin{subfigure}{0.16\textwidth}
+%         \centering
+%                      \caption{cov. error}
+% \includegraphics[width=\textwidth]{#1dataset_n_cov_fixed_frobenius_norm.pdf}
+%         \end{subfigure}
+%         \begin{subfigure}
+%         {0.16\textwidth}
+%                      \caption{cout. queries}
+% \includegraphics[width=\textwidth]{#1dataset_n_rand_coun_new_mean_dist.pdf}
+%     \end{subfigure}
+%         \begin{subfigure}
+%         {0.16\textwidth}
+%     \centering
+%                  \caption{thresh. queries}
+% \includegraphics[width=\textwidth]{#1dataset_n_rand_thrs_query_mean_dist.pdf}
+%     \end{subfigure}
+% }
+\input{sections/intro}
+\input{sections/background}
+\input{sections/algo}
+\input{sections/experiments}
+
+\bibliographystyle{plainnat}
+\bibliography{main}
+\newpage
+\appendix
+\input{sections/appendix}
+\end{document}

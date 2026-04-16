@@ -1,0 +1,204 @@
+\section{Preliminaries for differentially private data synthesis}
+In this section, we summarize key concepts and introduce notation related to differentially private data synthesis used in the paper. 
+
+In general, we consider our data to lie in a domain $\domain= \domain_1 \times  \cdots \times \domain_d$ that is discrete and has dimension $d$.
+This assumption is not restrictive since the vast majority of DP-data synthesis algorithms for tabular data rely on a discretized version of the data even if it originally lies in a continuous domain\footnote{We refer the reader to \citep{zhang2016privtree} for a discussion on how to optimally discretize in a DP-way.}. In particular, we can represent every dimension as an integer in the discrete set $\domain_{i} = \{1, \cdots, k_i\}$ with $k_i \in \mathbb N_+$.
+
+%\subsection{Differentially private data synthesis}
+%\fy{section title doesn't capture section - neither discretization nor DP definition are about dp data synthesis}
+Differential privacy \citep{dp} is an algorithmic property that guarantees that individual information in the data is protected in the output of an algorithm; even when assuming that an adversary has access to the information of all other individuals in the dataset. We now provide the formal definition.
+%\fy{ this belongs to definition} More formally, for any dataset $\dataset \in \domain^n$ of size $n$ in some domain $\domain$, 
+%we define: \fy{grammatically this has to be correct together with definition, but this is not}
+
+\begin{definition}
+\label{eq:defdp}
+    An algorithm $\gA$ is $(\epsilon,\delta)$-DP with $\epsilon>0$ and $\delta>0$ if for any datasets $\dataset, D'$
+    %$\dataset \in \domain^n$ of size $n$
+    differing in a single entry and any measurable subset $S \subset \mathrm{im}(\mathcal A)$ of the image of $\mathcal A$, we have
+\begin{equation*}
+  \prob{\algo{D}\in S} \leq \exp(\epsilon) \prob{\algo{D'}\in S} + \delta
+\end{equation*}
+\end{definition}
+
+The goal of \emph{differentially private data synthesis} is to design a (randomized) algorithm $\gA$  that, for any dataset $\dataset \in \domain^n$ of size $n$, generates an output $\algo{D} \in \domain^m$ that is a differentially private ``copy" of $D$, potentially of different size $m \neq n$. 
+
+% \paragraph{Discretization}  
+
+%While the original dataset may contain both continuous and categorical entries, we consider a discretized version of the data in a domain $\domain = \domain_1 \times  \cdots \times \domain_d$ with dimension $d$ with $\domain_{i} = \{1, \cdots, k_i\}$ in \fy{in?} at most $ k_i \leq k$ bins per dimension. 
+%Discretization is a crucial ingredient required by the vast majority of DP-data synthesis algorithms designed for tabular data, such as marginal-based approaches (see next subsection).  
+%There exists \fy{"there exists" generally a phrase to avoid except mathematically} a separate line of works dedicated to finding optimal discretizations in a DP-way, which is orthogonal to the work presented in this paper; see, for example, \citep{zhang2016privtree}. 
+
+\subsection{Marginal-based algorithms for private data synthesis }
+\label{sec:marginal_based}
+Our approach falls in the general category of marginal-based methods. They
+%Marginal-based approaches 
+ follow Algorithm~\ref{alg:mainalgo},  consisting of three steps: marginal selection, privatization, and generation.
+
+\paragraph{Marginal selection} 
+For any subset $S \subset \{1, \cdots, d\}$ of the dimensions,  we denote with $D_S \in \domain_S^n$ the dataset containing only the dimensions in $S$. For each subset $S$ we can define a corresponding marginal.
+\begin{definition}
+\label{def:marginal}
+    We denote by $\marginal{S}[D] \in \mathcal P(\domain_S)$ the $S$-marginal of a dataset $D$, defined as the empirical measure of $D_S$ over the domain $\domain_S$.
+    \end{definition}
+
+In the first step of the algorithm, a set $\mathcal{S}$ of such subsets $S$ is selected, and equivalently a set of marginals. 
+%subsets $S \in \mathcal S$ \fy{is S a subset or set of subsets}: \fy{youre not defining a set of subsets...}
+%The set of subsets $\mathcal S$ defines the marginals. 
+The problem of selecting marginals in a DP-way is an interesting problem on its own and has led to a significant amount of proposed methods~\citep{cai2021data, mst, aim, zhang2021privsyn}. 
+%Thus, marginal selection methods are orthogonal to this paper.
+In an
+%One important 
+extension of Algorithm~\ref{alg:mainalgo}, sketched in Algorithm~\ref{alg:mwem}, the marginals are not all selected in the beginning, but sequentially chosen from 
+%is to sequentially select the marginals from 
+a pre-defined pool of subsets $\mathcal S_W$ of $[d]$, often referred to as the workload.
+%using the DP-dataset from the previous iteration. 
+More specifically, in every iteration $t$, we select the marginals with the largest total variation distance $\text{TV}\left( \marginal{S}[\dpdata^{(t-1)}], \marginal{S}[D]\right) $, where $\dpdata^{(t-1)}$ is the DP-dataset from the previous iteration $t-1$. This is done
+in a DP-way using the exponential mechanism \cite{mcsherry2007mechanism}. Such approaches fall under the general MWEM~\citep{mwem,liu2021iterative} framework, which is the backbone of many DP synthesis methods. To control the overall privacy budget, the framework from Algorithm~\ref{alg:mwem} uses advanced compositional theorems. 
+
+
+\begin{figure}[!t]
+\begin{minipage}[t]{.46\textwidth}
+\noindent
+\begin{algorithm}[H]
+\caption{Standard data synthesis framework}\label{alg:mainalgo}
+\begin{algorithmic}[1]
+\Require Dataset $D$, privacy parameters $\epsilon$ and $\delta$
+\State \textbf{select} set $\mathcal S$ of subsets $S$ of $\{1, \cdots, d\}$
+\State \textbf{privatize} marginals $\marginal{S}[D]$ to obtain $(\epsilon, \delta)$-DP ``copies" $\measuredmarginal{S}$
+\State \textbf{generate} data from privatized marginals $\measuredmarginal{S}$
+\Statex\Return the DP dataset $\dpdata$
+\end{algorithmic}
+\end{algorithm}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{.52\textwidth}
+\begin{algorithm}[H]
+\caption{Extension to sequential query selection}\label{alg:mwem}
+\begin{algorithmic}[1]
+\Require Dataset \(D\), privacy parameters \(\epsilon\) and \(\delta\), workload \(\mathcal{S}_W\), rounds \(T\)
+\For{\(t = 1, \dots, T\)}
+    \State \textbf{select} \(S_t \in \mathcal{S}_W\)
+    \State \textbf{privatize} the marginal \(\nu_{S_t}[D]\) to obtain the 
+    \Statex\hspace{\algorithmicindent}\hspace{\algorithmicindent}DP-``copies" \(\hat{\nu}_{S_t}\)
+    \State \textbf{generate} data from privatized marginals 
+    \Statex\hspace{\algorithmicindent}\hspace{\algorithmicindent}\(\{\hat{\nu}_{S_j}\}_{j\leq t}\) to obtain \(D^{(t)}_{DP}\)
+\EndFor
+\State \Return DP dataset \(D^{(T)}_{DP}\).
+\end{algorithmic}
+\end{algorithm}
+\end{minipage}
+\end{figure}
+
+% \begin{minipage}[t]{.45\linewidth}
+% \begin{algorithm}[H]
+% \caption{Standard data synthesis framework}\label{alg:mainalgo}
+% \begin{algorithmic}[1]
+% \Require Dataset $D$,  privacy parameters $\epsilon$ and $\delta$
+% \State \textbf{select} set $\mathcal S$ of subsets  $S $ of $\{1, \cdots, d\}$
+% \State \textbf{privatize}  marginals $\marginal{S}[D]$ to obtain $(\epsilon, \delta)$-DP ``copies" $\measuredmarginal{S}$
+% \State \textbf{generate} data from privatized marginals $\measuredmarginal{S}$
+% \Statex\Return the DP dataset $ \dpdata$
+% \end{algorithmic}
+% \end{algorithm}
+% \end{minipage}\hfill
+% \begin{minipage}{.45\linewidth}
+% \begin{algorithm}[H]
+% \caption{Sequential query selection}\label{alg:mwem}
+% \begin{algorithmic}[1]
+% \Require Dataset $D$,  privacy parameters $\epsilon$ and $\delta$, workload $ \mathcal S_W$
+% \For{$t = 1, \cdots, T$}
+% \State \textbf{select}  $S_t \in  \mathcal S_W$  using $\dpdata^{(t-1)}$ and set 
+% %\begin{equation*}
+% $\mathcal S_t = \mathcal S_{t-1} \cup \{S_t\}$
+% %\end{equation*}
+% \State \textbf{run} Step 2 \& 3 in Alg.~\ref{alg:mainalgo} for $\mathcal Q_t$ to obtain $\dpdata^{(t)}$
+% \EndFor
+% \Statex\Return return DP dataset $ \dpdata^{(T)}$.
+% \end{algorithmic}
+% \end{algorithm}
+% \end{minipage}
+
+
+% \begin{algorithm}[t!]
+% \caption{Standard data synthesis framework}\label{alg:mainalgo}
+% \begin{algorithmic}[1]
+% \Require Dataset $D$,  privacy parameters $\epsilon$ and $\delta$
+% \State \textbf{select} set $\mathcal S$ of subsets  $S $ of $\{1, \cdots, d\}$
+% \State \textbf{privatize}  marginals $\marginal{S}[D]$ to obtain $(\epsilon, \delta)$-DP ``copies" $\measuredmarginal{S}$
+% \State \textbf{generate} data from privatized marginals $\measuredmarginal{S}$
+% \Statex\Return the DP dataset $ \dpdata$
+% \end{algorithmic}
+% \end{algorithm}
+
+% \begin{algorithm}[t!]
+% \caption{Sequential query selection \fy{synthetic ... with adaptive query selection?}}\label{alg:mwem}
+% \begin{algorithmic}[1]
+% \Require Dataset $D$,  privacy parameters $\epsilon$ and $\delta$, workload $ \mathcal S_W$
+% \For{$t = 1, \cdots, T$}
+% \State \textbf{select}  $S_t \in  \mathcal S_W$  using $\dpdata^{(t-1)}$ and set 
+% %\begin{equation*}
+% $\mathcal S_t = \mathcal S_{t-1} \cup \{S_t\}$
+% %\end{equation*}
+
+ 
+% \State \textbf{run} Step 2 \& 3 in Alg.~\ref{alg:mainalgo} for $\mathcal Q_t$ to obtain $\dpdata^{(t)}$
+% \EndFor
+% \Statex\Return return DP dataset $ \dpdata^{(T)}$.
+% \end{algorithmic}
+% \end{algorithm}
+
+
+\paragraph{Marginal privatization}
+After a set of marginals has been selected, both frameworks contain a privatization and generation step.
+%In the second step, we construct DP-``copies" of the marginals. 
+A common choice for privatization is to apply the %standard (doppelt gemoppelt)
+Gaussian mechanism \citep{mcsherry2007mechanism}, where we simply add i.i.d.~Gaussian noise to the empirical marginal $\marginal{S}[D]$. The variance $\sigma^2$ of the Gaussian depends on the privacy parameters $\epsilon$ and $\delta$. As a result, we obtain the signed measures  $\measuredmarginal{S}$:
+\begin{equation*}
+\label{eq:gaussian}
+\forall x \in \domain_S:~~
+\measuredmarginal{S}(\{x\}) = \marginal{S}[D](\{x\}) + \mathcal N(0, \sigma^2).
+\end{equation*}
+
+
+
+\paragraph{Data generation} 
+Finally, in the last step, we generate a dataset from the noisy estimates of the marginals. 
+For this purpose, existing methods 
+typically aim to learn a distribution $\hat{p}$ that minimizes the squared loss:
+\begin{equation*}
+   \sum_{S \in \mathcal S, x \in \domain_S}  \left(\hat p_S(\{x\})  -  \measuredmarginal{S}(\{x\})\right)^2 
+\end{equation*}
+and then release the private synthetic  data $\dpdata$ by sampling from $\hat p$.
+The predominant generation algorithm used by state-of-the-art methods \citep{mst, aim, cai2021data} is PGM~\citep{mckenna2019graphical}, which learns a graphical model using mirror descent. We refer to Section~\ref{sec:relatedwork} for further discussion. 
+
+
+\subsection{Sliced Wasserstein distance}
+\label{sec:slicedwd}
+% \fy{In our generation method we crucially utilize the SW ... which we now define}
+The optimal transport literature offers a set of natural divergence measures that can be used for particle gradient descent, such as the Sinkhorn divergence or the Wasserstein distance. 
+However, the computational complexity of these divergences scales at least quadratically (resp. cubically) with respect to the size of the support of the measures. This clearly defeats the purpose of a computationally efficient generation algorithm that can represent rich datasets with a large number of data points.
+Instead, a widely used \citep{wu2019sliced, kolouri2018sliced, deshpande2018generative, deshpande2019max}, computationally efficient alternative is the squared sliced Wasserstein ($\swd_2^2$) distance \citep{bonneel2015sliced}; that is, the averaged squared Euclidean transportation over all $1$-dimensional projections. 
+
+Formally, for $\theta\in\mathbb{R}$, let $g^\theta(x) = \langle x, \theta\rangle$ and $g^\theta_{\#}$ be the pullback measure induced by $g^\theta$. Moreover, let $\lambda^p$ be the uniform distribution over the sphere $\mathcal S^{p-1}$. For any Euclidean subspace $\Omega \subset \mathbb{R}^p$ and probability measures $\mu, \nu \in \mathcal{P}(\Omega)$ with support $\Omega$,  the $q$-SW distance is defined as follows:
+\begin{equation}
+\label{eq:def_sliced_wasserstein}
+    \swd_q(\mu, \nu) =  \left(\int_{\mathcal S^{p -1}} W_q^q(g^\theta_{\#} \mu, g^\theta_{\#}\nu) d\lambda(\theta) \right)^{1/q}, 
+\end{equation}
+where 
+% $p$ is the dimension of $\Omega$ and 
+$W_q^q$ is the $q$-th power of the $q$-Wasserstein distance for $q \geq 1$. The Wasserstein distance 
+over $1$-dimensional distributions, as it appears in \Cref{eq:def_sliced_wasserstein},
+%we can write it using the 
+has a well-known closed-form expression:
+\begin{equation}
+\label{eq:def_wasserstein}
+    W_q(g^\theta_{\#} \mu, g^\theta_{\#}\nu)  = \left(\int_u \vert F^{-1}_{g^\theta_{\#} \mu}(u) - F^{-1}_{ g^\theta_{\#}\nu }(u)\vert^q du\right)^{1/q}, 
+\end{equation}
+ where $F_{g^\theta_{\#} \mu}(u)$ (resp.~$ F_{ g^\theta_{\#}\nu }(u)$) represents the cumulative  function and $F^{-1}$ its inverse. Finally, in the special case of $q=1$, we have the  following identity for the $1$-Wasserstein distance by Vallender \citep{vallander}, which we will later leverage in our algorithm:\begin{equation}\label{eq:vallander}
+    W_1(g^\theta_{\#} \mu, g^\theta_{\#}\nu) = \| F_{g^\theta_{\#} \mu}(u) - F_{ g^\theta_{\#}\nu }(u)\|_{L_1(\mathbb R)}.
+\end{equation}
+Importantly, this identity allows us to naturally extend the definition of the (sliced) $1$-Wasserstein distance to signed measures, as demonstrated by \citet{boedihardjo2022private}.
+
+
+
+

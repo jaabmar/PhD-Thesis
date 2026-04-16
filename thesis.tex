@@ -1,0 +1,104 @@
+\RequirePackage{fix-cm}
+\documentclass[
+    twoside,
+    openright,
+    titlepage,
+    numbers=noenddot,
+    cleardoublepage=empty,
+    dottedtoc,
+    headings=optiontoheadandtoc,
+    abstract=false,
+    BCOR=5.5mm,
+    paper=a5,
+    fontsize=10pt,
+]{scrreprt}
+
+\usepackage{etex}
+\reserveinserts{10}
+
+\input{preamble/general}
+\usepackage[final]{pdfpages}
+\usepackage[round]{natbib}
+\input{preamble/math}
+\input{preamble/macros}
+
+\begin{document}
+
+\frenchspacing
+\raggedbottom
+\selectlanguage{english}
+\pagenumbering{roman}
+\pagestyle{scrplain}
+
+% Cover
+\IfFileExists{cover/cover_front.pdf}{
+  \includepdf[pages={1,{}}]{cover/cover_front.pdf}
+  \cleardoublepage\setcounter{page}{1}
+}{
+  \IfFileExists{cover/cover_front.tex}{
+    \input{cover/cover_front}
+    \cleardoublepage\setcounter{page}{1}
+  }{}
+}
+
+% Front matter
+\input{frontbackmatter/titlepage}
+\input{frontbackmatter/titleback}
+\cleardoublepage
+\input{frontbackmatter/dirtytitlepage}
+\cleardoublepage
+\input{frontbackmatter/dedication}
+\cleardoublepage
+\input{frontbackmatter/abstract}
+\cleardoublepage
+\input{frontbackmatter/acknowledgments}
+\pagestyle{scrheadings}
+\cleardoublepage\null
+
+% Table of contents
+\refstepcounter{dummy}
+\pdfbookmark[1]{\contentsname}{tableofcontents}
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+\manualmark
+\markboth{\spacedlowsmallcaps{\contentsname}}{\spacedlowsmallcaps{\contentsname}}
+\tableofcontents
+\automark[section]{chapter}
+\renewcommand{\chaptermark}[1]{\markboth{\spacedlowsmallcaps{#1}}{\spacedlowsmallcaps{#1}}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\enspace\spacedlowsmallcaps{#1}}}
+
+% Notation
+\input{preamble/notation}
+\clearpage
+\cleardoublepage\null
+
+% Main matter
+\cleardoublepage
+\pagenumbering{arabic}
+\input{chapters/introduction}
+
+\cleardoublepage
+\input{chapters/background}
+
+\input{chapters/paper-01-privpgd}
+\input{chapters/paper-02-cp-fuse}
+
+\cleardoublepage
+\input{chapters/conclusion}
+
+\newpage
+{
+\renewcommand*{\bibfont}{\normalfont\footnotesize}
+\bibliographystyle{plainnat}
+\bibliography{bib/references,papers/PrivPGD/main,papers/CP_Fuse/main}
+}
+
+\bookmarksetup{startatroot}
+\cleardoublepage
+\input{frontbackmatter/publications}
+
+\appendix
+\cleardoublepage
+\input{chapters/appendix}
+
+\end{document}

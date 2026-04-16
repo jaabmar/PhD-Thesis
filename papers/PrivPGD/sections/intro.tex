@@ -1,0 +1,77 @@
+
+\begin{abstract}
+
+We present a novel approach for differentially private data synthesis of protected tabular datasets, a relevant task in highly sensitive domains such as healthcare and government. Current state-of-the-art methods predominantly use marginal-based approaches, where a dataset is generated from private estimates of the marginals. In this paper, we introduce PrivPGD, a new generation method for marginal-based private data synthesis, leveraging tools from optimal transport and particle gradient descent. Our algorithm outperforms existing methods on a large range of datasets
+while being highly scalable and offering the flexibility to incorporate additional domain-specific constraints.
+\end{abstract}
+
+
+
+\section{Introduction}
+
+Distributing sensitive datasets is crucial for data-driven decision-making and methodological research in many fields, like healthcare and government. For example, epidemiologists and biostatisticians have relied on tools like SAS to analyze personal health data for decades \citep{dimaggio2013sas, dankar2012application}. However, there are significant concerns among patients about the use and disclosure of their information, especially among vulnerable groups~\citep{el2011case}.
+
+
+
+Differential privacy (DP) has gained prominence as a vital approach to mitigate privacy concerns.   Its adoption extends well beyond theoretical frameworks, finding practical utility across industries and government organizations \citep{johnson2018towards,abowd2018us,aktay2020google}. 
+In this paper, we target the problem of DP tabular data synthesis, a promising approach for creating high-quality copies of protected tabular datasets that adhere to privacy constraints. Any further task performed on these ``private" copies is thus guaranteed to comply with these constraints.
+
+
+Numerous differential privacy methods have emerged to synthesize tabular datasets with privacy guarantees while preserving relevant statistics from the original dataset \citep{hu2023sok, tao2021benchmarking}. %For tabular data, 
+Marginal-based approaches are among the preferred methods, dominant in NIST challenges~\citep{mst} and consistently top-ranked in benchmarks~\citep{tao2021benchmarking}. These approaches select a set of marginals and perturb them in a DP-compliant manner. Subsequently, a synthetic dataset is \textit{generated} from these noisy marginals through a generation method.
+
+
+In this paper, we introduce PrivPGD\footnote{See our GitHub repository for the source code: \url{https://github.com/jaabmar/private-pgd}.}, a novel DP-data generation method based on particle gradient descent \citep{chizat2018global, chizat2022sparse}. PrivPGD leverages an optimal transport-based divergence between the privatized and particle marginal distributions (Section~\ref{sec:slicedwd}) to integrate marginal information during gradient descent. This divergence can be efficiently approximated through parallel GPU processing, which is crucial for handling large datasets. Our approach has several important characteristics:
+
+\begin{itemize}
+
+\item \textit{State-of-the-Art performance.} PrivPGD outperforms state-of-the-art methods in a large benchmark comparison (9 datasets) across various metrics, including downstream task performance (Section~\ref{sec:experiments}).
+% Particularly in large datasets, PrivPGD demonstrates a noticeable improvement compared to existing methods. 
+% \fy{here i expect juxtaposition of previous works complexity thats higher - or how its infeasible for them to achieve xxx}
+
+
+
+  \item \textit{Scalability}. PrivPGD leverages a highly optimized gradient computation
+ that can be parallelized on GPU, enabling the algorithm to efficiently construct large datasets with over 100,000 data points while accommodating many marginals, e.g., all 2-Way marginals. 
+
+ 
+ 
+ % \fy{or say that its not possible with previous methods}
+
+ 
+ 
+ % PrivPGD is highly scalable to large sets of marginals, with linear run-time and constant memory complexity with respect to the number of marginals. This allows for capturing complex dependencies from the original data. 
+ 
+ 
+ % \item \textit{Scalability to large dataset}. PrivPGD leverages a highly optimized gradient computation with run-time complexity $O(m \log m)$, where $m$ is the size of the constructed dataset.  This allows for the construction of a dataset of size $100k$ from $60$ two-way marginals within less than $10$ minutes.  %(Figure~\ref{fig:XX} in the Appendix).
+
+\item \textit{Geometry preservation}. Many datasets contain features with inherent geometry, such as continuous features and some categorical features like age, which have rankings that should be retained in the synthetic data. Unlike state-of-the-art methods (see Section~\ref{sec:algorithms}), PrivPGD preserves this geometric structure, aligning more naturally with the nuances of real-world datasets.
+
+
+\item \textit{Incorporation of domain-specific constraints.} As a gradient-based method, PrivPGD allows the inclusion of any additive penalization term to the loss function. This enables explicit enforcement of domain-specific constraints within the generation algorithm, providing a straightforward and efficient way to incorporate these requirements into the synthetic data. We provide examples and successful implementations of domain-specific constraints in Section~\ref{sec:domainspecific_exp}.
+
+\end{itemize}
+
+\subsection{Related work}
+\label{sec:relatedwork}
+
+
+
+% We discuss in this section related works on DP-data synthesis for tabular data and refer the reader to Section~\ref{sec:experiments} for an extensive benchmark comparison (for a more comprehensive overview, see  %Additionally, we direct interested readers to a recent survey 
+% the recent survey \citep{hu2023sok}). We distinguish between marginal and query-based DP-data synthesis algorithms. While the latter receives any general set of queries and releases a tabular dataset that simultaneously answers all queries, the former only considers marginal queries and can thus be viewed as a special case of query-based algorithms, optimized for marginal queries.  
+
+In this section, we discuss related works on DP-data synthesis for tabular data and direct the readers to Section~\ref{sec:experiments} for extensive benchmark comparison. For a comprehensive overview, refer to the recent survey by \citet{hu2023sok}. We categorize the related work into marginal and query-based DP-data synthesis algorithms. Query-based algorithms handle a broad set of queries, while marginal-based algorithms focus on marginal queries and can be seen as a special case of query-based algorithms optimized for these queries.
+
+\paragraph{Marginal-based algorithms} Marginal-based algorithms are prominent in the literature for private tabular data synthesis, achieving state-of-the-art performance on numerous benchmark tasks \citep{mst, tao2021benchmarking, hu2023sok}. These algorithms typically follow two main steps: selecting marginals \citep{cai2021data, mst, aim} and generating the dataset after adding noise to these marginals \citep{zhang2017privbayes, mckenna2019graphical, li2021dpsyn}. A common approach in data generation is PGM \citep{mckenna2019graphical}, used by winning methods in the NIST competitions~\citep{cai2021data, mst, aim}. However, PGM faces two major limitations: it is highly sensitive to the number of selected marginals, easily resulting in memory and runtime issues, and has limited capability in preserving domain-specific constraints. Other marginal-based generation methods include PrivBayes \citep{zhang2017privbayes}, which trains a Bayesian network, and Gradual Update Methods \citep{li2021dpsyn, zhang2021privsyn}, which iteratively update a random dataset to match the marginals.
+
+\paragraph{Query-based algorithms} In contrast to marginal-based algorithms, query-based algorithms can handle a broader range of queries. Examples include DualQuery \citep{gaboardi14}, FEM \citep{vietri2020new}, RAP \citep{aydore2021differentially}, GEM \citep{liu2021iterative}, RAP++ \citep{vietri2022private}, and Private GSD \citep{pmlr-v202-liu23ag}. These methods construct a private dataset to answer a large set of predefined queries, often relying on gradient descent techniques \citep{aydore2021differentially, liu2021iterative}. Our method, PrivPGD, also uses particle gradient descent but does not require predefining a set of queries and is optimized to preserve marginal queries.
+
+% \paragraph{Other algorithms}
+% Copula-based approaches~\citep{gambs2021growing, li2014differentially, asghar2019differentially} employ Gaussian and vine copulas to approximate the privatized marginal distributions. 
+% However, such approaches suffer from high computational complexity, limiting their applicability. For instance, running a single iteration of Copula-Shirley~\citep{gambs2021growing} on the ACS datasets~\citep{ding2021retiring} takes over 24 hours on our cluster\footnote{
+% Our cluster consists of modern GPUs, at least of the NVIDIA GeForce RTX 2080 Ti type, and we used the official implementation from \url{https://github.com/alxxrg/copula-shirley}.}. 
+% Furthermore, while Generative Adversarial Networks (GANs) have been proposed for synthesising private data \citep{jordon2019pate, torkzadehmahani2019dp, xie2018differentially, vero2023programmable}, 
+% these methods reportedly fail to preserve basic distributional statistics for tabular datasets \citep{tao2021benchmarking}. DP-Sinkhorn \citep{cao2021don}, another optimal transport-based generative method, cannot be easily extended to tabular data synthesis. Finally, projection-based methods struggle to model complex relationships \citep{xu2017dppro, kenthapadi2012privacy}.
+
+\paragraph{Other Algorithms} Generative Adversarial Networks (GANs) have been proposed for synthesizing private data \citep{xie2018differentially, jordon2019pate, torkzadehmahani2019dp}. Like other generator-based methods \citep{liu2021iterative, vero2023programmable}, GANs require specifying and fine-tuning a parametric model, which is challenging due to the high sensitivity to hyperparameters. In contrast, PrivPGD uses particles to represent data, eliminating the need for model selection and tuning, and is remarkably robust to hyperparameter variations. Moreover, GANs often fail to maintain basic distributional statistics for tabular datasets \citep{tao2021benchmarking}. DP-Sinkhorn \citep{cao2021don}, an optimal transport-based generative method, is not easily extendable to tabular data synthesis. Finally, copula-based approaches \citep{li2014differentially, asghar2019differentially, gambs2021growing} utilize Gaussian and vine copulas to model privatized marginal distributions, but these methods are computationally intensive.
+% \footnote{A single iteration of Copula-Shirley \citep{gambs2021growing} on the ACS datasets \citep{ding2021retiring} takes over 24 hours on a cluster of modern GPUs, at least of the NVIDIA GeForce RTX 2080 Ti type.}.

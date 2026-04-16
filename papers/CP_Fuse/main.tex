@@ -1,0 +1,126 @@
+
+\documentclass{article} % For LaTeX2e
+\usepackage[a4paper,total={6.6in,8.5in}]{geometry}
+
+\usepackage{adjustbox} 
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs} 
+\usepackage{multirow} 
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{paralist, tabularx}
+\usepackage{makecell}
+\usepackage{colortbl}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+\usepackage{placeins}
+\usepackage{mdframed}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage[capitalize,noabbrev]{cleveref}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{appendix,minitoc}
+\usepackage{titletoc}
+
+\newcommand\DoToC{%
+  \startcontents
+\hypersetup{}
+  \printcontents{}{1}{\subsection*{\textbf{Table of contents}}}
+  \vskip3pt\vskip5pt
+}
+
+\usepackage[numbers, sort, comma, square]{natbib}
+\usepackage{authblk}
+
+
+\definecolor{bestgreen}{rgb}{0.345, 0.733, 0.541} 
+\definecolor{almostbestgreen}{rgb}{0.345, 0.733, 0.541} 
+\definecolor{middlegreen}{rgb}{0.639, 0.855, 0.745}  
+\definecolor{middleyellow}{rgb}{0.95, 0.965, 0.8}
+\definecolor{middlered}{rgb}{0.941, 0.678, 0.655} 
+\definecolor{worstred}{rgb}{0.902, 0.486, 0.451} 
+
+% Create commands using the new colors
+\newcommand{\BestCell}[1]{\cellcolor{bestgreen}\textbf{#1}}
+\newcommand{\AlmostBestCell}[1]{\cellcolor{almostbestgreen}#1}
+\newcommand{\MiddleGreenCell}[1]{\cellcolor{middlegreen}#1}
+\newcommand{\BestMiddleGreenCell}[1]{\cellcolor{middlegreen}\textbf{#1}}
+
+\newcommand{\MiddleYellowCell}[1]{\cellcolor{middleyellow}#1}
+\newcommand{\MiddleRedCell}[1]{\cellcolor{middlered}#1}
+\newcommand{\WorstCell}[1]{\cellcolor{worstred}#1}
+
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{example}{Example}[section]
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{assumption}{Assumption}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{lemma}{Lemma}[section]
+
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+
+
+\author[1]{Javier Abad}
+\author[1]{Konstantin Donhauser}
+\author[2]{Francesco Pinto\footnote{Equal supervision.}}
+\author[1]{Fanny Yang$^*$}
+\affil[1]{Department of Computer Science, ETH Zürich}
+\affil[2]{Department of Engineering Science, University of Oxford}
+
+\input{macros}
+
+\title{Copyright-Protected Language Generation via Adaptive Model Fusion}
+
+\date{}
+
+\begin{document}
+
+
+\maketitle
+ 
+\begin{abstract}
+The risk of language models reproducing copyrighted material from their training data has led to the development of various protective measures. Among these, inference-time strategies that impose constraints via post-processing have shown promise in addressing the complexities of copyright regulation. However, they often incur prohibitive computational costs or suffer from performance trade-offs. To overcome these limitations, we introduce Copyright-Protecting Model Fusion (CP-Fuse), a novel approach that combines models trained on disjoint sets of copyrighted material during inference. In particular, CP-Fuse adaptively aggregates the model outputs to minimize the reproduction of copyrighted content, adhering to a crucial \textit{balancing property} that prevents the regurgitation of memorized data. Through extensive experiments, we show that CP-Fuse significantly reduces the reproduction of protected material without compromising the quality of text and code generation. Moreover, its post-hoc nature allows seamless integration with other protective measures, further enhancing copyright safeguards. Lastly, we show that CP-Fuse is robust against common techniques for extracting training data\footnote{See our GitHub repository for the source code: \url{https://github.com/jaabmar/cp_fuse}.}.
+
+
+\end{abstract}
+
+\input{sections/intro.tex}
+\input{sections/background}
+\input{sections/method}
+\input{sections/experiments}
+
+\bibliographystyle{plainnat}
+\bibliography{main}
+
+
+\clearpage
+\DoToC
+\appendix
+\onecolumn
+\section*{Appendices}
+The following appendices provide additional results and discussions, deferred proofs, and experimental details.
+\FloatBarrier
+\input{sections/appendix}
+
+
+\end{document}

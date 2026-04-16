@@ -1,0 +1,77 @@
+\section{Introduction}
+
+Large Language Models (LLMs), such as GPT-4 \citep{achiam2023gpt} and Gemini \citep{team2023gemini}, have achieved undeniable success. However, they also present a significant challenge: the risk of reproducing copyrighted material from their training data \citep{sag66new,yu2023codeiipprompt, karamolegkou2023copyright}. With the widespread adoption of these models for generating new text and code, the risk of large-scale copyright violations has become a pressing issue, as highlighted by several recent multi-million dollar lawsuits \citep{henderson2023foundation}. Consequently, preventing copyright infringement in language models has become a critical focus for researchers and practitioners alike.
+
+The \textit{fair use} doctrine (17 U.S.C. 107) provides a framework to mitigate liability for copyright infringement, spurring interest in techniques that allow models to use protected works in transformative ways that do not harm their market value \citep{henderson2023foundation}. Since verbatim reproduction of copyrighted material often arises from the memorization of training data \citep{carlini2021extracting, Somepalli2022DiffusionAO, carlini2023quantifying, mm_mem2024}, the community has explored training-time strategies to prevent memorization of individual data samples, such as Differentially Private (DP) training \citep{dwork2014algorithmic, abadi2016deep}. However, scaling DP training to large models is computationally prohibitive and can degrade performance \citep{anil2022large}, motivating the exploration of alternative heuristic methods \citep{hans2024like}.
+
+
+
+Beyond training-time approaches, pre-processing and inference-time methods have also been considered. Pre-processing strategies curate the training data by excluding or deduplicating copyrighted samples \citep{kandpal2022deduplicating, kocetkov2022stack, min2023silo}. However, these techniques are only partially effective \citep{lee2023talkin, ippolito2023preventing} and often degrade model performance by removing high-quality copyrighted samples \citep{Meeus2023DidTN}. In contrast, inference-time methods intervene during decoding to prevent the reproduction of copyrighted content \citep{wei2024evaluating}. Notably, \citet{vyas2023provable} propose a general framework for constructing copyright-protected models by combining generative models trained on different data sources. While promising, their framework lacks a computationally feasible implementation suitable for real-world language models.
+
+In this paper, we propose Copyright-Protecting Model Fusion (CP-Fuse), a simple yet effective strategy that combines outputs from multiple language models, each trained on disjoint sets of copyrighted material, to protect against infringement. Our method builds on a rich body of work in model fusion for language models \citep{liu2021dexperts, wang2023fusing,wan2024knowledge}. Specifically, CP-Fuse adaptively aggregates logits to minimize the likelihood of reproducing copyrighted content (see \Cref{figure1} for an illustration of our approach on a toy example). In \Cref{sec:algo}, we first demonstrate that our approach satisfies a \textit{balancing property} (\Cref{lem:balance}), which intuitively helps mitigate the regurgitation of memorized training samples. We then empirically show CP-Fuse's effectiveness in reducing regurgitation across various metrics that measure exact and approximate memorization. Notably, it reduces the reproduction of copyrighted material by over $25\times$ and consistently outperforms other inference-time methods while preserving the utility of the generated text and code (\Cref{sec:utility_exps}). Additionally, we demonstrate that applying CP-Fuse in combination with standard training-time methods further enhances copyright protection (\Cref{sec:wraping_exps}). Finally, we present experiments where CP-Fuse exhibits robustness against strategies that extract training data via prompting  (\Cref{sec:attacks}).
+
+
+\begin{figure}[t!]
+\centering
+\input{sections/tikzpicture}
+\vspace{-0.8cm} 
+
+    \[
+    \overbrace{ \hspace{7cm} \phantom{xxxxxxxxxxxxxxxxx}\hspace{2cm}}
+    \]
+\vspace{-0.8cm} 
+
+\textbf{Prompt:} Write a story about a young wizard and a powerful artifact.
+
+\vspace{0.2cm}
+
+\begin{minipage}[t]{0.32\textwidth}
+    \centering
+    \textcolor{red}{\textbf{\( \mathbf{p}^{(1)} \) generation}} \\
+    \fbox{
+        \parbox{0.9\textwidth}{
+            \small
+            \textit{``Harry Potter waved his wand to defend the magical artifact from dark forces...''} \\
+            \includegraphics[height=1em]{figures/warning.pdf} Reproduces copyrighted content from Harry Potter.}
+        }
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.32\textwidth}
+    \centering
+    \textcolor{blue}{\textbf{\( \mathbf{p}^{(2)} \) generation}} \\
+    \fbox{
+        \parbox{0.9\textwidth}{
+            \small
+            \textit{``Bilbo found the One Ring, a powerful artifact, deep in the caves of  Misty Mountains...''} \\
+            % \emoji{warning} 
+            \includegraphics[height=1em]{figures/warning.pdf} Reproduces copyrighted content from The Hobbit.
+            \vspace{0.5mm}
+        }
+    }
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.32\textwidth}
+    \centering
+    \textcolor{darkgreen}{\textbf{\( \mathbf{p} \) generation}} \\
+    \fbox{
+        \parbox{0.9\textwidth}{
+            \small
+            \textit{``A young wizard embarks on an adventure to destroy a mysterious artifact, battling foes from distant lands, with no clear ally in sight...''} 
+            \includegraphics[height=0.95em]{figures/check.pdf} Adheres to  copyright guidelines.
+        % \vspace{0.53mm}
+        }
+    }
+\end{minipage}
+
+\caption{ (\textbf{Top}) Illustration of the copyright-protecting fusion strategy. The left panel shows the training datasets \( \mathcal{X}_1 \) (in \textcolor{red}{red}) and \( \mathcal{X}_2 \) (in \textcolor{blue}{blue}), each containing disjoint copyright sets \( \mathcal{C}_1 \subset \mathcal{X}_1 \) (in \textcolor{lightred}{light red}) and \( \mathcal{C}_2 \subset \mathcal{X}_2 \) (in \textcolor{lightblue}{light blue}). The middle panel depicts our copyright-protecting fusion algorithm. The right panel displays the learned distributions of the potentially infringing models \( \mathbf{p}^{(1)} \) (in \textcolor{red}{red}) and \( \mathbf{p}^{(2)} \) (in \textcolor{blue}{blue}), along with the resulting safe model \( \mathbf{p} \) (in \textcolor{darkgreen}{green}). Lighter regions indicate areas of lower probability; although the safe model still retains “access” to the copyrighted content, the probability of regurgitating it is very low. \textbf{(Bottom)} Generations from \( \mathbf{p}^{(1)} \), \( \mathbf{p}^{(2)} \), and \( \mathbf{p} \) given the same prompt; the first two generations reproduce copyrighted material, \( \mathbf{p} \) generates an original story.}
+
+
+\label{figure1}
+\end{figure}
+
+\nocite{abad2024strong}
+
+
+
+
+
