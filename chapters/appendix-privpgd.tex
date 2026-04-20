@@ -44,7 +44,7 @@ This appendix is organized in five parts:
 \section{Implementation Details}
 \label{app:privpgd-implementation}
 
-This section records the concrete experimental settings that were omitted from the main chapter to keep the narrative focused on the central empirical findings.
+This section records the concrete experimental settings that were omitted from the main chapter to keep the narrative focused on the main results.
 
 \subsection{Shared experimental protocol}
 All benchmark results are averaged over five runs. The primary privacy setting is \(\epsilon = 2.5\) and \(\delta = 10^{-5}\), while the lower-budget replications reported below use the same \(\delta\) and smaller values of \(\epsilon\). Downstream task performance is measured by training a gradient-boosting model on the synthetic data and evaluating it on the held-out test split. As in the source experiments, the \texttt{scikit-learn} implementation is used with standard hyperparameters, and all evaluation is carried out on the discretized representation of the data.
@@ -65,18 +65,18 @@ Private GSD is run in its one-shot variant with elite size \(2\) and early stopp
 \section{Technical Notes}
 \label{app:privpgd-technical}
 
-This section records a few implementation details that matter for interpreting how PrivPGD moves from privatized marginals to a decoded synthetic table.
+This section records technical details that complement the main chapter.
 
 \subsection{Projection and quantization}
-The main chapter describes the projection step conceptually. In implementation, each embedded signed marginal is first initialized by clipping negative mass and renormalizing. This initialization is not the final projected target; it only provides a feasible starting point for the optimization that minimizes the sliced \(1\)-Wasserstein discrepancy to the embedded signed marginal. After projection, the resulting probability measure is quantized to the same number of atoms as the synthetic particle cloud so that the optimization stage compares empirical measures of the same size. This choice is primarily computational: it makes the repeated sliced-Wasserstein evaluations in the main optimization loop substantially cheaper.
+In implementation, each embedded signed measure is initialized by clipping negative mass and renormalizing. This only provides a feasible starting point for the optimization that minimizes the sliced \(1\)-Wasserstein distance to the embedded signed measure. After projection, the resulting probability measure is quantized to the same number of support points as the synthetic particle cloud so that the optimization stage compares empirical measures of the same size.
 
 \subsection{Finalization}
-After optimization in the embedded space, each particle is snapped to the nearest point of the embedded discrete grid before decoding. This step ensures that the released synthetic dataset is again a genuine tabular dataset rather than a cloud of continuous points in the embedding space.
+After optimization in the embedded space, each particle is mapped to the nearest point of the embedded discrete grid before decoding. This ensures that the released synthetic dataset is again a genuine tabular dataset.
 
 For completeness, the privacy argument from the main chapter is restated below in proof-sketch form.
 
 \begin{proofsketch}[Proof sketch of \Cref{lem:privpgd-privacy}]
-The privacy guarantee in the main chapter follows directly from composition and post-processing. Suppose that the privatized marginals are released by an \((\epsilon_1,\delta_1)\)-differentially private mechanism and that an optional auxiliary regularization statistic is released independently by an \((\epsilon_2,\delta_2)\)-differentially private mechanism. PrivPGD then applies only deterministic or randomized post-processing to these released marginals and the privatized regularization statistic: embedding, projection, quantization, gradient-based optimization, and final discretization. By composition, the pair consisting of the released marginals and the privatized regularization statistic is \((\epsilon_1 + \epsilon_2, \delta_1 + \delta_2)\)-differentially private. By post-processing, the final synthetic dataset returned by PrivPGD inherits exactly the same guarantee. In the unregularized setting, the second mechanism is absent and the privacy budget reduces to that of the privatized marginals alone.
+Let the privatized marginals be released by an \((\epsilon_1,\delta_1)\)-differentially private mechanism, and let an optional auxiliary regularization statistic be released independently by an \((\epsilon_2,\delta_2)\)-differentially private mechanism. By composition, their joint release is \((\epsilon_1+\epsilon_2,\delta_1+\delta_2)\)-differentially private. PrivPGD then applies only post-processing to these released objects: embedding, projection, quantization, gradient-based optimization, and final discretization. Therefore, the final synthetic dataset inherits the same privacy guarantee. In the unregularized setting, the second mechanism is absent.
 \end{proofsketch}
 
 \clearpage
@@ -85,18 +85,18 @@ The privacy guarantee in the main chapter follows directly from composition and 
 
 \subsection{Target statistic and smooth surrogate}
 
-The constrained synthesis experiment from the main chapter augments the standard PrivPGD objective with a differentiable penalty designed to suppress a chosen population-level threshold statistic. In the embedded space, the target statistic is
+The constrained synthesis experiment from the main chapter augments the standard PrivPGD objective with a differentiable penalty designed to suppress a chosen population-level threshold statistic. For any integer \(r \geq 1\) and point cloud \(Z = (z_1,\dots,z_r) \in \Omega^r\), the target statistic in the embedded space is
 \[
   q_{\theta,b}(Z)
   =
-  \frac{1}{m}\sum_{j=1}^m \mathbf{1}\!\left\{\langle z_j, \theta \rangle + b > 0\right\}.
+  \frac{1}{r}\sum_{j=1}^r \mathbf{1}\!\left\{\langle z_j, \theta \rangle + b > 0\right\}.
 \]
 Because this quantity is not differentiable with respect to the particle positions, the implementation replaces it by the smooth surrogate
 \[
   \tilde q_{\theta,b}(Z)
   =
-  \frac{1}{m}\sum_{j=1}^m
-  \left(1 + \exp\!\left(-\sigma(\langle z_j, \theta \rangle - b)\right)\right)^{-1},
+  \frac{1}{r}\sum_{j=1}^r
+  \left(1 + \exp\!\left(-\sigma(\langle z_j, \theta \rangle + b)\right)\right)^{-1},
 \]
     with smoothing parameter \(\sigma = 5.0\).
 
@@ -125,7 +125,7 @@ and the reported sweeps vary the regularization strength \(\lambda\) from \(10^{
 \FloatBarrier
 
 \clearpage
-\section{Lower-Budget Comparisons}
+\section{Lower-Budget Experiments}
 \label{app:privpgd-low-eps}
 
 The main chapter focuses on \(\epsilon = 2.5\), which is the regime in which PrivPGD is most competitive. At smaller privacy budgets, the relative advantage narrows, and the lower-\(\epsilon\) experiments help clarify the method's limitations as well as its strengths.
@@ -184,19 +184,19 @@ At \(\epsilon = 0.2\), the same trend becomes more pronounced. PGM+AIM, PGM+MST,
 
 The following tables report mean values over five runs. In the downstream column, the first number is the test error of the model trained on the synthetic data, while the second number is the corresponding test error when the same model is trained on the original sensitive dataset.
 
-\begin{tcolorbox}[
-  enhanced,
-  breakable,
-  colback=gray!6,
-  colframe=chaptercolor,
-  boxrule=0.8pt,
-  arc=3pt,
-  title={How to Read the Tables},
-  colbacktitle=chaptercolor!12,
-  coltitle=black
-]
-Within each dataset block, the tables report the mean over five runs. In the \emph{Downstream} column, the first value is the test error after training on synthetic data and the second is the corresponding test error after training on the original sensitive data.
-\end{tcolorbox}
+% \begin{tcolorbox}[
+%   enhanced,
+%   breakable,
+%   colback=gray!6,
+%   colframe=chaptercolor,
+%   boxrule=0.8pt,
+%   arc=3pt,
+%   title={How to Read the Tables},
+%   colbacktitle=chaptercolor!12,
+%   coltitle=black
+% ]
+% Within each dataset block, the tables report the mean over five runs. In the \emph{Downstream} column, the first value is the test error after training on synthetic data and the second is the corresponding test error after training on the original sensitive data.
+% \end{tcolorbox}
 
 \subsection{Primary Privacy Setting (\texorpdfstring{$\epsilon = 2.5$}{epsilon = 2.5})}
 

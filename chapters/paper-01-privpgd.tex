@@ -24,7 +24,7 @@ The method introduced in this chapter has four main advantages:
   \item \textit{Incorporation of domain-specific constraints.} As a gradient-based method, PrivPGD allows the inclusion of an additive penalization term in the loss function, providing a straightforward way to enforce domain-specific constraints in the generation algorithm.
 \end{itemize}
 
-The remainder of the chapter is organized accordingly. It first positions PrivPGD relative to existing methods, then introduces the local notation and background needed for marginal-based synthesis, and finally presents the method and the main experimental findings. Material that is primarily supplementary, including full experimental results and implementation details, is deferred to the chapter-specific appendix.
+The remainder of the chapter is organized accordingly. It first positions PrivPGD relative to existing methods, then introduces the local notation and background needed for marginal-based synthesis, and finally presents the method and the main experimental results. Material that is primarily supplementary, including full experimental results and implementation details, is deferred to the chapter-specific appendix.
 
 \section{Positioning Relative to Existing Methods}
 
@@ -38,27 +38,46 @@ In this section, we introduce the problem setting and the notation used througho
 \[
   \mathcal{X} = \mathcal{X}_1 \times \cdots \times \mathcal{X}_d
 \]
-of dimension \(d\). This assumption is not restrictive, since the vast majority of differentially private data synthesis algorithms for tabular data rely on a discretized version of the data even if it originally lies in a continuous domain. In particular, we represent every dimension as an integer in the discrete set \(\mathcal{X}_i = \{1,\dots,k_i\}\).
+of dimension \(d\). We write \([d] = \{1,\dots,d\}\) and represent every dimension as an integer in the discrete set \(\mathcal{X}_i = \{1,\dots,k_i\}\). This assumption is not restrictive, since the vast majority of differentially private data synthesis algorithms for tabular data rely on a discretized version of the data even if it originally lies in a continuous domain.
 
-Differential privacy is an algorithmic property that guarantees that individual information in the data is protected in the output of an algorithm, even when assuming that an adversary has access to the information of all other individuals in the dataset \citep{dp}. Formally, an algorithm \(\mathcal{A}\) is \((\epsilon,\delta)\)-differentially private if for any datasets \(D,D'\) differing in a single entry and any measurable subset \(B\) of the image of \(\mathcal{A}\), we have
+Differential privacy is an algorithmic property that guarantees that individual information in the data is protected in the output of an algorithm, even when assuming that an adversary has access to the information of all other individuals in the dataset \citep{dp}. We write \(D \sim D'\) if the two datasets differ in exactly one record, and we recall the standard definition.
+
+\begin{definition}[Differential privacy]
+A randomized mechanism \(\mathcal{A}\) is \((\epsilon,\delta)\)-differentially private if for any neighboring datasets \(D \sim D'\) and any measurable subset \(B\) of the output space of \(\mathcal{A}\), we have
 \[
   \Pr[\mathcal{A}(D)\in B]
   \leq
   \exp(\epsilon)\Pr[\mathcal{A}(D')\in B] + \delta.
 \]
-The goal of \emph{differentially private data synthesis} is to design a randomized algorithm that, for any dataset \(D \in \mathcal{X}^n\) of size \(n\), generates an output \(D_{\mathrm{syn}} \in \mathcal{X}^m\) that is a differentially private copy of \(D\), potentially of different size \(m \neq n\).
+\end{definition}
+
+The goal of \emph{differentially private data synthesis} is to design a randomized mechanism \(\mathcal{M}\) that, for any dataset \(D \in \mathcal{X}^n\) of size \(n\), generates an output \(D_{\mathrm{syn}} = \mathcal{M}(D) \in \mathcal{X}^m\), potentially of different size \(m \neq n\).
 
 \paragraph{Marginal-based synthesis.}
 Our approach falls into the general category of marginal-based methods. These methods follow the three-step pipeline summarized in Algorithm~\ref{alg:privpgd-framework}: marginal selection, marginal privatization, and generation. Let
 \[
   D = (x_1,\dots,x_n) \in \mathcal{X}^n
 \]
-denote the sensitive dataset. For any subset \(S \subseteq \{1,\dots,d\}\), we write \(x_{i,S}\) for the restriction of \(x_i\) to the coordinates in \(S\), and \(D_S = (x_{1,S},\dots,x_{n,S})\) for the corresponding restricted dataset. The empirical marginal on \(S\) is then
+denote the sensitive dataset. For any subset \(S \subseteq [d]\), define
+\[
+  \mathcal{X}_S = \prod_{i \in S} \mathcal{X}_i,
+\]
+where the coordinates are ordered increasingly. We write \(x_{i,S} \in \mathcal{X}_S\) for the restriction of \(x_i\) to the coordinates in \(S\), and \(D_S = (x_{1,S},\dots,x_{n,S}) \in \mathcal{X}_S^n\) for the corresponding restricted dataset.
+
+\begin{definition}[Empirical marginal]
+For any subset \(S \subseteq [d]\), the empirical marginal of \(D\) on \(S\) is
 \[
   \nu_S[D] = \frac{1}{n}\sum_{i=1}^n \delta_{x_{i,S}}.
 \]
-We write \(\nu_S[D_{\mathrm{syn}}]\) analogously for the synthetic dataset.
-In the first step, a set \(\mathcal{S}\) of such subsets \(S\) is selected. In the second step, each empirical marginal \(\nu_S[D]\) is privatized, for example by applying the Gaussian mechanism \citep{gauss_mechanism} cellwise to obtain a differentially private copy \(\hat{\nu}_S\). Because this perturbation adds signed noise to the cells of the empirical marginal, the released marginals \(\hat{\nu}_S\) are finite signed measures rather than probability measures.
+\end{definition}
+
+Here \(\delta_x\) denotes the point mass at \(x\). We write \(\nu_S[D_{\mathrm{syn}}]\) analogously for the synthetic dataset. Thus, \(D\) denotes the sensitive dataset, \(D_S\) its restriction to \(S\), \(\nu_S[D]\) the corresponding exact empirical marginal, and \(\hat{\nu}_S\) its privatized version.
+In the first step, a workload \(\mathcal{S} \subseteq 2^{[d]}\) of such subsets \(S\) is selected. In the second step, each empirical marginal \(\nu_S[D]\) is privatized, for example by applying the Gaussian mechanism \citep{gauss_mechanism} cellwise:
+\[
+  \hat{\nu}_S(\{a\}) = \nu_S[D](\{a\}) + \xi_{S,a},
+  \qquad a \in \mathcal{X}_S,
+\]
+where the Gaussian noise variables \(\xi_{S,a}\) are calibrated to the privacy parameters. Because this perturbation adds signed noise to the cells of the empirical marginal, the released marginals \(\hat{\nu}_S\) are finite signed measures rather than probability measures.
 
 \begin{algorithm}[t]
   \caption{Standard marginal-based synthesis framework. PrivPGD addresses the third step, namely the generation of a synthetic dataset from privatized marginals.}
@@ -67,8 +86,8 @@ In the first step, a set \(\mathcal{S}\) of such subsets \(S\) is selected. In t
   \fbox{
     \begin{minipage}{0.92\textwidth}
       \begin{enumerate}
-        \item Select a set \(\mathcal{S}\) of subsets \(S \subseteq \{1,\dots,d\}\).
-        \item Privatize the marginals \(\nu_S[D]\) to obtain differentially private copies \(\hat{\nu}_S\).
+        \item Select a set \(\mathcal{S}\) of subsets \(S \subseteq [d]\).
+        \item Privatize the marginals \(\nu_S[D]\) to obtain privatized marginals \(\hat{\nu}_S\).
         \item Generate a synthetic dataset from the privatized marginals \(\{\hat{\nu}_S\}_{S \in \mathcal{S}}\).
       \end{enumerate}
     \end{minipage}
@@ -81,29 +100,39 @@ Finally, in the third step, a synthetic dataset
   D_{\mathrm{syn}} \in \mathcal{X}^m
 \]
 is generated from the privatized marginals \(\{\hat{\nu}_S\}_{S \in \mathcal{S}}\). Existing methods typically aim to learn a distribution \(\hat p\) whose marginals approximately match the privatized marginals \(\hat{\nu}_S\), and then release \(D_{\mathrm{syn}}\) by sampling from \(\hat p\). This is the step addressed in this chapter. Once the privatized marginals \(\{\hat{\nu}_S\}_{S \in \mathcal{S}}\) are available, one still has to decide how to construct a synthetic dataset \(D_{\mathrm{syn}}\) that preserves the relevant statistics, scales to realistic problem sizes, and can accommodate additional constraints when needed.
-\section{Why Geometry-Aware Generation Is Needed}
+\section{Geometry-Aware Fidelity and Sliced Wasserstein Distance}
 
-Many datasets contain features with inherent geometry, such as continuous features and some categorical features like age, whose rankings should be retained in the synthetic data. If the generation step only matches counts, then it ignores this geometry. In such a case, changing an age bin from \(30\) to \(31\) is treated in exactly the same way as changing it from \(30\) to \(80\), even though these mismatches should not have the same effect on the quality of the synthetic data.
+Many datasets contain features with inherent geometry, such as continuous features and ordered categorical features, whose relative positions should be retained in the synthetic data. If the generation step only matches counts, then it ignores this geometry and treats nearby and distant mismatches in the same way. This suggests using a discrepancy that is sensitive to the geometry of the domain rather than only to cellwise count differences.
 
-The optimal transport literature offers a set of natural divergence measures that can be used for particle gradient descent, such as the Sinkhorn divergence or the Wasserstein distance. However, the computational complexity of these divergences scales at least quadratically, and often cubically, with respect to the size of the support of the measures. This defeats the purpose of a computationally efficient generation algorithm that should be able to represent rich datasets with a large number of points.
+Optimal transport offers a natural family of such geometry-aware discrepancies, including the Sinkhorn divergence and the Wasserstein distance. However, the computational complexity of these divergences scales at least quadratically, and often cubically, with respect to the size of the support of the measures. This defeats the purpose of a computationally efficient generation algorithm that should be able to represent rich datasets with a large number of points.
 
-Instead, a widely used computationally efficient alternative is the sliced Wasserstein distance \citep{bonneel2015sliced,wu2019sliced,kolouri2018sliced,deshpande2018generative,deshpande2019max}. For a Euclidean subspace \(\Omega \subset \RR^p\), probability measures \(\mu,\nu \in \mathcal{P}(\Omega)\), projection directions \(\theta \in \mathbb{S}^{p-1}\), and the pushforward \(g^\theta_{\#}\) induced by \(g^\theta(x)=\langle x,\theta\rangle\), the \(q\)-sliced Wasserstein distance is
+Instead, a widely used computationally efficient alternative is the sliced Wasserstein distance \citep{bonneel2015sliced,wu2019sliced,kolouri2018sliced,deshpande2018generative,deshpande2019max}. We recall its definition.
+
+\begin{definition}[Sliced Wasserstein distance]
+Let \(\Omega \subset \RR^p\), let \(\mathbb{S}^{p-1} = \{\theta \in \RR^p : \|\theta\|_2 = 1\}\) be the unit sphere, and let \(\mu,\nu \in \mathcal{P}(\Omega)\). For \(\theta \in \mathbb{S}^{p-1}\), define \(g^\theta(x)=\langle x,\theta\rangle\), and let \(g^\theta_{\#}\mu\) denote the pushforward of \(\mu\) under \(g^\theta\). The \(q\)-sliced Wasserstein distance is
 \[
   \SW_q(\mu,\nu)
   =
   \left(
     \int_{\mathbb{S}^{p-1}}
-    W_q^q(g^\theta_{\#}\mu,g^\theta_{\#}\nu)\,d\lambda(\theta)
+    W_q^q(g^\theta_{\#}\mu,g^\theta_{\#}\nu)\,d\sigma(\theta)
   \right)^{1/q},
 \]
-where \(\lambda\) denotes the uniform distribution on the sphere. Its computational appeal comes from the fact that each one-dimensional transport problem admits a closed-form solution after sorting. In the special case \(q=1\), Vallender's identity also allows a natural extension to signed measures \citep{vallander,boedihardjo2022private}. This is exactly the setting needed for PrivPGD, since the privatized marginals are signed measures after the addition of Gaussian noise.
+where \(W_q\) is the \(q\)-Wasserstein distance on \(\RR\) and \(\sigma\) is the uniform probability measure on \(\mathbb{S}^{p-1}\).
+\end{definition}
+
+Here \(\mathcal{P}(\Omega)\) denotes the set of probability measures on \(\Omega\). Its computational appeal comes from the fact that each one-dimensional transport problem admits a closed-form solution after sorting. In the special case \(q=1\), Vallender's identity states that, for one-dimensional probability measures \(\alpha\) and \(\beta\) with cumulative distribution functions \(F_\alpha\) and \(F_\beta\),
+\[
+  W_1(\alpha,\beta) = \|F_\alpha - F_\beta\|_{L^1(\RR)}.
+\]
+This identity allows a natural extension to signed measures \citep{vallander,boedihardjo2022private}. This is the setting needed for PrivPGD: the projection step uses \(\SW_1\) because the privatized marginals are signed measures after adding Gaussian noise, whereas the optimization step uses \(\SW_2^2\).
 
 \section{The PrivPGD Method}
 
-We introduce PrivPGD, a novel approach for solving the generation step in marginal-based tabular data synthesis. Unlike other marginal-based methods \citep{zhang2017privbayes,mckenna2019graphical}, PrivPGD does not construct a dataset by sampling from a learned distribution. Instead, it directly propagates particles in an embedding space to minimize the sliced Wasserstein distance, following a particle gradient descent framework \citep{chizat2018global,chizat2022sparse}. A distinct advantage is that, through particle gradient descent, it is straightforward to enforce domain-specific constraints by adding a penalization term to the loss. A similar strategy for incorporating domain-specific constraints has recently been proposed for generator-based data synthesis algorithms \citep{vero2023programmable}.
+We introduce PrivPGD, a novel approach for solving the generation step in marginal-based tabular data synthesis. Unlike other marginal-based methods \citep{zhang2017privbayes,mckenna2019graphical}, PrivPGD does not construct a dataset by sampling from a learned distribution. Instead, it directly propagates particles in an embedding space to minimize the sliced Wasserstein distance, following a particle gradient descent framework \citep{chizat2018global,chizat2022sparse}. A distinct advantage is that, through particle gradient descent, it is straightforward to enforce domain-specific constraints by adding a penalization term to the loss. A similar strategy for incorporating domain-specific constraints has also been proposed for generator-based data synthesis algorithms \citep{vero2023programmable}. A compact overview is given in Algorithm~\ref{alg:privpgd-algorithm}.
 
 
-In summary, the data generation method takes as input a set of differentially private signed measures \(\{\hat{\nu}_S\}_{S \in \mathcal{S}}\) and, optionally, a differentially private regularization term \(\hat{\mathcal{R}}\) encoding domain-specific constraints. From these inputs, it returns a synthetic dataset \(D_{\mathrm{syn}}\).
+In summary, the data generation method takes as input a set of differentially private signed measures \(\{\hat{\nu}_S\}_{S \in \mathcal{S}}\) and, optionally, a differentially private differentiable regularization function \(\hat{\mathcal{R}}\) encoding domain-specific constraints. From these inputs, it returns a synthetic dataset \(D_{\mathrm{syn}}\).
 
 \begin{algorithm}[t]
   \caption{Compact summary of PrivPGD. The algorithm preprocesses the privatized marginals, optimizes a particle representation in the embedding space, and finally decodes the result back to a tabular dataset.}
@@ -112,7 +141,7 @@ In summary, the data generation method takes as input a set of differentially pr
   \fbox{
     \begin{minipage}{0.92\textwidth}
       \begin{enumerate}
-        \item \textbf{Projection:} for each \(S \in \mathcal{S}\), construct an empirical target measure \(\hat{\mu}_S\) from the privatized signed marginal \(\hat{\nu}_S\).
+        \item \textbf{Projection:} for each \(S \in \mathcal{S}\), embed \(\hat{\nu}_S\) as a signed measure \(\hat{\omega}_S\), project it to a probability measure, and quantize it to obtain an empirical target measure \(\hat{\mu}_S\).
         \item \textbf{Initialization:} randomly initialize a particle cloud \(Z^{(0)} \in \Omega^m\).
         \item \textbf{Optimization:} for \(t=1,\dots,T\), select a batch of marginals and update the particles by minimizing
         \[
@@ -129,15 +158,17 @@ In summary, the data generation method takes as input a set of differentially pr
 
 \subsection{Embedding the Tabular Domain}
 
-PrivPGD crucially relies on an embedding of the discretized domain into a compact Euclidean product space. We choose
+PrivPGD crucially relies on an embedding
 \[
-  \Omega = [0,1]^d
+  \Emb\colon \mathcal{X} \to \Omega,
+  \qquad
+  \Omega = [0,1]^d,
 \]
-and map every \(x \in \mathcal{X}\) to equally spaced centers via
+of the discretized domain into a compact Euclidean product space. We define it by mapping every \(x \in \mathcal{X}\) to equally spaced centers via
 \[
   \Emb(x)_i = \frac{2x_i - 1}{2k_i}.
 \]
-For any subset \(S \subseteq \{1,\dots,d\}\), we write \(\Omega_S\) for the projection of \(\Omega\) onto the coordinates in \(S\).
+For any subset \(S \subseteq [d]\), we write \(\Omega_S\) for the projection of \(\Omega\) onto the coordinates in \(S\), \(\Emb_S\colon \mathcal{X}_S \to \Omega_S\) for the induced embedding, and \(\Emb(\mathcal{X})_S = \Emb_S(\mathcal{X}_S) \subseteq \Omega_S\).
 We write
 \[
   \Emb(D) = (\Emb(x_1),\dots,\Emb(x_n)) \in \Omega^n.
@@ -148,26 +179,35 @@ This choice of embedding preserves the order in \(\mathcal{X}\), which is essent
 While this embedding is a natural choice for continuous or ordered categorical features, other embeddings are possible. Features like race, where imposing an ordering might be inappropriate, could instead be embedded so that the centers are equidistant. Likewise, when embedding locations, an embedding that preserves geographical distances may be preferable. Exploring such alternatives is interesting, but it is beyond the scope of this chapter.
 
 \paragraph{Particles.}
-PrivPGD aims to construct \(m\) data points in the embedding space. For any set of particles
+PrivPGD aims to construct \(m\) data points in the embedding space. More generally, for any integer \(r \geq 1\) and any point cloud
 \[
-  Z = (z_1,\dots,z_m) \in \Omega^m,
+  Z = (z_1,\dots,z_r) \in \Omega^r,
 \]
-we define \(Z_S\) as the projection onto the coordinates in \(S\), and the corresponding empirical marginal by
+we define \(Z_S\) as the projection onto the coordinates in \(S\).
+
+\begin{definition}[Embedded empirical marginal]
+For any subset \(S \subseteq [d]\), integer \(r \geq 1\), and point cloud \(Z = (z_1,\dots,z_r) \in \Omega^r\), the embedded empirical marginal on \(S\) is
 \[
-  \mu_S[Z] = \frac{1}{m}\sum_{j=1}^m \delta_{z_{j,S}}.
+  \mu_S[Z] = \frac{1}{r}\sum_{j=1}^r \delta_{z_{j,S}}.
 \]
+\end{definition}
+
 Likewise, \(\mu_S[\Emb(D)]\) and \(\mu_S[\Emb(D_{\mathrm{syn}})]\) denote the empirical marginals of the embedded datasets.
-The embedding also induces, for each privatized marginal \(\hat{\nu}_S\), a corresponding finite signed measure \(\hat{\omega}_S\) on \(\Omega_S\). These embedded signed measures are the inputs to the projection step.
+The embedding also induces, for each privatized marginal \(\hat{\nu}_S\), a corresponding finite signed measure
+\[
+  \hat{\omega}_S = (\Emb_S)_{\#}\hat{\nu}_S
+\]
+on \(\Omega_S\). The embedded signed measures are the inputs to the projection step.
 
 \subsection{Projection and Quantization of Privatized Marginals}
 
-The goal of the projection step is to transform the privatized signed measure into a proper probability measure that can be plugged into the Wasserstein distance. Following \citet{boedihardjo2022private} and \citet{donhauser2023certified}, we choose a probability measure \(\hat{\omega}_{S,\mathbb{P}} \in \mathcal{P}(\Omega_S)\) satisfying
+The goal of the projection step is to transform the privatized signed measure into a proper probability measure that can be plugged into the Wasserstein distance. Following \citet{boedihardjo2022private} and \citet{donhauser2023certified}, we choose a probability measure \(\hat{\omega}_{S,\mathbb{P}} \in \mathcal{P}(\Emb(\mathcal{X})_S)\) satisfying
 \[
-  \hat{\omega}_{S,\mathbb{P}} \in \argmin_{w \in \mathcal{P}(\Omega_S)} \SW_1(w,\hat{\omega}_S).
+  \hat{\omega}_{S,\mathbb{P}} \in \argmin_{w \in \mathcal{P}(\Emb(\mathcal{X})_S)} \SW_1(w,\hat{\omega}_S).
 \]
 We solve this convex optimization problem using gradient descent, approximating the integral in \(\SW_1\) with Monte Carlo samples. Importantly, minimizing this objective allows the projection to preserve the geometry of the signed measures.
 
-We further quantize the probability measure \(\hat{\omega}_{S,\mathbb{P}}\) using \(m\) particles \(\hat z_{S,1},\dots,\hat z_{S,m} \in \Omega_S\),
+We further quantize the probability measure \(\hat{\omega}_{S,\mathbb{P}}\) using \(m\) particles \(\hat z_{S,1},\dots,\hat z_{S,m} \in \Emb(\mathcal{X})_S\),
 \[
   \hat{\mu}_S = \frac{1}{m}\sum_{j=1}^m \delta_{\hat z_{S,j}},
 \]
@@ -175,7 +215,7 @@ so that \(\hat{\mu}_S \approx \hat{\omega}_{S,\mathbb{P}}\). This quantization s
 
 \subsection{Optimization, Finalization, and an Algorithmic View}
 
-In the optimization step, we aim to generate a dataset by finding particles \(Z \in \Omega^m\) that are close to the empirical target measures \(\hat{\mu}_S\) obtained from the privatized marginals. We additionally allow for domain-specific constraints through a differentially private differentiable penalty term. Formally, for a regularization strength \(\lambda\), we minimize
+In the optimization step, we aim to generate a dataset by finding particles \(Z \in \Omega^m\) that are close to the empirical target measures \(\hat{\mu}_S\) obtained from the privatized marginals. We additionally allow for domain-specific constraints through an optional differentially private differentiable regularization function \(\hat{\mathcal{R}}\colon \Omega^m \to \RR\). Formally, for a regularization strength \(\lambda\), we minimize
 \[
   \mathcal{L}(Z)
   =
@@ -184,10 +224,10 @@ In the optimization step, we aim to generate a dataset by finding particles \(Z 
   +
   \lambda \hat{\mathcal{R}}(Z),
 \]
-where \(\SW_2^2\) is the squared sliced Wasserstein distance and \(\hat{\mathcal{R}}(Z)\) is the optional differentially private regularization term.
+where \(\SW_2^2\) is the squared sliced Wasserstein distance and \(\hat{\mathcal{R}}\) is the optional differentially private regularization function.
 
 \paragraph{Algorithmic view.}
-The method can be summarized as follows. First, for each \(S \in \mathcal{S}\), the privatized marginal is embedded, projected to a probability measure, and quantized to obtain \(\hat{\mu}_S\). Second, a particle cloud \(Z^{(0)} \in \Omega^m\) is initialized. Third, mini-batch particle gradient descent is run on the loss above. Finally, after \(T\) iterations, each particle in \(Z^{(T)}\) is mapped to the closest point of the embedded grid, yielding the synthetic dataset \(D_{\mathrm{syn}} \in \mathcal{X}^m\).
+The method can be summarized as follows. First, for each \(S \in \mathcal{S}\), the privatized marginal is embedded as a signed measure \(\hat{\omega}_S\), projected to a probability measure, and quantized to obtain \(\hat{\mu}_S\). Second, a particle cloud \(Z^{(0)} \in \Omega^m\) is initialized. Third, mini-batch particle gradient descent is run on the loss above. Finally, after \(T\) iterations, each particle in \(Z^{(T)}\) is mapped to the closest point of the embedded grid, yielding the synthetic dataset \(D_{\mathrm{syn}} \in \mathcal{X}^m\).
 
 \paragraph{Computing the gradient of \(\SW_2^2\).}
 For computing the gradient, we leverage the fact that the one-dimensional \(2\)-Wasserstein distance between empirical measures has a closed-form expression. If
@@ -202,10 +242,10 @@ then
   =
   \frac{1}{m}\sum_{j=1}^m (y_{[j]} - y'_{[j]})^2,
 \]
-where \(y_{[j]}\) and \(y'_{[j]}\) denote the sorted projected values. This expression, and its gradient, can be computed efficiently by running a sorting algorithm, which is parallelizable on modern GPU architectures. Approximating \(\SW_2^2\) with \(N_{\mathrm{MC}}\) Monte Carlo projection directions therefore yields a runtime complexity of order \(O(|\mathcal{S}|\,N_{\mathrm{MC}}\,m\log m)\) for the main gradient computation.
+where \(y_{[j]}\) and \(y'_{[j]}\) denote the sorted projected values. This expression, and its gradient, can be computed efficiently by running a sorting algorithm, which is parallelizable on modern GPU architectures. Approximating \(\SW_2^2\) with \(N_{\mathrm{MC}}\) Monte Carlo projection directions therefore yields a runtime complexity of order \(O(|\mathcal{S}_{\mathrm{batch}}|\,N_{\mathrm{MC}}\,m\log m)\) per mini-batch gradient step.
 
 \paragraph{Finalization.}
-After running particle gradient descent for \(T\) iterations, we obtain the final synthetic dataset by mapping every particle in \(Z^{(T)}\) to the closest point in \(\Emb(\mathcal{X})\). This closes the loop between optimization in the continuous embedding space and release in the original discrete tabular domain.
+After running particle gradient descent for \(T\) iterations, we obtain the final synthetic dataset by mapping every particle in \(Z^{(T)}\) to the closest point in \(\Emb(\mathcal{X})\). This step closes the loop between optimization in the continuous embedding space and release in the original discrete tabular domain.
 
 \subsection{Privacy Guarantee and Interpretation}
 
@@ -216,13 +256,13 @@ The privacy guarantee of PrivPGD follows directly from the post-processing prope
 Assume that the noisy marginals \(\{\hat{\nu}_S\}_{S \in \mathcal{S}}\) and the regularization term \(\hat{\mathcal{R}}\) are generated by two independent \((\epsilon_1,\delta_1)\)- and \((\epsilon_2,\delta_2)\)-differentially private mechanisms. Then the output of PrivPGD, namely \(D_{\mathrm{syn}}\), is \((\epsilon_1+\epsilon_2,\delta_1+\delta_2)\)-differentially private.
 \end{lemma}
 
-Following standard practices in the literature \citep{mst,aim,vietri2022private}, the experiments use the Gaussian mechanism both for the noisy marginals and, where needed, for the parameterized regularization term. A short proof of \cref{lem:privpgd-privacy} is recorded in Appendix~\ref{app:privpgd-technical}.
+Following standard practices in the literature \citep{mst,aim,vietri2022private}, the experiments use the Gaussian mechanism both for the noisy marginals and, where needed, for the parameterized regularization term. A short proof of \Cref{lem:privpgd-privacy} is recorded in Appendix~\ref{app:privpgd-technical}.
 
 \section{Experimental Evaluation}
 
 \subsection{Evaluation Questions}
 
-The experimental section addresses three points: overall benchmark performance, the behavior of PrivPGD under geometry-aware fidelity measures, and the ability to incorporate domain-specific constraints. The main text keeps the discussion focused on these central results, while lower-\(\epsilon\) replications, full tables, and implementation details are collected in the appendix.
+The experimental section addresses three points: benchmark performance, the behavior of PrivPGD under geometry-aware fidelity measures, and examples incorporating domain-specific constraints. Additional experiments with other $\epsilon$ values and implementation details are deferred to the appendix.
 
 \subsection{Experimental Setup}
 
@@ -232,7 +272,7 @@ We use nine real-world datasets from various sources, detailed in Appendix~\ref{
 We use \(\epsilon = 2.5\) and \(\delta = 10^{-5}\) as the default privacy parameters in the main chapter. According to the National Institute of Standards and Technology (NIST), \(\epsilon\) values below \(5\) can be considered strong privacy protection, and real-world applications commonly use values above \(2.5\) \citep{NIST-diff-privacy}. Lower values of \(\epsilon\) are discussed separately in Appendix~\ref{app:privpgd-low-eps}.
 
 \paragraph{Metrics.}
-We evaluate the statistical and downstream task performance of the algorithm with the same standard metrics as in the original paper. These include downstream error, covariance error, random counting query error, random threshold query error, average sliced Wasserstein distance over all two-way marginals, and average total variation distance over all two-way marginals. The average sliced Wasserstein distance is approximately minimized by PrivPGD, while the total variation distance is more naturally aligned with existing marginal-based approaches such as AIM and MST.
+We evaluate the statistical and downstream task performance of the algorithm with standard metrics. These include downstream error, covariance error, random counting query error, random threshold query error, average sliced Wasserstein distance over all two-way marginals, and average total variation distance over all two-way marginals. The average sliced Wasserstein distance is closely aligned with the geometry-aware objective optimized by PrivPGD, while the total variation distance is more naturally aligned with PGM-based marginal methods such as PGM+AIM and PGM+MST.
 
 Downstream error is the classification or regression test error of a gradient-boosting model trained on the synthetic data and evaluated on the held-out test data. Covariance error is the Frobenius norm of the difference between the centered covariance matrices of \(\Emb(D)\) and \(\Emb(D_{\mathrm{syn}})\), normalized by the Frobenius norm of the covariance matrix of \(\Emb(D_{\mathrm{syn}})\).
 
@@ -259,13 +299,13 @@ where \(\theta_j \in \RR^d\) is a random \(3\)-sparse direction and \(b_j \in \R
 Finally, we compute the average sliced Wasserstein distance and the average total variation distance over all two-way marginals:
 \[
   \binom{d}{2}^{-1}
-  \sum_{\substack{S \subseteq \{1,\dots,d\}\\|S|=2}}
+  \sum_{\substack{S \subseteq [d]\\|S|=2}}
   \SW_1\!\left(\mu_S[\Emb(D)],\mu_S[\Emb(D_{\mathrm{syn}})]\right)
 \]
 and
 \[
   \binom{d}{2}^{-1}
-  \sum_{\substack{S \subseteq \{1,\dots,d\}\\|S|=2}}
+  \sum_{\substack{S \subseteq [d]\\|S|=2}}
   \TV\!\left(\nu_S[D],\nu_S[D_{\mathrm{syn}}]\right).
 \]
 
@@ -279,11 +319,11 @@ and
 \end{figure}
 
 \paragraph{Baselines.}
-We benchmark PrivPGD against representative marginal-based and query-based methods. The marginal-based baselines are MST and AIM \citep{mst,aim}. The query-based baselines are Private GSD, RAP, and GEM \citep{pmlr-v202-liu23ag,aydore2021differentially,liu2021iterative}. Complete implementation details for PrivPGD and the baselines are deferred to Appendix~\ref{app:privpgd-implementation}.
+We benchmark PrivPGD against representative marginal-based and query-based methods. The marginal-based baselines are the PGM-based methods PGM+MST and PGM+AIM \citep{mst,aim}. The query-based baselines are Private GSD, RAP, and GEM \citep{pmlr-v202-liu23ag,aydore2021differentially,liu2021iterative}. Complete implementation details for PrivPGD and the baselines are deferred to Appendix~\ref{app:privpgd-implementation}.
 
-\subsection{Main Benchmark Findings}
+\subsection{Main Benchmark Results}
 
-We now present how the performance of PrivPGD compares against state-of-the-art algorithms for differentially private data synthesis. The main comparison figure illustrates the relative performance of PrivPGD compared to other methods across the benchmark datasets and metrics. Overall, PrivPGD consistently ranks as either the best or the second-best method in most metrics and datasets, with a few exceptions such as the covariance error on the ACS Public Coverage dataset.
+We now present how the performance of PrivPGD compares against state-of-the-art algorithms for differentially private data synthesis. Figure~\ref{fig:comp} illustrates the relative performance of PrivPGD compared to other methods across the benchmark datasets and metrics. Overall, PrivPGD consistently ranks as either the best or the second-best method in most metrics and datasets, with a few exceptions such as the covariance error on the ACS Public Coverage dataset.
 
 \paragraph{Comparison with PGM.}
 PrivPGD systematically outperforms both variants of PGM, which are the state-of-the-art for marginal-based tabular data synthesis, often by a significant margin. In particular, it is better than PGM+MST in covariance and query errors across datasets, except for threshold query error on the Diabetes dataset, and performs at least as well as PGM+AIM in most settings, with the notable exception of threshold query error on the ACS Mobility dataset. For downstream tasks, PrivPGD performs comparably to PGM+AIM and consistently better than PGM+MST.
@@ -306,14 +346,20 @@ PrivPGD is also the preferred method in most scenarios when compared to query-ba
     \centering
     \includegraphics[width=\textwidth]{papers/PrivPGD/figures/plots_distances/eps_2.5/newl1_2Way_avg.pdf}
   \end{minipage}
-  \caption{Comparison of average sliced Wasserstein distance (left) and average total variation distance (right) for PrivPGD against state-of-the-art methods across the benchmark datasets. As expected, PrivPGD compares especially well under the geometry-aware sliced Wasserstein metric that it directly optimizes.}
+  \caption{Comparison of average sliced Wasserstein distance (left) and average total variation distance (right) for PrivPGD against state-of-the-art methods across the benchmark datasets. As expected, PrivPGD compares especially well under the geometry-aware sliced Wasserstein metric that is most closely aligned with its training objective.}
   \label{fig:comp-sw-tv}
 \end{figure}
 
-The comparison between sliced Wasserstein distance and total variation distance is particularly informative. It illustrates a noticeable performance gap between PrivPGD and other methods when comparing the average sliced Wasserstein distance and the total variation distance. PrivPGD effectively minimizes the former, while state-of-the-art methods like PGM primarily target the latter. This is the expected behavior: PrivPGD is optimized for a geometry-aware loss, and it therefore compares especially well under a geometry-aware notion of fidelity.
+Figure~\ref{fig:comp-sw-tv} compares sliced Wasserstein distance and total variation distance and is particularly informative. It illustrates a noticeable performance gap between PrivPGD and other methods when comparing the average sliced Wasserstein distance and the total variation distance. PrivPGD is optimized for a geometry-aware loss that is closely aligned with the former, while state-of-the-art methods like PGM are more naturally aligned with the latter. This is the expected behavior, and it explains why PrivPGD compares especially well under a geometry-aware notion of fidelity.
 \FloatBarrier
 
 \subsection{Domain-Specific Constraints}
+
+The final experiment shows that PrivPGD can protect population-level statistics while still constructing a high-quality dataset. While differential privacy protects individual information, many applications also require the protection of specific population-level statistics. In such cases, one would like selected statistics of the synthetic dataset to differ substantially from the corresponding statistics of the original data. One example is census data, where it might be desirable to hide religious or sexual orientations at the subpopulation level to prevent potential discriminatory misuse.
+
+As an example, we consider maximizing the distance of a single linear non-sparse thresholding query defined directly in the embedding space. This query is approximated by a differentiable sigmoid surrogate, and the resulting differentially private regularization term is added to the objective. The exact construction is given in Appendix~\ref{app:privpgd-constraints}.
+
+Figure~\ref{fig:constraints-main} shows that the targeted query is well approximated when no, or only little, regularization is used, and that increasing the regularization strength increasingly protects these statistics, as the domain-specific query on the synthetic dataset deviates strongly from the same query on the original data. At the same time, the downstream error and the errors on unrelated random counting and threshold queries remain comparable to the unregularized case even for relatively large regularization strengths.
 
 \begin{figure}[!t]
   \centering
@@ -328,16 +374,10 @@ The comparison between sliced Wasserstein distance and total variation distance 
   \end{minipage}
 \end{figure}
 
-The final experiment shows that PrivPGD can protect population-level statistics while still constructing a high-quality dataset. While differential privacy protects individual information, many applications also require the protection of specific population-level statistics. In such cases, one would like selected statistics of the synthetic dataset to differ substantially from the corresponding statistics of the original data. One example is census data, where it might be desirable to hide religious or sexual orientations at the subpopulation level to prevent potential discriminatory misuse. Another example is the publication of rental and house sale prices, where exposing certain correlations could lead to speculative abuses in specific locales.
-
-As an example, we consider maximizing the distance of a single linear non-sparse thresholding query defined directly in the embedding space. This query is approximated by a differentiable sigmoid surrogate, and the resulting differentially private regularization term is added to the objective. The exact construction is given in Appendix~\ref{app:privpgd-constraints}.
-
-The resulting curves show that the targeted query is well approximated when no, or only little, regularization is used, and that increasing the regularization strength increasingly protects these statistics, as the domain-specific query on the synthetic dataset deviates strongly from the same query on the original data. At the same time, the downstream error and the errors on unrelated random counting and threshold queries remain comparable to the unregularized case even for relatively large regularization strengths. This illustrates that PrivPGD can incorporate domain-specific constraints in a direct and effective way.
-
 \FloatBarrier
 
 \section{Chapter Summary}
 
-We introduced PrivPGD, a novel generation method for marginal-based private data synthesis. The approach leverages particle gradient descent together with tools from optimal transport, resulting in improved performance in a large number of settings, enhanced scalability for handling many marginals and larger datasets, and increased flexibility for accommodating domain-specific constraints compared to existing methods.
+We introduced PrivPGD, a novel generation method for marginal-based private data synthesis. The approach leverages particle gradient descent together with tools from optimal transport, resulting in improved performance in a large number of settings, scalability for handling many marginals and larger datasets, and flexibility for accommodating domain-specific constraints compared to existing methods.
 
 % The main chapter has focused on the core method and on the strongest empirical evidence. Extended dataset descriptions, lower-\(\epsilon\) results, full implementation details, and detailed benchmark tables are collected in Appendix~\ref{app:privpgd-datasets} through Appendix~\ref{app:privpgd-tables}, so that the main text can remain centered on the primary methodological and empirical contributions.

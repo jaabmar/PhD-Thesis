@@ -26,26 +26,13 @@
 \input{preamble/math}
 \input{preamble/macros}
 
-\makeatletter
-\newif\ifchapterseparatorpending
-\chapterseparatorpendingfalse
-\newcommand{\insertchapterseparator}{\global\chapterseparatorpendingtrue}
-\patchcmd{\scr@startchapter}
-  {\if@openright\cleardoublepage\else\clearpage\fi}
-  {%
-    \ifchapterseparatorpending
-      \clearpage
-      \thispagestyle{empty}%
-      \null
-      \newpage
-      \global\chapterseparatorpendingfalse
-    \else
-      \clearpage
-    \fi
-  }
-  {}%
-  {\PackageError{thesis}{Failed to patch \string\scr@startchapter}{}}
-\makeatother
+\newcommand{\insertblankpage}{%
+  \clearpage
+  \thispagestyle{empty}%
+  \null
+  \clearpage
+}
+\newcommand{\insertchapterseparator}{\insertblankpage}
 
 \begin{document}
 
