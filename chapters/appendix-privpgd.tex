@@ -1,9 +1,30 @@
-\section{Extended Dataset Details}
+\section{Datasets and Preprocessing}
 \label{app:privpgd-datasets}
 
 The empirical study uses nine real-world tabular datasets drawn from the American Community Survey (ACS) and from the tabular benchmark of \citet{grinsztajn2022tree}. Unless noted otherwise, each dataset is split into \(80\%\) sensitive training data and \(20\%\) held-out test data. Real-valued variables, as well as integer-valued variables with range larger than \(32\), are discretized into \(32\) equally sized bins before private release.
 
-\paragraph{Classification benchmarks.}
+\begin{tcolorbox}[
+  enhanced,
+  breakable,
+  colback=gray!6,
+  colframe=chaptercolor,
+  boxrule=0.8pt,
+  arc=3pt,
+  title={Guide to Appendix A},
+  colbacktitle=chaptercolor!12,
+  coltitle=black
+]
+This appendix is organized in five parts:
+\begin{itemize}
+  \item datasets and preprocessing conventions for the tabular benchmarks;
+  \item implementation details for PrivPGD and the main baselines;
+  \item technical notes on projection, quantization, and finalization;
+  \item constrained-synthesis details together with lower-budget comparison figures; and
+  \item full benchmark tables for \(\epsilon = 2.5\), \(1.0\), and \(0.2\).
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Classification benchmarks}
 \begin{itemize}
   \item \textbf{ACS Income (Inc.)}~\citep{ding2021retiring}. This task predicts whether an individual earns more than \$50,000 per year. The dataset is derived from the ACS PUMS sample after filtering to individuals older than 16 who reported at least one hour of work per week in the preceding year and reported annual income above \$100. The benchmark uses California data from survey year 2018 with a five-year horizon, yielding \(d=11\) features and \(n=760{,}157\) records.
   \item \textbf{ACS Employment (Emp.)}~\citep{ding2021retiring}. This task predicts employment status. The sample is restricted to individuals aged 16 to 90 from the California 2018 five-year ACS release. The resulting dataset has \(d=17\) features and \(n=1{,}503{,}938\) records.
@@ -13,7 +34,7 @@ The empirical study uses nine real-world tabular datasets drawn from the America
   \item \textbf{Diabetes 130-US (Diab.)}~\citep{strack2014impact}. This task uses ten years of inpatient records from 130 US hospitals and integrated delivery systems. The curation keeps admissions associated with a diabetes diagnosis, hospital stays between 1 and 14 days, laboratory tests, and medication administration. The resulting benchmark has \(d=7\) features and \(n=56{,}872\) records.
 \end{itemize}
 
-\paragraph{Regression benchmarks.}
+\subsection{Regression benchmarks}
 \begin{itemize}
   \item \textbf{Medical Charges (Med.)}~\citep{grinsztajn2022tree}. This dataset is derived from the Inpatient Utilization and Payment Public Use File and records inpatient discharges under Medicare fee-for-service. It covers more than 3,000 hospitals under the Medicare Inpatient Prospective Payment System from fiscal years 2011 to 2016. The benchmark uses \(d=3\) features and \(n=130{,}452\) records.
   \item \textbf{Black Friday (Fri.)}~\citep{grinsztajn2022tree}. This task uses purchase records from \(n=133{,}456\) buyers and \(d=9\) features, including gender, age, occupation, and marital status.
@@ -25,36 +46,44 @@ The empirical study uses nine real-world tabular datasets drawn from the America
 
 This section records the concrete experimental settings that were omitted from the main chapter to keep the narrative focused on the central empirical findings.
 
-\paragraph{Common protocol.}
+\subsection{Shared experimental protocol}
 All benchmark results are averaged over five runs. The primary privacy setting is \(\epsilon = 2.5\) and \(\delta = 10^{-5}\), while the lower-budget replications reported below use the same \(\delta\) and smaller values of \(\epsilon\). Downstream task performance is measured by training a gradient-boosting model on the synthetic data and evaluating it on the held-out test split. As in the source experiments, the \texttt{scikit-learn} implementation is used with standard hyperparameters, and all evaluation is carried out on the discretized representation of the data.
 
-\paragraph{PrivPGD implementation.}
+\subsection{PrivPGD configuration}
 PrivPGD is implemented in \texttt{PyTorch} and run on a GPU. For all datasets, the released statistics consist of all two-way marginals, privatized with the Gaussian mechanism. The synthetic release is represented by \(100{,}000\) particles.
 
 For the projection step, the sliced \(1\)-Wasserstein distance is approximated with \(200\) Monte Carlo projection directions. The projected probability measure is computed with \texttt{Adam} for \(1750\) iterations, using an initial learning rate of \(0.1\) and a linear scheduler with step size \(100\) and multiplicative factor \(0.8\). The initialization clips negative weights of the embedded signed marginal to zero and renormalizes the remaining positive mass.
 
 For the optimization step, the squared sliced \(2\)-Wasserstein loss is approximated with \(N_{\mathrm{MC}} = 10\) projection directions. The particle cloud is optimized for \(1000\) epochs, with each epoch visiting every selected marginal once. The subsets in \(\mathcal{S}\) are processed in mini-batches of size \(5\). The optimizer uses an initial learning rate of \(0.1\), a linear scheduler with step size \(50\) and multiplicative factor \(0.75\), and \texttt{Sparse Adam}. Following the source implementation, \(80\%\) of the gradient entries are set to zero at each update.
 
-\paragraph{Baseline implementations.}
+\subsection{Baseline configurations}
 MST and AIM are run with the authors' official implementation, available at \url{https://github.com/ryan112358/private-pgm}. The mirror-descent optimizer is run for \(3000\) iterations with initial learning rate \(1.0\), and the sensitivity constants in the Gaussian and exponential mechanisms are adjusted so that the implementation matches the privacy model used in this thesis.
 
 Private GSD is run in its one-shot variant with elite size \(2\) and early stopping. The tuned hyperparameters are the number of generations \(G \in \{200\mathrm{k}, 500\mathrm{k}\}\), mutation and crossover population sizes \(P_{\mathrm{mut}} = P_{\mathrm{cross}} \in \{50, 100, 150, 200, 500\}\), and the synthetic dataset size \(m \in \{2\mathrm{k}, 100\mathrm{k}\}\). For GEM and RAP, the official implementations are used with their default settings, while tuning the iteration counts \(T \in \{3, 10, 30, 50, 100, 150, 200\}\). For GEM, the model architecture is tuned over \([512, 512, 1024]\) and \([128, 256]\). For RAP, the learning rate is tuned over \(\{0.0001, 0.001, 0.03\}\) and the synthetic dataset size over \(\{2\mathrm{k}, 500\mathrm{k}\}\). GEM and RAP could not be run on the ACS Employment dataset under the available \(20\) GB memory budget.
 
-\section{Additional Technical Notes}
+\clearpage
+\section{Technical Notes}
 \label{app:privpgd-technical}
 
-\paragraph{Projection and quantization.}
+This section records a few implementation details that matter for interpreting how PrivPGD moves from privatized marginals to a decoded synthetic table.
+
+\subsection{Projection and quantization}
 The main chapter describes the projection step conceptually. In implementation, each embedded signed marginal is first initialized by clipping negative mass and renormalizing. This initialization is not the final projected target; it only provides a feasible starting point for the optimization that minimizes the sliced \(1\)-Wasserstein discrepancy to the embedded signed marginal. After projection, the resulting probability measure is quantized to the same number of atoms as the synthetic particle cloud so that the optimization stage compares empirical measures of the same size. This choice is primarily computational: it makes the repeated sliced-Wasserstein evaluations in the main optimization loop substantially cheaper.
 
-\paragraph{Finalization.}
+\subsection{Finalization}
 After optimization in the embedded space, each particle is snapped to the nearest point of the embedded discrete grid before decoding. This step ensures that the released synthetic dataset is again a genuine tabular dataset rather than a cloud of continuous points in the embedding space.
+
+For completeness, the privacy argument from the main chapter is restated below in proof-sketch form.
 
 \begin{proofsketch}[Proof sketch of \Cref{lem:privpgd-privacy}]
 The privacy guarantee in the main chapter follows directly from composition and post-processing. Suppose that the privatized marginals are released by an \((\epsilon_1,\delta_1)\)-differentially private mechanism and that an optional auxiliary regularization statistic is released independently by an \((\epsilon_2,\delta_2)\)-differentially private mechanism. PrivPGD then applies only deterministic or randomized post-processing to these released marginals and the privatized regularization statistic: embedding, projection, quantization, gradient-based optimization, and final discretization. By composition, the pair consisting of the released marginals and the privatized regularization statistic is \((\epsilon_1 + \epsilon_2, \delta_1 + \delta_2)\)-differentially private. By post-processing, the final synthetic dataset returned by PrivPGD inherits exactly the same guarantee. In the unregularized setting, the second mechanism is absent and the privacy budget reduces to that of the privatized marginals alone.
 \end{proofsketch}
 
-\section{Additional Details for the Constrained Synthesis Experiment}
+\clearpage
+\section{Constrained Synthesis Details}
 \label{app:privpgd-constraints}
+
+\subsection{Target statistic and smooth surrogate}
 
 The constrained synthesis experiment from the main chapter augments the standard PrivPGD objective with a differentiable penalty designed to suppress a chosen population-level threshold statistic. In the embedded space, the target statistic is
 \[
@@ -69,7 +98,9 @@ Because this quantity is not differentiable with respect to the particle positio
   \frac{1}{m}\sum_{j=1}^m
   \left(1 + \exp\!\left(-\sigma(\langle z_j, \theta \rangle - b)\right)\right)^{-1},
 \]
-with smoothing parameter \(\sigma = 5.0\).
+    with smoothing parameter \(\sigma = 5.0\).
+
+\subsection{Privacy split and regularized objective}
 
 The privacy budget is split between the auxiliary threshold statistic and the marginal release. A budget of \(\epsilon = 0.5\) and \(\delta = 2 \times 10^{-6}\) is used to obtain a differentially private estimate \(\widehat{\tilde q}_{\theta,b}(D)\) of \(\tilde q_{\theta,b}(\Emb(D))\) via the Gaussian mechanism. The remaining budget, \(\epsilon = 2.0\) and \(\delta = 8 \times 10^{-6}\), is used to privatize all two-way marginals. By simple composition, the overall constrained release therefore remains \((2.5,10^{-5})\)-differentially private.
 
@@ -81,7 +112,7 @@ The regularization term optimized in this experiment is
 \]
 and the reported sweeps vary the regularization strength \(\lambda\) from \(10^{-2}\) to \(10\). The resulting tradeoff curves for the ACS Income and ACS Employment datasets are reproduced in Figure~\ref{fig:app-privpgd-constraints}.
 
-\begin{figure}[p]
+\begin{figure}[!tbp]
   \centering
   \includegraphics[width=0.72\textwidth]{papers/PrivPGD/figures/plots_constraint/exp3_legend.pdf}\\[1ex]
   \includegraphics[width=0.48\textwidth]{papers/PrivPGD/figures/plots_constraint/exp3_acs_income_CA_2018_default_32+thresholding_1.pdf}
@@ -91,16 +122,19 @@ and the reported sweeps vary the regularization strength \(\lambda\) from \(10^{
   \label{fig:app-privpgd-constraints}
 \end{figure}
 
-\section{Lower-Privacy-Budget Comparisons}
+\FloatBarrier
+
+\clearpage
+\section{Lower-Budget Comparisons}
 \label{app:privpgd-low-eps}
 
 The main chapter focuses on \(\epsilon = 2.5\), which is the regime in which PrivPGD is most competitive. At smaller privacy budgets, the relative advantage narrows, and the lower-\(\epsilon\) experiments help clarify the method's limitations as well as its strengths.
 
+\subsection{\texorpdfstring{$\epsilon = 1.0$}{epsilon = 1.0}}
+
 At \(\epsilon = 1.0\), PrivPGD remains broadly competitive, but PGM-based methods, especially AIM, become stronger on a larger fraction of datasets. Private GSD also closes the gap on several tasks. This pattern is consistent with the stronger inductive bias of maximum-entropy-style PGM methods when the privatized marginals become noisier. Even so, PrivPGD remains particularly competitive on larger datasets and on settings in which geometry-aware fidelity is more informative than purely count-based matching.
 
-At \(\epsilon = 0.2\), the same trend becomes more pronounced. PGM+AIM, PGM+MST, and Private GSD more frequently outperform PrivPGD on query- and covariance-based metrics, especially when the data are smaller or higher-dimensional. The method nevertheless remains viable on several datasets, and the geometry-aware comparison still shows the expected advantage in sliced Wasserstein distance relative to total variation.
-
-\begin{figure}[p]
+\begin{figure}[!tbp]
   \centering
   \includegraphics[width=0.9\textwidth]{papers/PrivPGD/figures/exp12legend_plot.pdf}\\[1ex]
   \includegraphics[width=0.9\textwidth]{papers/PrivPGD/figures/plots_datasets/eps_1.0/1.pdf}\\[1ex]
@@ -109,7 +143,7 @@ At \(\epsilon = 0.2\), the same trend becomes more pronounced. PGM+AIM, PGM+MST,
   \label{fig:app-privpgd-comp-1}
 \end{figure}
 
-\begin{figure}[p]
+\begin{figure}[!tbp]
   \centering
   \includegraphics[width=0.48\textwidth]{papers/PrivPGD/figures/plots_distances/eps_1.0/wdist_1_2Way_avg.pdf}
   \hfill
@@ -118,7 +152,13 @@ At \(\epsilon = 0.2\), the same trend becomes more pronounced. PGM+AIM, PGM+MST,
   \label{fig:app-privpgd-dist-1}
 \end{figure}
 
-\begin{figure}[p]
+\FloatBarrier
+
+\subsection{\texorpdfstring{$\epsilon = 0.2$}{epsilon = 0.2}}
+
+At \(\epsilon = 0.2\), the same trend becomes more pronounced. PGM+AIM, PGM+MST, and Private GSD more frequently outperform PrivPGD on query- and covariance-based metrics, especially when the data are smaller or higher-dimensional. The method nevertheless remains viable on several datasets, and the geometry-aware comparison still shows the expected advantage in sliced Wasserstein distance relative to total variation.
+
+\begin{figure}[!tbp]
   \centering
   \includegraphics[width=0.9\textwidth]{papers/PrivPGD/figures/exp12legend_plot.pdf}\\[1ex]
   \includegraphics[width=0.9\textwidth]{papers/PrivPGD/figures/plots_datasets/eps_0.2/1.pdf}\\[1ex]
@@ -127,7 +167,7 @@ At \(\epsilon = 0.2\), the same trend becomes more pronounced. PGM+AIM, PGM+MST,
   \label{fig:app-privpgd-comp-02}
 \end{figure}
 
-\begin{figure}[p]
+\begin{figure}[!tbp]
   \centering
   \includegraphics[width=0.48\textwidth]{papers/PrivPGD/figures/plots_distances/eps_0.2/wdist_1_2Way_avg.pdf}
   \hfill
@@ -136,15 +176,33 @@ At \(\epsilon = 0.2\), the same trend becomes more pronounced. PGM+AIM, PGM+MST,
   \label{fig:app-privpgd-dist-02}
 \end{figure}
 
+\FloatBarrier
+
 \clearpage
-\section{Detailed Benchmark Tables}
+\section{Detailed Benchmark Results}
 \label{app:privpgd-tables}
 
 The following tables report mean values over five runs. In the downstream column, the first number is the test error of the model trained on the synthetic data, while the second number is the corresponding test error when the same model is trained on the original sensitive dataset.
 
-\subsection{Primary Privacy Setting: \texorpdfstring{$\epsilon = 2.5$}{epsilon = 2.5}}
+\begin{tcolorbox}[
+  enhanced,
+  breakable,
+  colback=gray!6,
+  colframe=chaptercolor,
+  boxrule=0.8pt,
+  arc=3pt,
+  title={How to Read the Tables},
+  colbacktitle=chaptercolor!12,
+  coltitle=black
+]
+Within each dataset block, the tables report the mean over five runs. In the \emph{Downstream} column, the first value is the test error after training on synthetic data and the second is the corresponding test error after training on the original sensitive data.
+\end{tcolorbox}
 
-\begin{table}[p]
+\subsection{Primary Privacy Setting (\texorpdfstring{$\epsilon = 2.5$}{epsilon = 2.5})}
+
+Tables~\ref{tab:app-privpgd-e25-acs} and \ref{tab:app-privpgd-e25-rest} collect the full benchmark results at the default privacy budget, separated into the ACS-style datasets and the remaining benchmarks.
+
+\begin{table}[!tbp]
   \centering
   \scriptsize
   \resizebox{\textwidth}{!}{
@@ -190,7 +248,7 @@ The following tables report mean values over five runs. In the downstream column
   \label{tab:app-privpgd-e25-acs}
 \end{table}
 
-\begin{table}[p]
+\begin{table}[!tbp]
   \centering
   \scriptsize
   \resizebox{\textwidth}{!}{
@@ -232,9 +290,11 @@ The following tables report mean values over five runs. In the downstream column
 \end{table}
 
 \clearpage
-\subsection{Lower Privacy Budget: \texorpdfstring{$\epsilon = 1.0$}{epsilon = 1.0}}
+\subsection{Lower Budget (\texorpdfstring{$\epsilon = 1.0$}{epsilon = 1.0})}
 
-\begin{table}[p]
+Tables~\ref{tab:app-privpgd-e10-acs} and \ref{tab:app-privpgd-e10-rest} report the same benchmark split at \(\epsilon = 1.0\), where the relative gap between PrivPGD and the strongest baselines narrows.
+
+\begin{table}[!tbp]
   \centering
   \scriptsize
   \resizebox{\textwidth}{!}{
@@ -280,7 +340,7 @@ The following tables report mean values over five runs. In the downstream column
   \label{tab:app-privpgd-e10-acs}
 \end{table}
 
-\begin{table}[p]
+\begin{table}[!tbp]
   \centering
   \scriptsize
   \resizebox{\textwidth}{!}{
@@ -322,9 +382,11 @@ The following tables report mean values over five runs. In the downstream column
 \end{table}
 
 \clearpage
-\subsection{Lower Privacy Budget: \texorpdfstring{$\epsilon = 0.2$}{epsilon = 0.2}}
+\subsection{Lower Budget (\texorpdfstring{$\epsilon = 0.2$}{epsilon = 0.2})}
 
-\begin{table}[p]
+Tables~\ref{tab:app-privpgd-e02-acs} and \ref{tab:app-privpgd-e02-rest} summarize the highest-noise setting, which makes the appendix's lower-budget discussion concrete at the full table level.
+
+\begin{table}[!tbp]
   \centering
   \scriptsize
   \resizebox{\textwidth}{!}{
@@ -370,7 +432,7 @@ The following tables report mean values over five runs. In the downstream column
   \label{tab:app-privpgd-e02-acs}
 \end{table}
 
-\begin{table}[p]
+\begin{table}[!tbp]
   \centering
   \scriptsize
   \resizebox{\textwidth}{!}{

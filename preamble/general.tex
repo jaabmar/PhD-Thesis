@@ -66,6 +66,9 @@
 \usepackage{wrapfig}
 \usepackage[section]{placeins}
 \usepackage{lscape}
+\usepackage{listings}
+\usepackage{mdframed}
+\usepackage[most]{tcolorbox}
 \setlength{\abovetopsep}{1ex}
 \setcounter{topnumber}{3}
 \renewcommand{\topfraction}{0.95}
@@ -98,6 +101,7 @@
 \usetikzlibrary{shapes.geometric}
 \usetikzlibrary{calc}
 \usetikzlibrary{arrows.meta}
+\usetikzlibrary{patterns,shadings}
 \graphicspath{{figures/}{papers/CP_Fuse/figures/}{papers/PrivPGD/figures/}}
 
 % Circled numbers
@@ -177,8 +181,17 @@
 \let\chapterNumber\undefined
 \newfont{\chapterNumber}{eurb10 scaled 5500}
 \titleformat{\chapter}[display]
-  {\relax}{\vspace*{-1.2\baselineskip}\makebox[\linewidth][r]{\color{darklinkcolor}\chapterNumber\thechapter}}{1.15\baselineskip}
-  {\raggedright\spacedallcaps}
+  {\relax}
+  {\vspace*{-1.2\baselineskip}\makebox[\linewidth][r]{\color{darklinkcolor}\chapterNumber\thechapter}}
+  {0.8\baselineskip}
+  {\raggedright\LARGE\bfseries}
+  [\vspace{0.65\baselineskip}{\color{chaptercolor}\titlerule[0.6pt]}]
+\titleformat{name=\chapter,numberless}[display]
+  {\relax}
+  {}
+  {0pt}
+  {\raggedright\LARGE\bfseries}
+  [\vspace{0.65\baselineskip}{\color{chaptercolor}\titlerule[0.6pt]}]
 
 % Chapter abstract helper
 \def\chapterabstract#1{%

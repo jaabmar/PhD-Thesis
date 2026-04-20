@@ -1,6 +1,8 @@
 build/
 *.aux
 *.bbl
+!chapters/mainmatter-unit.bbl
+!chapters/appendix-unit.bbl
 *.bcf
 *.blg
 *.fdb_latexmk

@@ -1,0 +1,71 @@
+\paragraph{Proof of Lemma~\ref{lem:cpfuse-kkt}.}
+The statement in Lemma~\ref{lem:cpfuse-kkt} is a direct application of standard convex-optimization arguments. In particular, the KKT stationarity condition implies that, for every \(y_t \in V\),
+\begin{equation}
+\sum_i \lambda_i
+\Bigl(
+\log p^*(y_t)
+-
+\log p^{(i)}(y_t \vert y_{<t}, x)
++ 1
+\Bigr)
++
+\mu
+-
+u_{y_t}
+=
+0,
+\end{equation}
+for dual variables \(\lambda_i \geq 0\), \(u_{y_t} \geq 0\), and \(\mu \in \mathbb{R}\). Complementary slackness further gives
+\begin{equation}
+\lambda_i
+\Bigl(
+\text{KL}\!\bigl(p^* \vert \vert p^{(i)}(. \vert y_{<t}, x)\bigr)
++
+\gamma_i
+- t
+\Bigr)
+=
+0,
+\qquad
+u_{y_t} \, p^*(y_t) = 0.
+\end{equation}
+At least one multiplier \(\lambda_i\) must be positive, since otherwise the stationarity condition cannot be satisfied on the simplex. This is exactly the characterization used in Lemma~\ref{lem:cpfuse-kkt}.
+
+\subsection{Proof of Lemma~\ref{lem:cpfuse-balance}}
+
+Assume that both \(p^{(1)}\) and \(p^{(2)}\) have full support, and define
+\[
+\gamma_i
+=
+\log\left(
+\frac{p(y_{<t} \, | \, x)}
+     {p^{(i)}(y_{<t} \, | \, x)}
+\right).
+\]
+Then one of the following two cases must hold for the optimizer \(p^*\).
+
+\begin{enumerate}
+    \item Both constraints from Equation~\eqref{eq:cpfuse-opt-problem} are tight. In that case,
+    \begin{equation}
+    \text{KL}\!\bigl(p^* \vert \vert p^{(1)}(. \vert y_{<t}, x)\bigr) + \gamma_1
+    =
+    \text{KL}\!\bigl(p^* \vert \vert p^{(2)}(. \vert y_{<t}, x)\bigr) + \gamma_2,
+    \end{equation}
+    which is exactly condition (1) in Lemma~\ref{lem:cpfuse-balance}.
+
+    \item The optimum coincides with one base model, so \(p^* = p^{(1)}\) or \(p^* = p^{(2)}\). Suppose by contradiction that \(p^* = p^{(1)}\). Then
+    \begin{align}
+    \text{KL}\!\bigl(p^* \vert \vert p^{(2)}(. \vert y_{<t}, x)\bigr) + \gamma_2
+    &>
+    \text{KL}\!\bigl(p^{(2)}(. \vert y_{<t}, x) \vert \vert p^{(2)}(. \vert y_{<t}, x)\bigr) + \gamma_2 \\
+    &=
+    \gamma_2 \\
+    &>
+    \gamma_1 \\
+    &=
+    \text{KL}\!\bigl(p^* \vert \vert p^{(1)}(. \vert y_{<t}, x)\bigr) + \gamma_1.
+    \end{align}
+    This contradicts the optimality of \(p^*\). Therefore the only remaining possibility is \(p^* = p^{(2)}\), which is condition (2) from Lemma~\ref{lem:cpfuse-balance}.
+\end{enumerate}
+
+Finally, if \(p^{(i)}(y_t \vert y_{<t}, x) = 0\) for some token \(y_t\), then necessarily \(p^*(y_t) = 0\) as well. In that case, the optimizer may satisfy neither of the two conclusions above.

@@ -1,0 +1,166 @@
+\definecolor{cpfusecodegreen}{rgb}{0,0.6,0}
+\definecolor{cpfusecodegray}{rgb}{0.5,0.5,0.5}
+\definecolor{cpfusecodepurple}{rgb}{0.58,0,0.82}
+\definecolor{cpfusebackcolour}{RGB}{250,250,249}
+\definecolor{cpfuseboxbg}{RGB}{248,248,248}
+\definecolor{cpfuseboxline}{RGB}{210,220,228}
+\definecolor{cpfuseboxtitlebg}{RGB}{239,244,247}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{cpfusebackcolour},
+    commentstyle=\color{cpfusecodegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{cpfusecodegray},
+    stringstyle=\color{cpfusecodepurple},
+    basicstyle=\tiny\ttfamily,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+}
+
+\newtcolorbox{promptmdf}{
+    breakable,
+    enhanced,
+    colback=cpfuseboxbg,
+    colframe=cpfuseboxline,
+    boxrule=2pt,
+    arc=10pt,
+    left=10pt,
+    right=10pt,
+    top=10pt,
+    bottom=10pt,
+    fonttitle=\small,
+    halign title=flush left,
+    title={\textbf{Prompt:}\\How would you code a function in Python 3\\to set data for outgoing stream?},
+    colbacktitle=cpfuseboxtitlebg,
+    coltitle=black
+}
+
+\newtcolorbox{promptmdftwo}{
+    breakable,
+    enhanced,
+    colback=cpfuseboxbg,
+    colframe=cpfuseboxline,
+    boxrule=2pt,
+    arc=10pt,
+    left=10pt,
+    right=10pt,
+    top=10pt,
+    bottom=10pt,
+    fonttitle=\small,
+    halign title=flush left,
+    title={\textbf{Prompt:}\\Write a Python 3 function for reading a package file\\as text to get its name and version.},
+    colbacktitle=cpfuseboxtitlebg,
+    coltitle=black
+}
+
+\newtcolorbox{promptmdfthree}{
+    breakable,
+    enhanced,
+    colback=cpfuseboxbg,
+    colframe=cpfuseboxline,
+    boxrule=2pt,
+    arc=10pt,
+    left=10pt,
+    right=10pt,
+    top=10pt,
+    bottom=10pt,
+    fonttitle=\small,
+    halign title=flush left,
+    title={\textbf{Prompt:}\\How would you implement a Python 3 function that calculates\\the mean heart rate from a set of RR intervals?},
+    colbacktitle=cpfuseboxtitlebg,
+    coltitle=black
+}
+
+\newtcolorbox{promptmdfmem}{
+    breakable,
+    enhanced,
+    colback=cpfuseboxbg,
+    colframe=cpfuseboxline,
+    boxrule=2pt,
+    arc=10pt,
+    left=10pt,
+    right=10pt,
+    top=10pt,
+    bottom=10pt,
+    fonttitle=\small,
+    halign title=flush left,
+    title={\textbf{Prompt:}\\Given two strings, return true if they share a common substring\\longer than one letter, and false otherwise.},
+    colbacktitle=cpfuseboxtitlebg,
+    coltitle=black
+}
+
+\newtcolorbox{promptmdftwomem}{
+    breakable,
+    enhanced,
+    colback=cpfuseboxbg,
+    colframe=cpfuseboxline,
+    boxrule=2pt,
+    arc=10pt,
+    left=10pt,
+    right=10pt,
+    top=10pt,
+    bottom=10pt,
+    fonttitle=\small,
+    halign title=flush left,
+    title={\textbf{Prompt:}\\Given a string \texttt{s}, write a function that returns true if it is\\a valid integer or floating-point number, and false otherwise.},
+    colbacktitle=cpfuseboxtitlebg,
+    coltitle=black
+}
+
+\newtcolorbox{promptmdfthreemem}{
+    breakable,
+    enhanced,
+    colback=cpfuseboxbg,
+    colframe=cpfuseboxline,
+    boxrule=2pt,
+    arc=10pt,
+    left=10pt,
+    right=10pt,
+    top=10pt,
+    bottom=10pt,
+    fonttitle=\small,
+    halign title=flush left,
+    title={\textbf{Prompt:}\\Create a function that returns the total cost of a meal, including\\tax and tip, without tipping on the tax.},
+    colbacktitle=cpfuseboxtitlebg,
+    coltitle=black
+}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\scriptsize,
+    escapeinside={(*@}{@*)},
+}
+
+\newenvironment{breakablefigure}
+  {\par\medskip\captionsetup{type=figure,justification=raggedright,singlelinecheck=false,font=small}}
+  {\par\medskip}
+
+\newenvironment{cpfusetextbox}[1]
+  {\begin{tcolorbox}[
+      breakable,
+      enhanced,
+      colback=cpfuseboxbg,
+      colframe=cpfuseboxline,
+      boxrule=2pt,
+      arc=10pt,
+      left=10pt,
+      right=10pt,
+      top=10pt,
+      bottom=10pt,
+      title={#1},
+      fontupper=\small,
+      fonttitle=\small,
+      halign title=flush left,
+      before upper={\sloppy},
+      colbacktitle=cpfuseboxtitlebg,
+      coltitle=black
+    ]}
+  {\end{tcolorbox}}

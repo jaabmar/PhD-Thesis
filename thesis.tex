@@ -1,7 +1,7 @@
 \RequirePackage{fix-cm}
 \documentclass[
     twoside,
-    openright,
+    open=any,
     titlepage,
     numbers=noenddot,
     cleardoublepage=empty,
@@ -14,13 +14,38 @@
 ]{scrreprt}
 
 \usepackage{etex}
-\reserveinserts{10}
+\makeatletter
+\@ifundefined{reserveinserts}{}{\reserveinserts{10}}
+\makeatother
 
+\usepackage{chapterbib}
 \input{preamble/general}
+\usepackage{etoolbox}
 \usepackage[final]{pdfpages}
 \usepackage[round]{natbib}
 \input{preamble/math}
 \input{preamble/macros}
+
+\makeatletter
+\newif\ifchapterseparatorpending
+\chapterseparatorpendingfalse
+\newcommand{\insertchapterseparator}{\global\chapterseparatorpendingtrue}
+\patchcmd{\scr@startchapter}
+  {\if@openright\cleardoublepage\else\clearpage\fi}
+  {%
+    \ifchapterseparatorpending
+      \clearpage
+      \thispagestyle{empty}%
+      \null
+      \newpage
+      \global\chapterseparatorpendingfalse
+    \else
+      \clearpage
+    \fi
+  }
+  {}%
+  {\PackageError{thesis}{Failed to patch \string\scr@startchapter}{}}
+\makeatother
 
 \begin{document}
 
@@ -30,30 +55,19 @@
 \pagenumbering{roman}
 \pagestyle{scrplain}
 
-% Cover
-\IfFileExists{cover/cover_front.pdf}{
-  \includepdf[pages={1,{}}]{cover/cover_front.pdf}
-  \cleardoublepage\setcounter{page}{1}
-}{
-  \IfFileExists{cover/cover_front.tex}{
-    \input{cover/cover_front}
-    \cleardoublepage\setcounter{page}{1}
-  }{}
-}
-
 % Front matter
 \input{frontbackmatter/titlepage}
 \input{frontbackmatter/titleback}
 \cleardoublepage
-\input{frontbackmatter/dirtytitlepage}
-\cleardoublepage
-\input{frontbackmatter/dedication}
-\cleardoublepage
 \input{frontbackmatter/abstract}
+\cleardoublepage
+\input{frontbackmatter/zusammenfassung}
+\cleardoublepage
+\input{frontbackmatter/publications}
 \cleardoublepage
 \input{frontbackmatter/acknowledgments}
 \pagestyle{scrheadings}
-\cleardoublepage\null
+\cleardoublepage
 
 % Table of contents
 \refstepcounter{dummy}
@@ -69,36 +83,16 @@
 
 % Notation
 \input{preamble/notation}
-\clearpage
-\cleardoublepage\null
+\cleardoublepage
 
 % Main matter
-\cleardoublepage
+\clearpage
 \pagenumbering{arabic}
-\input{chapters/introduction}
+\include{chapters/mainmatter-unit}
 
 \cleardoublepage
-\input{chapters/background}
-
-\input{chapters/paper-01-privpgd}
-\input{chapters/paper-02-cp-fuse}
-
-\cleardoublepage
-\input{chapters/conclusion}
-
-\newpage
-{
-\renewcommand*{\bibfont}{\normalfont\footnotesize}
-\bibliographystyle{plainnat}
-\bibliography{bib/references,papers/PrivPGD/main,papers/CP_Fuse/main}
-}
-
-\bookmarksetup{startatroot}
-\cleardoublepage
-\input{frontbackmatter/publications}
-
+\part*{Appendix}
 \appendix
-\cleardoublepage
-\input{chapters/appendix}
+\include{chapters/appendix-unit}
 
 \end{document}
