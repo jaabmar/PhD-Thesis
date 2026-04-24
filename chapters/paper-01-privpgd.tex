@@ -381,6 +381,6 @@ Figure~\ref{fig:constraints-main} shows that the targeted query is well approxim
 
 \section{Chapter Summary}
 
-We introduced PrivPGD, a novel generation method for marginal-based private data synthesis. The approach leverages particle gradient descent together with tools from optimal transport, resulting in improved performance in a large number of settings, scalability for handling many marginals and larger datasets, and flexibility for accommodating domain-specific constraints compared to existing methods.
+This chapter introduced PrivPGD as a geometry-aware generation method for marginal-based private tabular data synthesis. By combining particle gradient descent with an optimal transport objective, PrivPGD constructs synthetic datasets directly from privatized marginals while scaling to larger datasets and marginal workloads. The empirical results show that this design yields strong benchmark performance and naturally supports incorporating domain-specific constraints, making PrivPGD a flexible and competitive alternative to existing generation methods.
 
 % The main chapter has focused on the core method and on the strongest empirical evidence. Extended dataset descriptions, lower-\(\epsilon\) results, full implementation details, and detailed benchmark tables are collected in Appendix~\ref{app:privpgd-datasets} through Appendix~\ref{app:privpgd-tables}, so that the main text can remain centered on the primary methodological and empirical contributions.

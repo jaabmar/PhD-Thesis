@@ -25,7 +25,7 @@ Figure~\ref{fig:example1_code_methods} gives one representative \texttt{Python i
 
 Figures~\ref{fig:example1_story} and \ref{fig:example1_text_methods} provide one representative text example each for \texttt{WritingPrompts} and \texttt{MathAbstracts}. In both cases, CP-Fuse stays semantically aligned with the prompt while diverging more from the memorized reference than $\cpdelta$.
 
-\paragraph{\texttt{Python instructions}.}
+\subsubsection*{\texttt{Python instructions}}
 
 % Additionally, the early-stopped models produce low-quality text, usually repeating sentences or generating nonsensical content. 
 
@@ -76,7 +76,7 @@ def set_data(self, data):
 
 \FloatBarrier
 
-\paragraph{\texttt{WritingPrompts}.}
+\subsubsection*{\texttt{WritingPrompts}}
 
 \begin{breakablefigure}
     \begin{cpfusetextbox}{\textbf{Prompt:}\\Crippled by misery and sorrow, you cry out that you would give anything to bring someone back.\\Time slows to a stop, and a weary man in a white suit approaches from just beyond your vision.}
@@ -131,7 +131,7 @@ The man in the white suit was Father Tim. He knelt down so that he was on her le
 
 \FloatBarrier
 
-\paragraph{\texttt{MathAbstracts}.}
+\subsubsection*{\texttt{MathAbstracts}}
 
 % \begin{figure}[!htbp]
 %     \begin{mdframed}[
@@ -265,30 +265,9 @@ We study Coxeter diagrams of some unitary reflection groups. Using solely the co
 \subsection{CP-Fuse vs. MemFree}
 \label{app:cpfuse-comparison-memfree}
 
-The MemFree comparison highlights a different tradeoff. Exact copying is often avoided through local perturbations rather than by generating genuinely new content, which is especially problematic for code.
+The MemFree comparison highlights a different tradeoff. Exact copying is often avoided through local perturbations rather than by generating genuinely new content, which is especially problematic for code. In \Cref{fig:example3_code_memfree}, MemFree avoids copying mainly through superficial edits, while CP-Fuse changes the implementation in a way that remains correct. In \Cref{fig:example1_story_memfree}, blocking a key word causes the MemFree continuation to drift away from the prompt, whereas CP-Fuse still produces a coherent story that fits the premise.
 
-\begin{tcolorbox}[
-  enhanced,
-  breakable,
-  colback=gray!6,
-  colframe=chaptercolor,
-  boxrule=0.8pt,
-  arc=3pt,
-  title={What These MemFree Examples Show},
-  colbacktitle=chaptercolor!12,
-  coltitle=black
-]
-\begin{itemize}
-    \item In \texttt{APPS}, MemFree frequently changes spacing, variable names, or literals in ways that avoid exact matches but can break correctness or syntax.
-    \item In \texttt{WritingPrompts}, MemFree often introduces grammatical issues or drifts away from the title, whereas CP-Fuse usually remains on-topic and stylistically cleaner.
-\end{itemize}
-\end{tcolorbox}
-
-\Cref{fig:example3_code_memfree} gives one representative \texttt{APPS} example. Here MemFree avoids exact copying mainly through superficial edits, while CP-Fuse changes the implementation in a way that remains correct and even improves on the reference by respecting the instruction not to tip on the tax.
-
-\Cref{fig:example1_story_memfree} gives one representative \texttt{WritingPrompts} example. Blocking a key word causes the MemFree continuation to drift away from the prompt, whereas CP-Fuse still produces a coherent story that fits the premise.
-
-\paragraph{\texttt{APPS}.}
+\subsubsection*{\texttt{APPS}}
 
 \begin{breakablefigure}
     \centering
@@ -319,7 +298,7 @@ def calculate_total(subtotal, tax, tips):
 
 \FloatBarrier
 
-\paragraph{\texttt{WritingPrompts}.}
+\subsubsection*{\texttt{WritingPrompts}}
 
 \begin{breakablefigure}
 \footnotesize

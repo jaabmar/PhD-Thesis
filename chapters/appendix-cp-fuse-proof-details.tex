@@ -1,71 +1,117 @@
-\paragraph{Proof of Lemma~\ref{lem:cpfuse-kkt}.}
-The statement in Lemma~\ref{lem:cpfuse-kkt} is a direct application of standard convex-optimization arguments. In particular, the KKT stationarity condition implies that, for every \(y_t \in V\),
-\begin{equation}
-\sum_i \lambda_i
-\Bigl(
-\log p^*(y_t)
--
-\log p^{(i)}(y_t \vert y_{<t}, x)
-+ 1
-\Bigr)
-+
-\mu
--
-u_{y_t}
-=
-0,
-\end{equation}
-for dual variables \(\lambda_i \geq 0\), \(u_{y_t} \geq 0\), and \(\mu \in \mathbb{R}\). Complementary slackness further gives
-\begin{equation}
-\lambda_i
-\Bigl(
-\text{KL}\!\bigl(p^* \vert \vert p^{(i)}(. \vert y_{<t}, x)\bigr)
-+
-\gamma_i
-- t
-\Bigr)
-=
-0,
-\qquad
-u_{y_t} \, p^*(y_t) = 0.
-\end{equation}
-At least one multiplier \(\lambda_i\) must be positive, since otherwise the stationarity condition cannot be satisfied on the simplex. This is exactly the characterization used in Lemma~\ref{lem:cpfuse-kkt}.
+\subsection{Proof of \Cref{lem:cpfuse-kkt}}
 
-\subsection{Proof of Lemma~\ref{lem:cpfuse-balance}}
-
-Assume that both \(p^{(1)}\) and \(p^{(2)}\) have full support, and define
+For brevity, write
 \[
 \gamma_i
 =
 \log\left(
-\frac{p(y_{<t} \, | \, x)}
-     {p^{(i)}(y_{<t} \, | \, x)}
+\frac{\model(y_{<t}\mid x)}
+     {\modeli(y_{<t}\mid x)}
 \right).
 \]
-Then one of the following two cases must hold for the optimizer \(p^*\).
+The optimization problem in \Cref{eq:cpfuse-opt-problem} can then be written as
+\begin{equation}
+\begin{aligned}
+\min_{p^*,\,\tau} \quad & \tau \\
+\text{s.t.} \quad &
+\KL\bigl(p^* \,\|\, \modeli(\cdot \mid y_{<t},x)\bigr)
++ \gamma_i
+\le \tau,
+\qquad \forall i,
+\end{aligned}
+\end{equation}
+with \(p^*\) constrained to lie on the simplex over \(V\).
+
+Let \(\lambda_i \ge 0\) be the multipliers of the two inequality constraints and let \(\mu\) enforce simplex normalization. The KKT conditions give
+\[
+\sum_i \lambda_i = 1
+\]
+from stationarity in \(\tau\), and for every coordinate with \(p^*(y_t) > 0\),
+\begin{equation}
+\sum_i \lambda_i
+\Bigl(
+\log p^*(y_t)
+- \log \modeli(y_t \mid y_{<t}, x)
++ 1
+\Bigr)
++ \mu
+= 0.
+\end{equation}
+Using \(\sum_i \lambda_i = 1\), this becomes
+\begin{equation}
+\begin{aligned}
+\log p^*(y_t)
+= {} &
+\lambda_1 \log \modelone(y_t \mid y_{<t},x) \\
+& + \lambda_2 \log \modeltwo(y_t \mid y_{<t},x)
++ \gamma_t,
+\end{aligned}
+\end{equation}
+where \(\gamma_t = -1-\mu\). Setting \(\alpha_t = \lambda_1\) and \(\beta_t = \lambda_2\) yields the claimed representation. For coordinates with \(p^*(y_t)=0\), the same identity is read in the extended-real convention \(\log(0)=-\infty\).
+
+\subsection{Proof of \Cref{lem:cpfuse-balance}}
+
+Assume that both \(\modelone\) and \(\modeltwo\) have full support, and define
+\[
+\gamma_i
+=
+\log\left(
+\frac{\model(y_{<t}\mid x)}
+     {\modeli(y_{<t}\mid x)}
+\right).
+\]
+Also define
+\[
+f_i(p)
+=
+\KL\bigl(p \,\|\, \modeli(\cdot \mid y_{<t},x)\bigr)
++
+\gamma_i.
+\]
+The optimization problem in \Cref{eq:cpfuse-opt-problem} is therefore
+\begin{equation}
+\min_{p} \max\{f_1(p),f_2(p)\}.
+\end{equation}
+At any optimizer \(p^*\), either both terms are active, or exactly one of them is active.
 
 \begin{enumerate}
-    \item Both constraints from Equation~\eqref{eq:cpfuse-opt-problem} are tight. In that case,
+    \item Both constraints from \Cref{eq:cpfuse-opt-problem} are tight. In that case,
     \begin{equation}
-    \text{KL}\!\bigl(p^* \vert \vert p^{(1)}(. \vert y_{<t}, x)\bigr) + \gamma_1
-    =
-    \text{KL}\!\bigl(p^* \vert \vert p^{(2)}(. \vert y_{<t}, x)\bigr) + \gamma_2,
+    \begin{aligned}
+    \KL\bigl(p^* \,\|\, \modelone(\cdot \mid y_{<t},x)\bigr) + \gamma_1
+    &=
+    \KL\bigl(p^* \,\|\, \modeltwo(\cdot \mid y_{<t},x)\bigr) + \gamma_2.
+    \end{aligned}
     \end{equation}
-    which is exactly condition (1) in Lemma~\ref{lem:cpfuse-balance}.
+    Expanding the KL terms shows that this is equivalent to
+    \begin{equation}
+    \begin{aligned}
+    \mathbb{E}_{y_t \sim p^*}\log \modelone(y_{\le t}\mid x)
+    &=
+    \mathbb{E}_{y_t \sim p^*}\log \modeltwo(y_{\le t}\mid x),
+    \end{aligned}
+    \end{equation}
+    which is exactly condition (1) in \Cref{lem:cpfuse-balance}.
 
-    \item The optimum coincides with one base model, so \(p^* = p^{(1)}\) or \(p^* = p^{(2)}\). Suppose by contradiction that \(p^* = p^{(1)}\). Then
+    \item Exactly one term is active. Then \(p^*\) minimizes that active term. Since each function \(f_i\) is minimized on the simplex at the corresponding base conditional, the only possibilities are that \(p^*\) coincides with one of the two base conditionals.
+
+    We now rule out the first possibility. Suppose by contradiction that \(p^* = \modelone(\cdot \mid y_{<t},x)\). Then
     \begin{align}
-    \text{KL}\!\bigl(p^* \vert \vert p^{(2)}(. \vert y_{<t}, x)\bigr) + \gamma_2
+    \KL\bigl(p^* \,\|\, \modeltwo(\cdot \mid y_{<t},x)\bigr) + \gamma_2
     &>
-    \text{KL}\!\bigl(p^{(2)}(. \vert y_{<t}, x) \vert \vert p^{(2)}(. \vert y_{<t}, x)\bigr) + \gamma_2 \\
+    \KL\bigl(\modeltwo(\cdot \mid y_{<t},x) \,\|\, \modeltwo(\cdot \mid y_{<t},x)\bigr) + \gamma_2 \\
     &=
     \gamma_2 \\
     &>
     \gamma_1 \\
     &=
-    \text{KL}\!\bigl(p^* \vert \vert p^{(1)}(. \vert y_{<t}, x)\bigr) + \gamma_1.
+    \KL\bigl(p^* \,\|\, \modelone(\cdot \mid y_{<t},x)\bigr) + \gamma_1.
     \end{align}
-    This contradicts the optimality of \(p^*\). Therefore the only remaining possibility is \(p^* = p^{(2)}\), which is condition (2) from Lemma~\ref{lem:cpfuse-balance}.
+    Here the strict inequality \(\gamma_2>\gamma_1\) follows from the assumption \(\modelone(y_{<t}\mid x)>\modeltwo(y_{<t}\mid x)\). Hence the objective at \(p^*=\modelone(\cdot \mid y_{<t},x)\) is controlled by the second term, so \(p^*\) cannot be optimal. Therefore the only remaining one-active case is
+    \begin{equation}
+    p^* = \modeltwo(\cdot \mid y_{<t},x),
+    \end{equation}
+    which is exactly condition (2) in \Cref{lem:cpfuse-balance}.
 \end{enumerate}
 
-Finally, if \(p^{(i)}(y_t \vert y_{<t}, x) = 0\) for some token \(y_t\), then necessarily \(p^*(y_t) = 0\) as well. In that case, the optimizer may satisfy neither of the two conclusions above.
+Finally, if one of the base conditionals assigns zero probability to some token \(y_t\), then any optimizer with finite objective must also assign zero probability to that token. Without the full-support assumption, the optimizer need not satisfy either of the two conclusions above in exactly the same form.
