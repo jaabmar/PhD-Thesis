@@ -1,0 +1,141 @@
+% !TEX root = ../arxiv.tex
+\subsubsection{Proof of~\Cref{lemma:identify_ate}}
+\label{apx:proof_id_ate}
+For $\diamond=\rct$, we have
+\begin{align*}
+	\mu(\pxrct, \pfullrct) &= \EE_{\pfullrct} [ Y(1)-Y(0)] \\
+	&= \EE_{\pxrct} \left[ \EE_{\prct}[Y \mid T=1,X]\frac{\prct(T=1)}{\prct(T=1)}  -\EE_{\prct}[Y \mid T=0,X]\frac{\prct(T=0)}{\prct(T=0)}  \right]\\
+	&= \EE_{\prct} \left[ Y\left(\frac{T}{\pi} - \frac{(1-T)}{1-\pi}  \right)  \right],
+\end{align*}
+where the last equality follows from the internal validity of the randomized trial.
+
+For $\diamond=\obsres$, we first note that by transportability of CATE and definition of $\pobsres$, we have
+\begin{equation*}
+\mu(\pobsres_X, \pfullobsres) = \mu(\pobsres_X, \pfullobs) 
+= \EE_{\pobsres_X}\left[ \EE_{\pfullobs}[Y(1) - Y(0) \mid X] \right]  = \EE_{\pobsres_X}\left[ \EE_{\pfullrct}[Y(1) - Y(0) \mid X] \right]. 
+\end{equation*}
+
+Furthermore, it holds via \Cref{asm:nested_support} (support inclusion) and the definition of $\pobsres$ that
+\begin{align*}
+\EE_{\prct_X}\left[ \EE_{\pfullrct}[Y(1) - Y(0) \mid X] \frac{\pobsres(X)}{\prct(X)} \right] 
+&=\EE_{\pxrct}\left[ \left( \EE_{\prct}[Y \mid T=1, X] - \EE_{\prct}[Y \mid T=0, X]  \right) \frac{\pobsres(X)}{\prct(X)} \right] \\
+&= \EE_{\prct}\left[ Y\left( \frac{T}{\pi} - \frac{(1-T)}{1-\pi} \right) \frac{\pobsres(X)}{\prct(X)} \right], 
+\end{align*}
+where the last equality again
+follows from the internal validity of the randomized trial.
+
+\subsubsection{Proof of~\Cref{prop:test}}
+\label{apx:proof_test}
+First, observe that by definition,
+\begin{equation}
+\{\test_\diamond(\confvalue,\alpha) = 1\} \implies
+\{\hat{T}_\confvalue^+  \leq z_{\alpha/2} \} \cup \{  \hat{T}_\confvalue^-  \leq z_{\alpha/2} \}. 
+\end{equation} 
+Hence, if $\p_{\hnull(\Gamma)}(\hat{T}_\confvalue^-  \leq z_{\alpha/2}) \leq \frac{\alpha}{2} + o(1)$ and $\p_{\hnull(\Gamma)}(\hat{T}_\confvalue^+  \leq z_{\alpha/2}) \leq \frac{\alpha}{2} + o(1)$, the result follows from the union bound.
+For brevity, we only prove $\hat{T}_\confvalue^+ \leq z_{\alpha/2}$ as the proof for $\hat{T}_\confvalue^-$ is analogous. 
+
+
+\paragraph{Proof of case $\diamond=\rct$} 
+ Let $(X_i,Y_i,T_i)$ be i.i.d. sampled from $\prct$ and define \begin{align*}Z&=\left(\frac{YT}{\pi} - \frac{Y(1-T)}{1-\pi}, \quad\cate_\confvalue^+(X)\right)^T,\quad  \text{with} \\ \mu &\defeq \EE_{\prct}[Z] = \left(\yone\left(\pxrct, \pfullrct\right), \quad \yone_\confvalue^+ \left(\pxrct\right)\right)^T \quad \text{and} \quad \Sigma:=\operatorname{Cov}_{\prct}(Z)= \left(\begin{array}{cc}\sigma^2 & \xi_\confvalue  \\ \xi_\confvalue & (\sigma^+_\confvalue)^2 \end{array} \right) < \infty.\end{align*}
+Further, we define  
+$$
+\bar{Z}_n=\left( \frac{1}{\nrct}  \sum_{(T_i,Y_i)  \in \datarct}\frac{Y_iT_i}{\pi} - \frac{Y_i(1-T_i)}{1-\pi}   , \frac{1}{\nrct}  \sum_{X_i  \in \datarct} \cate_\confvalue^+(X_i) \right).
+$$
+By the multivariate central limit theorem, we have 
+$$
+\sqrt{\nrct}\left(\bar{Z}_n-\mu\right) \stackrel{\mathcal{D}}{\longrightarrow} \mathcal{N}(0, \Sigma), \;\;\text{as}\;\;\nrct \to \infty.
+$$
+Thus, it follows from the Cramér-Wold theorem that 
+$$
+\sqrt{\nrct}\left[\left(\frac{1}{\nrct}  \sum_{X_i  \in \datarct} \cate_\confvalue^+(X_i)  - \yonehat\right)-\left(\yone_\confvalue^+\left(\pxrct\right) - \yone\left(\pxrct, \pfullrct \right)\right)\right]\xrightarrow{\mathcal{D}} \gauss \left(0,  \sigma^2  +(\sigma^+_\confvalue)^2-2\xi_\confvalue\right),\;\;\text{as}\;\;\nrct \to \infty.$$
+It remains to show that asymptotic normality also holds when we replace the oracle average $\frac{1}{\nrct}\sum_{X_i \in \datarct} \cate_\confvalue^+(X_i)$ by the empirical estimator $\yonehat_\confvalue^+$. To do so, define
+\begin{equation}
+\label{eq:convg}
+R_n \defeq \sqrt{\nrct}\left(\frac{1}{\nrct}\sum_{X_i \in \datarct} \cate_\confvalue^+(X_i) - \yonehat_\confvalue^+(X_i)\right).
+\end{equation}
+Let $d_n(x) \defeq \cate_\confvalue^+(x) - \catehat_\confvalue^+(x)$. Then, conditional on the observational dataset $\dataobs$ used to train $\yonehat^+_\confvalue(\cdot)$, 
+\begin{align*}
+\left|\EE_{\prct}\left[R_n \mid \dataobs\right]\right|
+\leq \sqrt{\nrct}\,\EE_{\prct}\left[|d_n(X)| \mid \dataobs\right]
+\leq \sqrt{\nrct}\,\|d_n\|_{L^2(\prct)}
+= O_{\pobs}\left(\sqrt{\nrct/\nobs}\right)
+= o_{\pobs}(1),
+\end{align*}
+where we used $\|d_n\|_{L^2(\prct)} = O_{\pobs}(\nobs^{-1/2})$ and $\nrct/\nobs \to 0$. Similarly,
+\[
+\var_{\prct}\left[R_n \mid \dataobs\right]
+\leq \EE_{\prct}\left[d_n(X)^2 \mid \dataobs\right]
+= \|d_n\|_{L^2(\prct)}^2
+= O_{\pobs}(\nobs^{-1})
+= o_{\pobs}(1).
+\]
+Hence, by Chebyshev's inequality, for every $\varepsilon > 0$,
+\[
+\prct\left(|R_n|>\varepsilon \mid \dataobs\right)
+\leq \frac{1}{\varepsilon^2}\left(\var_{\prct}\left[R_n \mid \dataobs\right] + \EE_{\prct}\left[R_n \mid \dataobs\right]^2\right)
+= o_{\pobs}(1).
+\]
+Since $0 \leq \prct\left(|R_n|>\varepsilon \mid \dataobs\right) \leq 1$, this implies
+\[
+\mathbb P\left(|R_n|>\varepsilon\right)
+= \EE_{\pobs}\left[\prct\left(|R_n|>\varepsilon \mid \dataobs\right)\right]
+\longrightarrow 0,
+\]
+where $\mathbb P$ denotes the joint law of $(\dataobs,\datarct)$. Thus, $R_n=o_{\mathbb P}(1)$ under the joint law, and by the asymptotic normality established above and Slutsky's theorem, we have, as $\nrct \to \infty$ and $\nobs \to \infty$,
+\begin{equation}
+	\label{eq:as_norm_1}
+\sqrt{\nrct}\left[\left(\yonehat_\confvalue^+ - \yonehat\right)-\left(\yone_\confvalue^+\left(\pxrct\right) - \yone\left(\pxrct, \pfullrct \right)\right)\right]\xrightarrow{\mathcal{D}} \gauss \left(0,  \sigma^2  +(\sigma^+_\confvalue)^2 -2\xi_\confvalue\right).
+\end{equation}
+
+
+Finally, by the consistency of $\sigmahat^2, \varubhat$ and Slutsky's theorem, we have
+\begin{align*}
+\lim_{\nrct,\nobs \to \infty} \mathbb P_{\hnull(\Gamma)} \left(\hat{T}_\confvalue^+  \leq z_{\alpha/2} \right)&= \lim_{\nrct,\nobs \to \infty} \mathbb P_{\hnull(\Gamma)}\left(\frac{\yonehat^{+}_\confvalue - \yonehat }{\sqrt{\varubhat + \sigmahat^2 +2\sigmahat^+_\confvalue\sigmahat} }  \leq z_{\alpha/2} \right)\\
+&=\lim_{\nrct,\nobs \to \infty} \mathbb P_{\hnull(\Gamma)}\left(\frac{\sqrt{\nrct}(\yonehat^{+}_\confvalue - \yonehat)}{\sqrt{(\sigma^+_\confvalue)^2 + \sigma^2 +2\sigma^+_\confvalue \sigma} }  \leq z_{\alpha/2} \right) \\ 
+&\leq \lim_{\nrct,\nobs \to \infty} \mathbb P_{\hnull(\Gamma)}\left(\frac{\sqrt{\nrct}(\yonehat^{+}_\confvalue - \yonehat)}{\sqrt{(\sigma^+_\confvalue)^2 + \sigma^2-2\xi_\confvalue} }  \leq z_{\alpha/2} \right),
+\end{align*}
+where in the last line, we use the Cauchy--Schwarz covariance inequality, i.e. $|\xi_\confvalue| \leq \sigma^+_\confvalue\sigma$. Further, under $\hnull(\Gamma)$, it holds that $\yone_\confvalue^+\left(\pxrct\right) -\yone\left(\pxrct, \pfullrct \right)\geq 0$ by~\Cref{lemma:test_1}. Then, by asymptotic normality established in~\Cref{eq:as_norm_1}, we conclude that
+\begin{align*}
+\lim_{\nrct,\nobs \to \infty} \mathbb P_{\hnull(\Gamma)}\left(\hat{T}_\confvalue^+  \leq z_{\alpha/2} \right)&\leq \lim_{\nrct,\nobs  \to \infty} \mathbb P_{\hnull(\Gamma)} \left(\frac{\sqrt{\nrct}\left((\yonehat^{+}_\confvalue - \yonehat) -\yone_\confvalue^+\left(\pxrct\right) +\yone\left(\pxrct, \pfullrct \right)\right)}{\sqrt{(\sigma_\confvalue^+)^2 + \sigma^2-2\xi_\confvalue} }  \leq z_{\alpha/2} \right) \\
+&= \Phi(z_{\alpha/2})=\alpha/2. 
+\end{align*}
+
+
+
+
+
+
+\paragraph{Proof of case $\diamond=\obsres$}
+Let $n=\nrct+\nobs$ with fixed proportions, where $\nrct=\rho n$ and $\nobs=(1-\rho)n$ for $\rho \in (0,1)$. By the central limit theorem and~\Cref{lemma:identify_ate}, it holds that
+$$
+\sqrt{n}\left(\frac{1}{\nrct}\sum_{\substack{(X_i,T_i,Y_i)  \in \datarct}} \left(\frac{Y_iT_i}{\pi} - \frac{Y_i(1-T_i)}{1-\pi}  \right)w(X_i) - \yone\left(\pobsres_X, \pfullobs \right)\right)\xrightarrow{\mathcal{D}} \gauss\left(0, \sigma^2/\rho \right) \quad \text{as} \quad n \to \infty.$$
+Then, from the asymptotic normality of $\yonehat_\confvalue^+$ and the independence $\yonehat_\confvalue^+\indep \yonehat$, we have
+$$
+\sqrt{n}\left(\begin{array}{c} \yonehat_\confvalue^+ - \yone_\confvalue^+  \\\yonehat - \yone \end{array}\right)
+\stackrel{\mathcal{D}}{\rightarrow} \mathcal{N}\left(\left(\begin{array}{l}0 \\ 0 \end{array}\right),\left[\begin{array}{cc}(\sigma_\confvalue^+)^2/(1-\rho) & 0  \\ 0 & \sigma^2/\rho \end{array} \right]\right).
+$$
+Hence, by the $\delta$-technique with $h(X) = X_1 - X_2$, we get 
+$$
+\sqrt{n}\left(\yonehat_\confvalue^+ - \yonehat - \yone_\confvalue^+\left(\pobsres_X \right) + \yone\left(\pobsres_X, \pfullobs \right)\right)\xrightarrow{\mathcal{D}} \gauss \left(0, \frac{(\sigma^+_\confvalue)^2}{1-\rho} + \frac{\sigma^2}{\rho} \right) \quad \text{as} \quad  n \to \infty.
+$$
+Finally, from the consistency of $\sigmahat^2, \varubhat$ and Slutsky's theorem,  it holds that
+$$
+\frac{\yonehat^{+}_\confvalue - \yonehat - \yone_\confvalue^+\left(\pobsres_X \right) + \yone\left(\pobsres_X, \pfullobs \right)}{\sqrt{\varubhat+ \sigmahat^2}} \xrightarrow{\mathcal{D}}  \gauss\left(0, 1\right) \quad \text{as} \quad  n \to \infty.
+$$
+As before,  asymptotic normality implies that
+\begin{align*}
+\lim_{n\to \infty} \mathbb P_{\hnull(\Gamma)} \left(\hat{T}_\confvalue^+  \leq z_{\alpha/2} \right)&= \lim_{n\to \infty} \mathbb P_{\hnull(\Gamma)} \left(\frac{\yonehat^{+}_\confvalue - \yonehat }{\sqrt{\varubhat + \sigmahat^2} }  \leq z_{\alpha/2} \right)\\
+&\leq \lim_{n\to \infty} \mathbb P_{\hnull(\Gamma)}\left(\frac{\yonehat^{+}_\confvalue - \yonehat -\yone_\confvalue^+\left(\pobsres_X \right) + \yone\left(\pobsres_X, \pfullobs \right) }{\sqrt{\varubhat + \sigmahat^2} }  \leq z_{\alpha/2} \right)
+\\&= \Phi(z_{\alpha/2})=\alpha/2.
+\end{align*}
+
+
+
+
+%Let us consider the Horvitz-Thompson estimator $\yonehat$. Since  the outcome $Y$ is a bounded random variable, the population  variance is bounded
+%$$
+%\sigma^2 \defn \var_{\prct}\left[\frac{YT}{\pi} - \frac{Y(1-T)}{1-\pi}  \right] < \infty,
+%$$
+%Hence, by the central limit theorem we know that
+%$$
+%\sqrt{\nrct} \;\sum_{(X_i,T_i,Y_i)  \in \datarct} \frac{Y_iT_i}{\pi} - \frac{Y_i(1-T_i)}{1-\pi}  \xrightarrow{\mathcal{D}} \gauss\left(\yone, \sigma^2 \right) \quad \text{as} \quad \nrct \to \infty.$$

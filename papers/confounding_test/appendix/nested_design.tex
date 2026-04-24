@@ -1,0 +1,23 @@
+ In a nested trial design, the randomized trial is embedded in a cohort of eligible people who are proposed to participate in the trial, but if they refuse, they are still included in the observational study. 
+Two concrete examples of nested designs are the Women Health Initiative~\citep{anderson2003implementation} and the recent study on Medicaid~\citep{degtiar2021conditional}.
+
+
+In contrast to~\Cref{sec:setting}, the nested design has an extra variable $S \in \{0,1\}$, which is a binary indicator for randomized trial participation.
+ More formally, we observe i.i.d. samples from an underlying distribution $\pfullnest$ over $\left(X, U, Y(0), Y(1),Y, S, T\right)$. Further, let $\pnest \defeq \marg(\pfullnest)$ be the marginal distribution  over $(X,Y,S,T)$. We can then  write the marginal distributions over $X$ of the  (restricted) observational study and randomized trial  as 
+$$
+\prct_X(X) =  \pnest\left(X \mid S=1 \right) \quad \mathrm{and}  \quad 
+\pobsres_X(X) = \pnest\left(X \mid S=0, X \in \supp(\prct) \right).$$
+This study design has a significant impact on the estimators previously introduced. In particular, the importance weights $w(X)$ can be estimated by pooling the observational study and the randomized trial as follows %Recall  from~\Cref{lemma:identify_ate} that \begin{align*}\mu(\pobsres_X, \pfullobsres)  =\EE_{\prct}\left[ Y\left( \frac{T}{\pi} - \frac{(1-T)}{1-\pi} \right) w(X)\right],
+%\end{align*} 
+%where the restricted observational study population is defined as 
+%$
+%\pobsres \defeq \pobs \mid X \in \supp(\prct). 
+%$ 
+%We show that the importance weights can be identified as follows
+\begin{align*}
+	w(X) &= \frac{\pobsres(X)}{\prct(X)} \\&= \frac{\pnest(X\mid S=0, X\in \supp(\prct))}{\pnest(X \mid S=1)}\\
+	&= \frac{\pnest(S=0\mid X) }{\pnest(S=1\mid X)} \frac{\pnest(S=1 \mid X \in \supp(\prct))}{\pnest(S=0 \mid X \in \supp(\prct))},
+\end{align*}
+where the sampling probability $\pnest(S\mid X)$ can be identified under a nested study design~\citep{dahabreh2021study}.
+
+

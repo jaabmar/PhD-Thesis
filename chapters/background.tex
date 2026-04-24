@@ -1,36 +1,25 @@
 \chapter{Background}
 \label{chap:background}
 
-This chapter is the shared foundation for the full thesis.
-It is the right place for notation, definitions, prior work, and any recurring concepts that would otherwise be repeated across paper chapters.
+This chapter collects the general background needed across the thesis.
+Its purpose is to introduce broad concepts and research directions that will be revisited in the later technical chapters, without turning into a notation chapter or duplicating paper-specific preliminaries.
 
-\section{Foundations}
+\TODO{Introduce the high-level thesis context around trustworthy generative modeling, including the role of constraints such as privacy, safety, and controlled generation.}
 
-\TODO{Add the theoretical, methodological, or domain-specific background needed across multiple chapters.}
+\TODO{Introduce the basic privacy motivation and the role of differential privacy in releasing data-derived artifacts.}
 
-As a rule of thumb, material belongs here when it will be reused by at least two later chapters.
+\TODO{Summarize the goal of synthetic tabular data generation and why it matters in sensitive application domains.}
 
-\section{Notation}
+\TODO{Briefly position the main families of private tabular synthesis methods that form the context for Chapter~\ref{chap:privpgd}.}
 
-Use this chapter to normalize notation across papers even if the original papers used slightly different symbols.
+\TODO{Introduce the optimal-transport viewpoint at a high level and explain why geometry-aware discrepancies are useful in generative modeling.}
 
-\begin{equation}
-  y = f_{\theta}(x)
-\end{equation}
+\TODO{Give the high-level intuition for sliced Wasserstein distances and why they are computationally attractive in high-dimensional generative problems.}
 
-The equation above is only a harmless placeholder showing where key mathematical objects can be introduced.
+\TODO{Add a short background discussion on particle-based optimization methods and why they provide a natural fit for direct dataset construction.}
 
-\begin{table}[htbp]
-  \centering
-  \begin{tabular}{ll}
-    \toprule
-    Symbol & Meaning \\
-    \midrule
-    $x$ & Input placeholder \\
-    $y$ & Output placeholder \\
-    $\theta$ & Parameter placeholder \\
-    \bottomrule
-  \end{tabular}
-  \caption{Replace this table with a thesis-wide notation summary if useful.}
-\end{table}
+\TODO{Introduce memorization and regurgitation as a practical issue in text and code generation.}
 
+\TODO{Provide a broad overview of training-time, post-hoc, and inference-time approaches to reducing copyright risk.}
+
+\TODO{Motivate inference-time fusion methods as the immediate background for Chapter~\ref{chap:cpfuse}.}

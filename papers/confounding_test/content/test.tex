@@ -1,0 +1,138 @@
+\section{Methodology}\label{sec:test}
+
+We would like to test whether the unobserved full distribution $\pfullobs$, which marginalizes to $\pobs$, has confounding strength at most $\confvalue$. This is captured by the following null hypothesis
+$$\hnull(\confvalue): \pfullobs \in \msm(\pobs,\confvalue).$$ 
+Note that in the special case where $\confvalue=1$,  
+the problem reduces to testing whether there are no unobserved confounders, i.e. $(Y(1),Y(0)) \indep T \mid X$ under $\pobs$. We refer to this case, which has been recently studied in the literature~(see~\Cref{sec:related_work}), as \emph{binary testing} for unobserved confounding. 
+
+
+In real-world scenarios, binary tests can be overly stringent, as they invalidate an observational study even if the unobserved
+confounding strength is negligible. To overcome this limitation, we propose the first test, to the best of our knowledge, for the general case where $\confvalue$ is greater than one. In particular, underlying our testing procedure is a simple observation that follows from the
+sensitivity analysis bounds: When the null hypothesis is true for some confounding strength $\Gamma$, the average treatment effect under some target population should fall between the valid upper and lower bounds constructed from the observational study. \begin{lemma}
+\label{lemma:test_1} For any $\pfull$ which satisfies transportability, i.e. 
+$
+\yone(X,\pfull) =\yone(X,\pfullobs),
+$
+and any $\p_X$ which satisfies support inclusion, i.e. $\supp(\p_X) \subseteq \supp(\pobs_X)$, it holds that
+\begin{equation*}
+\pfullobs \in \msm(\pobs,\confvalue) \implies \yone(\p_X, \pfull) \in [\yone_\confvalue^-(\p_X), \yone_\confvalue^+(\p_X)].  
+\end{equation*}
+\end{lemma}\begin{proof}
+First, note how $\yone(X, \pfull) \in [\yone_\confvalue^-(X), \yone_\confvalue^+(X)]$ for all $X \in \supp(\pobs_X)$ when the null hypothesis $\hnull(\confvalue)$ is true, due to the transportability assumption and the definition of CATE sensitivity bounds. 
+The result then follows by taking expectations with respect to the corresponding marginals $\p_X$ on both sides.
+\end{proof}
+
+\subsection{Statistical tests for $\hnull(\confvalue)$}
+In what follows, we have access to a randomized trial $\datarct = \{(X_i,Y_i,T_i)\}_{i=1}^{\nrct}$ sampled i.i.d. from the distribution $\prct$, and an observational study $\dataobs = \{(X_i,Y_i,T_i)\}_{i=1}^{\nobs}$, sampled i.i.d. from the distribution $\pobs$. We first propose estimates for the average treatment effect under two target populations. Then, we leverage these estimates together with the sensitivity bounds to design an asymptotically valid statistical test at significance level $\alpha$. Finally, we show how such a test can be used to establish an asymptotically valid lower bound on the unobserved confounding strength. 
+
+\label{sec:test_presentetion}
+
+\paragraph{Estimating the ATE} We discuss here how the average treatment effect can be estimated using data from the randomized trial. First, we define a target population $\ptar_X$ to estimate the ATE. 
+Then, the following lemma shows how the choice of $\prct_X$ and $\pobsres_X \defeq \pobs_X \mid X \in \supp(\prct)$ allows us to identify ATE  using data sampled from the randomized trial marginal distribution $\prct$.
+
+
+\begin{lemma}
+\label{lemma:identify_ate}
+For $\diamond \in \{ \rct, \obsres\}$, under Assumptions~\ref{asm:transportability}, \ref{asm:internalvalid} and     
+\ref{asm:nested_support}, we have
+\begin{align*}
+\yone(\ptar_X, \pfulltar) &= \EE_{\prct} \left[ Y\left(\frac{T}{\pi} - \frac{1-T}{1-\pi}  \right)  w(X) \right], \quad \mathrm{where}\quad   w(X) \defeq \frac{\ptar(X)}{\prct(X)}.
+\end{align*}
+\end{lemma}
+\Cref{lemma:identify_ate} is a well-known result in the transportability literature  \citep{cole2010generalizing,colnet2023risk}. It establishes that when the distribution shift between $\prct_X$ and $\ptar_X$ can be corrected, we can identify and estimate the ATE under $\ptar_X$. 
+
+\paragraph{Estimating the sensitivity interval} Next, we discuss how $\yone_\confvalue^-(\ptar_X)$ and $\yone_\confvalue^+(\ptar_X)$ can be estimated using data from both the observational study and the target population $\ptar_X$. Here, the approach varies based on the target population.
+\begin{itemize}[leftmargin=*]
+	\item For $\ptar_X = \prct_X$, we estimate the CATE sensitivity bounds from observational data and average them over the target population. Specifically, we use the B-Learner \citep{oprescu2023b} to estimate the sensitivity analysis bounds.
+	\item For $\ptar_X = \pobsres_X$, we have two options: either estimate the CATE sensitivity analysis bounds and average them, or directly estimate the ATE sensitivity analysis bounds over the target population.  In our experiments, we directly estimate the ATE sensitivity analysis bounds using either the DVDS \citep{dorn2021doubly} or the QB estimator \citep{dorn2022sharp}.
+\end{itemize}   
+
+These methods yield estimates that are valid, sharp, and efficient under more general conditions than other existing methods. Nevertheless, our testing procedure is agnostic to the choice of the sensitivity analysis bound estimator, allowing for various options to be adopted. 
+
+
+\paragraph{Two statistical tests} We outline our testing procedure in \Cref{algo:test}, which can be instantiated for the target populations $\rct$ and $\obsres$. This results in two statistical tests, $\test_{\rct}$ and $\test_{\obsres}$, for the null hypothesis $\hnull(\confvalue)$. The following proposition confirms their asymptotic validity.
+\begin{prop}[Validity of the test]
+\label{prop:test} Fix $\confvalue \in [1,\infty)$ and $\alpha \in (0,1)$, and let $\test_\diamond(\confvalue,\alpha)$ be the test defined in~\Cref{algo:test}. Under Assumptions~\ref{asm:transportability}--\ref{asm:nested_support}, the setting described in~\Cref{sec:setting}, we have, for $\hnull(\confvalue)$, 
+ 
+(i) If it holds that $  \underset{\nrct,\nobs \to \infty}{\lim} \nrct/\nobs=  0$ and the estimators of
+ the CATE sensitivity analysis bounds satisfy	
+$$\|\cate_\confvalue^{\pm} - \catehat_\confvalue^{\pm}\|_{L^2(\prct)} = O_{\pobs}(\nobs^{-1/2}),$$
+$\test_\rct(\confvalue, \alpha)$ is an asymptotically valid level-$\alpha$ test.
+	
+(ii) If it holds that $\underset{\nrct,\nobs \to \infty}{\lim}\nrct/(\nrct+\nobs)=\rho \in (0,1)$, $\EE_{\prct}[w(X)^2] < \infty$, and $\yonehat_\confvalue^+$ and $\yonehat_\confvalue^-$ are consistent estimators of the ATE sensitivity analysis bounds that satisfy
+$$
+ \sqrt{\nobs}\bigl(\yonehat_\confvalue^+ - \yone_\confvalue^+\bigr)\xrightarrow{\mathcal{D}} \gauss(0,(\sigma_\confvalue^+)^2), \qquad \sqrt{\nobs}\bigl(\yonehat_\confvalue^- - \meanlb\bigr)\xrightarrow{\mathcal{D}} \gauss(0,(\sigma_\confvalue^-)^2), 
+$$
+$\test_{\obsres}(\confvalue, \alpha)$ is an asymptotically valid level-$\alpha$ test.
+\end{prop} 
+We provide a complete proof in~\Cref{apx:proof_test}. Notably, Assumption (ii), together with the fixed limiting proportions of the randomized trial and observational study, is relatively mild and expected to hold for various estimators; for instance, it can be satisfied by the DVDS estimator~\citep{dorn2021doubly}. On the other hand, Assumption (i) is stronger and generally only expected to hold when $\nobs\gg\nrct$.
+
+In essence, we propose two tests that work under different assumptions: $\test_{\rct}$ relies on a consistent estimate of the CATE sensitivity analysis bounds, while $\test_{\obsres}$ relies on directly estimating the ATE sensitivity analysis bounds together with the importance weights $w(X)$. The importance weights can be identified when the observational study and the randomized trial adhere to a nested trial design~\citep{olschewski1985comprehensive, olschewski1992analysis, choudhry2017randomized}. See \Cref{apx:nested_design} for a discussion on how the importance weights are estimated in this setting.
+
+
+
+
+
+\paragraph{Advantages of each test} The test $\test_{\obsres}$ can be advantageous when CATE estimation is challenging (e.g. when the outcomes are binary and the classes are imbalanced or when the observational study has a limited sample size), but the weights $w(X)$ can be identified, and vice versa for the test $\test_{\rct}$. In addition, $\test_{\obsres}$ can benefit from large observational studies as the variances $(\sigmahat_\confvalue^-)^2$ and $(\sigmahat_\confvalue^+)^2$ vanish for large $\nobs$.
+\vspace{-2mm}
+\begin{algorithm*}[t]
+\caption{Statistical test for detecting unobserved confounding}
+\begin{algorithmic}[1]
+\State \textbf{Input:}  $\diamond \in \{\rct,\obsres\}$, $\datarct,\dataobs$, significance level $\alpha$, confounding strength $\confvalue$.
+
+
+
+\State Estimate $\yone(\ptar, \pfulltar)$ using the randomized trial dataset:  \begin{align*}\yonehat &=  \frac{1}{\nrct}\sum_{\substack{(X_i,T_i,Y_i)  \in \datarct}} Y_i\left(\frac{T_i}{\pi} - \frac{1-T_i}{1-\pi}  \right)w(X_i), 
+\quad \sigmahat^2 = \widehat{\var}_{\prct}[\yonehat].
+\end{align*} 
+
+\State Estimate the sensitivity analysis bounds $\yonehat^{-}_\confvalue(X)$ and $\yonehat^{+}_\confvalue(X)$ using the observational study dataset, and average over the target population $\ptar$:$$
+\yonehat_\confvalue^+ =
+  \hat{\EE}_{\ptar_X}[ \yonehat^{+}_\confvalue(X)], \quad (\sigmahat^+_\confvalue)^2 = \widehat{\var}_{\ptar_X}[\yonehat_\confvalue^+], \quad   \yonehat_\confvalue^- = \hat{\EE}_{\ptar_X}[ \yonehat^{-}_\confvalue(X)], \quad (\sigmahat^-_\confvalue)^2 = \widehat{\var}_{\ptar_X}[\yonehat_\confvalue^-],
+$$
+where $\hat{\EE}[\cdot]$ denotes the empirical mean, and $\widehat{\var}[\cdot]$ denotes a consistent estimator of the sampling variance. 
+\State Compute the test statistics: 
+\begin{align*}  &\hat{T}_{\confvalue}^+= \frac{\yonehat^{+}_\confvalue - \yonehat}{\sigmahat^+_{\diamond}} , \quad \mathrm{where} \quad  \sigmahat^+_{\rct} =\sqrt{\varubhat +\sigmahat^2 + 2 \sigmahat_\confvalue^+ \sigmahat } \quad \mathrm{and}\quad \sigmahat^+_{\obsres} =\sqrt{\varubhat +\sigmahat^2},
+\\\ &\hat{T}_{\confvalue}^- =  \frac{ \yonehat- \yonehat^{-}_\confvalue}{\sigmahat^-_{\diamond}},\quad \mathrm{where} \quad  \sigmahat^-_{\rct} =\sqrt{\varlbhat +\sigmahat^2 + 2 \sigmahat_\confvalue^- \sigmahat } \quad \mathrm{and}\quad \sigmahat^-_{\obsres} =\sqrt{\varlbhat +\sigmahat^2}.\end{align*}
+
+
+\State \textbf{Output:} $\test_\diamond(\confvalue,\alpha) =  \indi \{\min\left(\hat{T}_\confvalue^+, \hat{T}_\confvalue^- \right) < z_{\alpha/2} \} $, where $z_\alpha$ is the $\alpha$-quantile of the standard normal. 
+\end{algorithmic}
+\label{algo:test}
+
+\end{algorithm*}
+ 
+\subsection{A lower bound on unobserved confounding strength}
+\label{sec:lower_bound}
+The statistical test described in the previous section raises a question about what level of confounding strength is reasonable to test. 
+Ideally, epidemiologists would like to estimate the confounding strength instead of conducting a test. However, this is infeasible unless the support of $\prct_X$ and $\pobs_X$ are the same. 
+
+A practical alternative is to estimate a lower bound on the true unobserved confounding strength defined as
+$$
+\Gammatrue \defeq  \inf \{ \confvalue : \pfullobs \in \msm(\pobs,\confvalue)\}.
+$$
+Given an observational study and a randomized trial, we aim to find a quantity that, with high probability, is a lower bound for the true confounding strength $\Gammatrue$. 
+Without loss of generality, we fix the test $\test_{\rct}$ and recall that $\test_{\rct}(\confvalue, \alpha) $ is a deterministic function given the data\footnote{When bootstrap is used to estimate the variance we fix the bootstrap bags for all $\confvalue$.}. Hence, we obtain a lower bound for a fixed significance level $\alpha$ by computing
+ \begin{equation}
+ \label{eq:lb1}
+     \gammalb = \inf_{\Gamma} \{\Gamma: \test_{\rct}(\confvalue,\alpha) =0 \},
+ \end{equation}
+that is, in words, the smallest $\Gamma$ such that the test accepts the null hypothesis. In practice, we compute $\gammalb$ with a grid search over values of $\confvalue$ starting from $1$ until the first test acceptance.
+ 
+ 
+We show in the following proposition that $\gammalb$ is a valid lower bound for $\Gammatrue$. 
+\begin{prop}
+Let $\gammalb$ be as in Equation~\eqref{eq:lb1} for a fixed level $\alpha$.
+Then, under the setting described in~\Cref{sec:setting}, and the same assumptions as in Proposition~\ref{prop:test},  
+$\gammalb$ is an asymptotically valid lower bound, 
+$$\p (\gammalb \leq \Gammatrue) \geq 1-\alpha - o(1).$$
+\end{prop}
+\begin{proof}
+Note that by definition of $\gammalb$, we have that
+\begin{align*}
+    \p (\gammalb > \Gammatrue) &= \p (\cap_{\Gamma \leq \Gammatrue} \{\test_{\rct}(\confvalue, \alpha) =1\}) \\
+    &\leq \p(\test_{\rct} (\Gammatrue,\alpha) =1) \leq \alpha + o(1),
+\end{align*}
+where the last inequality follows from the asymptotic validity of the test in Proposition~\ref{prop:test}. 
+\end{proof}
+% !TEX root = ../arxiv.tex

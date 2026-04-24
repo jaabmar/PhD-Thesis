@@ -1,0 +1,31 @@
+We discuss here the intuition behind the tightness of $\gammalb$ in the infinite-sample limit, though it carries over to finite samples. Without loss of generality, we focus on the lower bound derived from $\test_{\obsres}$ and assume that the unobserved confounding biases the average treatment effect upwards, i.e.
+$$
+\yone^-_{\confvalue=1}(\pobsres_X) = \yone^+_{\confvalue=1}(\pobsres_X) \geq \yone(\pobsres_X, \pfullobsres),
+$$
+where $\yone^-_{\confvalue=1}(\pobsres_X)$ and $\yone^+_{\confvalue=1}(\pobsres_X)$ are the IPW estimates of ATE on the (restricted) marginal distribution of the observational study.
+Further, we define the infinite-sample lower bound as
+$$
+\gammalbinfinite \defeq \inf \left \{ \confvalue: \lim_{n\to \infty} \test_{\obsres}(\confvalue,\alpha) =0 \right \},
+$$
+which is, in words, the smallest value of $\confvalue$ such that the sensitivity bounds include the true ATE.
+The key observation is that the interval $[\yone^-_\confvalue(\pobsres_X),\yone^+_\confvalue(\pobsres_X)]$ widens with $\confvalue$: the lower sensitivity bound is non-increasing and the upper sensitivity bound is non-decreasing in $\confvalue$.
+Under the upward-bias assumption above, the interval first contains the true ATE when the lower bound drops below it. Hence,
+\begin{align*}
+\gammalbinfinite
+= \inf \left \{ \confvalue: \yone^-_{\confvalue}(\pobsres_X) \leq \yone(\pobsres_X,\pfullobsres) \right \}.
+\end{align*}
+ If one additionally assumes that $\confvalue \mapsto \yone^-_{\confvalue}(\pobsres_X)$ is continuous and strictly decreasing in a neighborhood of the crossing, then the inequality above can be replaced by equality.
+
+The looseness of the lower bound can be characterized by
+$\Delta \defeq \Gammatrue - \gammalbinfinite$: if $\Delta > 0$ even in the infinite-sample limit, the lower bound will not be tight. We discuss two interesting cases:
+
+
+\paragraph{Case 1.} If
+		$$
+		\pfullobsres \in \underset{\pfulltilde \in \msm(\pobsres, \Gammatrue)}{\argmin}\, \yone(\pobsres_X,\pfulltilde),
+		$$
+	then $\yone_{\Gammatrue}^-(\pobsres_X) = \yone(\pobsres_X,\pfullobsres)$ and therefore $\Delta=0$. This corresponds to the case in which the observed full distribution is itself extremal for the lower ATE bound on the target population. It is also in line with worst-case constructions where the hidden confounder encodes the potential outcomes, for example $U=(Y(1),Y(0))$; see~\citet{dorn2022sharp} for a closed-form solution of the ATE sensitivity bounds.
+
+
+\paragraph{Case 2.} If $U \indep (Y(1),Y(0))$, then $\yone^-_{\confvalue=1}(\pobsres_X) = \yone^+_{\confvalue=1}(\pobsres_X) = \yone(\pobsres_X, \pfullobsres)$. Hence, $\Delta=\Gammatrue -1$ and the lower bound can be arbitrarily loose.
+

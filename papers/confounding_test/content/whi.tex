@@ -1,0 +1,66 @@
+\section{Real-world experiments}
+\label{sec:whi_exp}
+
+Linking back to the pipeline in \Cref{fig:motivating_example}, we demonstrate how epidemiologists can use the lower bound $\gammalb$ to successfully differentiate between studies with significant confounding and those with negligible confounding. 
+Specifically, we propose comparing $\gammalb$ with a critical value of $\confvalue$, estimated from the available observational data
+$$
+\confvaluecrit \defeq \inf\{ \confvalue : 0 \in [\yonehat^-_{\confvalue}, \yonehat^+_{\confvalue}] \}. 
+$$
+In essence, $\confvaluecrit$ represents the minimum strength for which sensitivity analysis includes both positive and negative values of treatment effect, thereby invalidating the study results. Similar critical values have been proposed in the literature to assess the robustness of conclusions drawn from observational data, see e.g. \citet{vanderweele2017sensitivity,jin2023sensitivity}. The most appropriate choice for the specific context should be determined by epidemiologists. 
+
+We flag an observational study as confounded if $\gammalb$
+exceeds the critical value, i.e.
+\begin{equation}
+\label{test_critical}
+\algours \defeq \indi \{ \gammalb > \confvaluecrit\}.
+\end{equation}
+
+We compare our decision-making procedure with one based on a binary test 
+$$
+\algbinary = \indi \{ \gammalb >1\}.
+$$
+In contrast to our procedure, the output of the binary one flags an observational study if any level of confounding is detected.  Note that choosing a more powerful binary test in the literature would only \emph{exacerbate} this issue. 
+
+\paragraph{Controversy around HRT} For years, epidemiologists could not reach a consensus on the impact of hormone replacement therapy (HRT) on coronary heart disease and stroke
+based on the findings of the Women's Health Initiative (WHI) study~\citep{anderson2003implementation}.
+The WHI study included a randomized trial and an observational study that examined the impact of HRT on various cardiovascular events. While the observational study suggested that HRT had a protective effect against these outcomes, the randomized trial indicated the opposite. This discrepancy was recently resolved by identifying a strong unobserved confounder - the time $t$ since the start of HRT - and reanalyzing the data accordingly~\citep{vandenbroucke2009hrt}. We now present evidence that our procedure can yield the same epidemiological conclusions and avoid issuing false alarms when the confounding is negligible. 
+
+\paragraph{Experimental details} We consider two binary-valued outcomes: the presence of stroke and coronary heart disease
+within the follow-up period. We apply our procedure from \Cref{test_critical} to both the original dataset, which includes all patients (i.e. $t \leq 20$), and a subsampled dataset that only includes patients who were not previous users of HRT (i.e. $t = 0$). Since the WHI study satisfies the criteria for a nested trial design, we calculate $\gammalb$ using our testing procedure $\test_{\obsres}$.
+See~\Cref{apx:whi_exp} for experimental details.
+
+\begin{table}
+\centering
+\caption{The significance level is $\alpha=0.05$. For $t=0$ (small confounding), the study only included patients who were not previous users of HRT. For $t \leq 20$ (strong confounding), the study includes patients who have been using HRT for up to 20 years.}
+\label{table:whi}
+\begin{tabular}{cccccccc}
+\toprule
+\multirow{2}{*}{Metric} & \multicolumn{2}{c}{Stroke} & \multicolumn{2}{c}{Coronary heart disease} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+& $t=0$ & $t\leq20$ & $t=0$ & $t \leq 20$ \\
+\midrule
+$\confvaluecrit$ & 1.017 & 1.172 & 1.017 & 1.164 \\
+$\gammalb$  & 1.052 & 1.207 & 1.009 & 1.224 \\
+\midrule
+$\algbinary$  & \textcolor{ForestGreen}{1} & \textcolor{ForestGreen}{1} & \textcolor{BrickRed}{1} & \textcolor{ForestGreen}{1} \\
+$\algours$  & \textcolor{ForestGreen}{1} & \textcolor{ForestGreen}{1} & \textcolor{ForestGreen}{0} & \textcolor{ForestGreen}{1} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+
+\paragraph{Results} In~\Cref{table:whi}, we show the result of both procedures on the WHI dataset, with small ($t=0$) and large ($t \leq 20$) unobserved confounding .  
+
+
+For coronary heart disease, both algorithms flag the study as confounded when strong unobserved confounding is present ($t \leq 20$). However, when minimal unobserved confounding is present ($t = 0$), our test does not flag the study, while $\algbinary$ does. This difference underscores our test's capability to distinguish between small and large unobserved confounding, thereby addressing a limitation in the flagging procedures based on existing testing methods.
+
+In the case of stroke, both $\algours$ and $\algbinary$ correctly flag the observational study, even when we adjust for the time since the start of treatment ($t=0$). This finding aligns with experts suggesting that additional unobserved confounding factors for stroke are still present after controlling for the time since the start of hormone replacement therapy~\citep{prentice2005combined}.
+
+Observe that an alternative way to reach the same conclusions is by testing the difference in ATE estimates between the two studies. However, our approach offers a notable advantage: it allows us to test if the observational study is too confounded on arbitrarily fine-grained subgroups up to the individual level. Indeed, we can estimate the CATE sensitivity analysis bounds and compare critical values for specific subgroups against our lower bound. In contrast, testing differences in group-level ATE estimates would require several tests, one for each subgroup, leading to issues with multiple testing and insufficient sample sizes.
+
+
+
+
+
+

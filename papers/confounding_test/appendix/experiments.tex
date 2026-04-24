@@ -1,0 +1,149 @@
+% !TEX root = ../arxiv.tex
+\subsection{Synthetic experiments}
+\label{apx:syn_exp}
+We design the propensity scores such that the data distribution satisfies the MSM with true confounding strength $\confvalue^*=5$. To do so, we define the \emph{adversarial propensity score} as 
+\begin{align*}
+&e^+(X,U) = \begin{cases}
+        \ell(X) & \text{if } U>t(X) \\
+        u(X) & \text{if }  U \leq t(X)
+    \end{cases}, \quad \text{where} \quad \ell(X)=\frac{e(X)}{e(X)+(1-e(X))\Gammatrue},  &u(X)=\frac{e(X)}{e(X)+(1-e(X)) / \Gammatrue}
+\end{align*}
+are respectively the lower and upper bounds on the full propensity score under the MSM. 
+By choosing $t(X) = \frac{e(X) - \ell(X)}{u(X) -\ell(X)}$ in our data-generating process in~\Cref{sec:datasets} where $U \sim U(0,1)$, we ensure 
+that $\EE_{\pobs}[e^+(X,U) \mid X] = e(X)$. 
+We note that this is different from~\cite{kallus2019interval,jesson2021quantifying,oprescu2023b} where they choose a fixed threshold $t(X)=1/2$, resulting in a data distribution that does not satisfy the MSM. For all synthetic experiments, we estimate the propensity score using logistic regression. Further, we set $\nbs = 100, \sigma^2_Y=0.1, \alpha=0.05$, and report the mean and standard error over 20 runs. 
+
+
+For the test $\test_{\obsres}$, we use the sensitivity bound estimator QB~\citep{dorn2022sharp}, and fit the quantile function using quantile forest regression~\citep{meinshausen2006quantile}. For the test $\test_{\rct}$, we use the sensitivity bound estimator B-Learner~\citep{oprescu2023b}. We fit the quantile function using quantile forest regression~\citep{meinshausen2006quantile}, and the outcome model using a random forest regressor.
+
+\subsection{Semi-synthetic experiments}
+\label{apx:semisyn_exp}
+We provide the details of the semi-synthetic experiments in \Cref{sec:datasets}. Specifically, we describe the subsampling procedure used to generate a randomized trial and an observational study that satisfy our setting, along with additional information about the datasets employed.
+
+\subsubsection{Subsampling procedure}
+
+
+\begin{algorithm}
+\caption{Randomized Trial Rejection Sampling \citep{keith2023rct}}
+\label{algo:rejection}
+\begin{algorithmic}[1]
+\State \textbf{Inputs:} $D \setminus \datarct = \{(X_i, U_i, Y_i,T_i)\}_{i=1}^{n}$; $\pconfobs(T = 1 \mid U)$, a function specified by the user; $M$ 
+%\geq \sup_{T,U} \frac{\pconfobs(T \mid U)}{\pconfobs(T)}$, 
+a constant computed empirically.
+\State \textbf{Output:} $\dataobs$.
+\State $\dataobs \leftarrow D \setminus \datarct$
+\While{true}
+\For{each unit $i$ in $\dataobs$}
+\State Sample $K_i$ uniform on $(0, 1)$
+\If{$K_i > \frac{\pconfobs(T=T_i \mid U_i)}{\widehat{\p}(T=t_i) M}$}
+\State  $\dataobs \leftarrow \dataobs \setminus \{(X_i, U_i, Y_i,T_i)\}$
+\EndIf
+\EndFor
+\State \textbf{break} if no units were discarded in the last iteration
+\EndWhile
+\State Remove $U$ from $\dataobs$
+\end{algorithmic}
+\end{algorithm}
+
+
+We now detail the procedure for constructing a randomized trial and multiple observational datasets for our semi-synthetic experiments. 
+Given a large-scale real-world randomized trial $D$ with covariates $\Xall$, our objective is to create multiple observational datasets $\dataobs$ that differ in the correlation $\rho_{u,y} = \frac{\operatorname{Cov}_{\pfullobs}[Y(1),U]}{\sigma_{Y(1)} \sigma_U}$, i.e. $\pinv$, but have the same confounding strength $\Gammatrue$, i.e. $\pconfobs$. This setup allows us to separately understand the effect of $\rho_{u,y}$ on the power of the test. While we cannot directly intervene on $\pinv (Y(1), Y(0)|\Xall)$ as it is intrinsic to the dataset, we can hide different $U \in \Xall$ for each $\dataobs$, resulting in different  $\pinv (Y(1), Y(0)|U)$  and hence correlation coefficient $\rho_{u,y}$. 
+
+For each candidate hidden confounder $U$ within $\Xall$, we implement the following steps:  First, we select a subset from $D$ to construct our randomized trial dataset, $\datarct$, and remove $U$ from $\Xall$.  Next, we \emph{subsample} $D \setminus \datarct$ to generate a dataset $\dataobs$ that belongs to $\msm(\pobs, \Gammatrue)$. We enforce this constraint by constructing a specific propensity score $\pconfobs(T = 1\mid U)$  (detailed in the sequel) and employing the subsampling procedure in~\Cref{algo:rejection} using this  $\pconfobs(T = 1\mid U)$. Note that for simplicity, we choose a propensity score that does not depend on $X$; this is consistent with the graphical model in Figure~\ref{fig:dag}.
+
+
+We use different $\pconfobs(T = 1\mid U)$ for continuous and binary confounders.
+We first define
+\begin{equation}
+\label{eq:uplow}
+\ell = \frac{\hat{\pi}}{\hat{\pi} + [1-\hat{\pi}]\Gammatrue}, \quad
+u = \frac{\hat{\pi}}{\hat{\pi} + [1-\hat{\pi}]/\Gammatrue},
+\end{equation}
+where we estimate $\hat{\pi} = \widehat{\p}(T = 1)$ from the split $D \setminus \datarct$ before subsampling.
+For a \emph{continuous} confounder $U$ positively correlated with $Y(1)$, we use the following full propensity score in~\Cref{algo:rejection}:
+\begin{equation}
+\label{adv_semi}
+\pconfobs(T=1 \mid U) = 
+\begin{cases}
+    \ell & \text{if } U > Q_{\hat{q}^*}(U), \\
+    u & \text{if } U \leq Q_{\hat{q}^*}(U),
+\end{cases}
+\end{equation}
+where $Q_q(U) = \inf \left\{ z \in \mathbb{R} : {\pconfobs(U \leq z)} \geq q \right\}$ is the $q$-th quantile of the marginal distribution of $U$ in $D \setminus \datarct$ before subsampling.
+Since the propensity score does not depend on $X$, using $\hat{q}^\star = \frac{\hat{\pi} - \ell}{u - \ell}$ makes sure that 
+$$e(X)=\pconfobs(T = 1|X)=\pconfobs(T = 1) = \hat \pi$$
+and hence the target full propensity score satisfies the marginal constraint. 
+Note that this is equivalent to enforcing the same marginal propensity score before and after the subsampling. 
+For a negatively correlated continuous confounder, we choose $\hat{q}^\star = \frac{u - \hat{\pi}}{u - \ell}$ and change the direction of the inequalities in~\Cref{adv_semi}.
+
+Further, for a positively correlated \emph{binary} confounder, we use the following propensity score in~\Cref{algo:rejection}:
+\begin{equation}
+\label{adv_semi_binary}
+\pconfobs(T=1 \mid U) = 
+\begin{cases}
+    \ell & \text{if } U = 1, \\
+    u & \text{if } U = 0.
+\end{cases}
+\end{equation}
+By first subsampling $D \setminus \datarct$ such that
+\begin{align*}
+\widehat{\p}(U = 1) &= \frac{u - \hat{\pi}}{u - \ell},
+\end{align*}
+and then applying~\Cref{algo:rejection} with the propensity score from~\Cref{adv_semi_binary}, we again obtain $e(X)=\pconfobs(T = 1) = \hat \pi$.
+For a negatively correlated binary confounder, we first enforce
+$\widehat{\p}(U = 1) = \frac{\hat{\pi} - \ell}{u - \ell}$ and swap $\ell$ for $u$ in~\Cref{adv_semi_binary}, and vice versa.
+
+The subsampling procedure in \Cref{algo:rejection} allows for the construction of observational datasets where the causal effect is identifiable non-parametrically, in contrast to previous approaches, such as \citep{gentzel2021and}, that do not guarantee identifiability after subsampling. In \Cref{algo:rejection}, 
+we note that  $M=\frac{\max _{i \in\{1, \ldots, n\}} \pconfobs\left(T=t_i \mid U_i\right)}{\min _{i \in\{1, \ldots, n\}} \widehat{\p}\left(T=t_i\right)}$, which is required to ensure that the causal effect is identifiable in the subsampled dataset (see Theorem 3.2 in~\cite{keith2023rct}). 
+We empirically observe that the subsampling procedure discards half of the instances from  $D \setminus \datarct$. 
+
+
+
+\subsubsection{Datasets details}
+\label{apx:dataset_details}
+
+We give additional details about the three datasets we use for the semi-synthetic experiments.
+
+\begin{itemize}
+    \item \textbf{Hillstrom's MineThatData Email data}~\citep{hillstrom2008}. The Hillstrom dataset contains records of 64,000 customers who purchased within the last twelve months. They were part of an e-mail campaign to assess the effectiveness of distinct campaign strategies. Two treatment groups, ``Men’s" and ``Women’s" email campaigns, and a control group were established. Treatments were randomly assigned. Our analysis primarily focuses on a combined treatment group, which constitutes roughly 66\% of the dataset. While the original dataset has different outcomes, we looked at the dollars spent in the two weeks post-campaign. The dataset provides data on recent purchase patterns (Recency), annual spending categories (History Segment) and values (History), merchandise type, either Mens (Mens) or Womens (Womens), geographical location via zip code (Zip Code), newcomer status (Newbie), and purchasing avenues (Channel). After subsampling, we end up with a randomized trial of size $\nrct=7680$ and an observational dataset of size $\nobs=20500$. \Cref{asm:nested_support} is enforced by excluding urban zip codes in the trial.
+
+    \item \textbf{VOTE dataset}~\citep{gerber2008social}. The VOTE dataset studies the effect of social pressure on voting behaviors among Michigan's registered voters, focusing on those who voted in the prior election and met certain criteria. The primary outcome is a binary variable indicating whether the letter recipients voted. In this randomized trial, participants were allocated to a control group or one of four treatment groups. The treatment groups received distinct letters, each varying in social pressure intensity, aimed at encouraging voting. The most persuasive letter provided insight into the recipient's neighbors' voting patterns from the previous two elections and implied updates on neighbors' subsequent voting actions in future letters. Using the split in \citep{stutz2023}, we incorporated roughly 190,000 samples in the control group, and we kept the treatment group with the strongest letter, leaving about 38,000 samples. We retained preprocessed features like age, household size, gender, and two scores reflecting past voting habits and the voting patterns of neighbors. After subsampling, we end up with a randomized trial of size $\nrct=10650$ and an observational dataset of size $\nobs=36800$.  We discard households with more than 4 participants to enforce \Cref{asm:nested_support}.
+
+    \item \textbf{Tennessee STAR Project}~\citep{word1990state}. The Tennessee STAR experiment, initiated in 1985, was a randomized study examining the impact of class size on students' standardized test scores, tracking them from kindergarten through third grade. Initially, students and teachers were randomly placed into class sizes, intending to maintain these conditions throughout the study. We follow the dataset preprocessing outlined in~\citep{kallus2018removing}.  Their analysis concentrates on two conditions: small classes (13-17 students) and regular-sized classes (22-25 students). They used the class size at first grade as the treatment variable, observing 4,509  students. Their outcome aggregates scores from listening, reading, and math tests at the end of the first grade. After excluding students with missing values, the final sample consisted of 4,218 students: 1,805 in small classes (treatment) and 2,413 in regular-sized classes (control). The observed features for each student are gender, race, birth month, birthday, birth year, free lunch given or not and teacher ID.  After subsampling, we end up with a randomized trial of size $\nrct=600$ and an observational dataset of size $\nobs=1800$. For the STAR project, we keep inner-city and suburban students but remove urban and rural ones to enforce~\Cref{asm:nested_support}.
+\end{itemize}
+
+We one-hot-encode all categorical features and standardize in $[0, 1]$ all continuous features.
+
+\paragraph{Implementation }We use QB~\citep{dorn2022sharp} for the test $\test_{\obsres}$. For continuous outcomes (Hillstrom and STAR), we fit a random forest regressor for the quantile functions, while we leverage the closed-form solution for the quantiles in the binary case (VOTE). For the test $\test_{\rct}$ we use the B-Learner~\citep{oprescu2023b}, fitting respective random forest regressors for the quantiles, the outcome and the bounds models. For the binary case, we use the closed-form solution for the quantiles and fit the outcome and bounds models with XGBoost~\citep{chen2015xgboost}. We always train a logistic regressor for the propensity score.  We report mean and standard error over 15 runs and set $\nbs = 200, \alpha=0.05$ for all experiments.
+
+
+
+
+\subsection{Women's Health Initiative}
+\label{apx:whi_exp}
+The Women's Health Initiative (WHI) is a long-term national health study that has focused on strategies for preventing the major causes of death, disability, and frailty in older women, specifically heart disease, cancer, and osteoporotic fractures. This multi-million dollar, 20+ year project, sponsored by the National Institutes of Health (NIH), the National Heart, Lung, and Blood Institute (NHLBI), originally enrolled 161,808 women aged 50-79 between 1993 and 1998. The WHI was one of the most definitive, far-reaching clinical trials of post-menopausal women's health ever undertaken in the US.  
+
+The WHI had two major parts: a Clinical Trial and an Observational Study. The randomized controlled Clinical Trial (CT) enrolled 68,132 women on trials testing three prevention strategies. Eligible women could choose to enrol in one, two, or three of the trial components.
+\begin{itemize}
+\item Hormone Therapy Trials (HT): This component examined the effects of combined hormones or estrogen alone on the prevention of heart disease and osteoporotic fractures, and associated risk for breast cancer. Women participating in this component took hormone pills or a placebo (inactive pill) until the Estrogen plus Progestin and Estrogen Alone trials were stopped early in July 2002 and March 2004, respectively. All HT participants continued to be followed without intervention until close-out.
+\item 	Dietary Modification Trial (DM): The Dietary Modification component evaluated the effect of a low-fat and high-fruit, vegetable and grain diet on the prevention of breast and colorectal cancers and heart disease. Study participants followed either their usual eating pattern or a low-fat dietary pattern.
+\item Calcium/Vitamin D Trial (CaD): This component evaluated the effect of calcium and vitamin D supplementation on the prevention of osteoporotic fractures and colorectal cancer. Women in this component took calcium and vitamin D pills or placebos.
+\end{itemize}
+The Observational Study (OS) examines the relationship between lifestyle, health and risk factors and disease outcomes. This component involves tracking the medical events and health habits of 93,676 women. Recruitment for the observational study was completed in 1998 and participants have been followed since.
+
+
+
+To assess our method in a real-world scenario, we use observational study and randomized trial data from the Women’s Health Initiative (WHI). We use the Postmenopausal Hormone Therapy (PHT) trial as the RCT in our analysis ($\nrct=16,608$), which was run on postmenopausal women aged 50-79 years with an intact uterus. The trial investigated the effect of hormone therapy on several types of cancers, cardiovascular events, and fractures, measuring the “time-to-event” for each outcome. In the WHI setup, the observational study component was run in parallel and tracked similar outcomes to the RCT. 
+
+
+\paragraph{Data preprocessing} 
+We binarize a composite outcome, called the “global index”, in our analysis, where Y = 1 if coronary heart disease or stroke was observed in the first seven years of follow-up, and Y = 0 otherwise. Note that Y = 0 could also occur from censoring. To establish treatment and control groups in the observational study, we use questionnaire data in which participants confirm or deny usage of combination hormones (i.e. both estrogen and progesterone) in the first three years. Using this procedure, we end up
+ with a total of $\nobs = 33,511$ patients. Finally, we restrict the set of covariates used to those that are measured in both the RCT and the observational study.  In particular, we use as covariates only those measured in both the RCT and observational study, and we further restrict them to those identified as significant in epidemiological literature, such as in~\citep{prentice2005combined}. Specifically, the covariates in our analysis are: \texttt{AGE}, \texttt{ETHNIC\_White}, \texttt{BMI}, \texttt{SMOKING\_Past\_Smoker}, \texttt{SMOKING\_Current\_Smoker}, \texttt{EDUC\_x\_College\_graduate\_or\_Baccalaureate Degree}, \texttt{EDUC\_x\_Some\_post-graduate\_or\_professional}, \texttt{MENO}, \texttt{PHYSFUN}. The data used is available on \href{(https://biolincc.nhlbi.nih.gov/studies/whi_ctos)}{BIOLINCC}.
+
+
+
+
+
+
+
+\paragraph{Experimental details}We train logistic regression for both outcome models and propensity score. We use as sensitivity bounds DVDS~\citep{dorn2021doubly} for the test $\test_{\obsres}$, and B-Learner for the test $\test_{\rct}$. We test for confounding in one direction, i.e. we only compute the test statistic $\hat{T}_\confvalue^+$. We set $\nbs=100$ and $\alpha=0.05$ for all experiments.

@@ -1,0 +1,13 @@
+\subsection{Related work}
+\label{sec:related_work}
+Our approach is closely related to a line of work that proposes statistical tests for the \emph{presence} of unobserved confounding. In particular, several works leverage randomized trials to detect unobserved confounding. These tests check for significant differences between average treatment effect estimates obtained from randomized and observational data \citep{viele2014use,yangelastic, morucci2023double,hussain2022falsification}. More sophisticated approaches also test for differences in conditional average treatment effect estimates \citep{hussain2023falsification} and account for right-censored outcomes~\citep{demirel2024benchmarking}. 
+
+
+Similarly, other works have designed statistical tests using instrumental variables and negative control outcomes instead of randomized trials~\citep{lipsitch2010negative, de2014testing, donald2014testing,sofer2016negative}. Additionally, multiple observational studies can be leveraged to test conditional independences and detect unobserved confounding~\citep{karlsson2023detecting}.
+
+
+In contrast to our test, these works have a significant limitation: they cannot quantify the true confounding strength. Even in infinite samples, they reject observational studies with negligible confounding. In real-world settings, where some degree of confounding will likely be present, testing for the absence of unobserved confounding can be too restrictive. 
+
+Finally, another line of works proposes calibrating the value of confounding strength using only observational data~\citep{hsu2013calibrating,veitch2020sense}. However, the true confounding
+ strength can be arbitrarily different from the calibrated strength, and there is no theoretical result for how these two quantities are related, even with infinite samples. 
+ 

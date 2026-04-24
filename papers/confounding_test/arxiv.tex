@@ -1,0 +1,103 @@
+\documentclass{article}
+\usepackage[a4paper, total={6.5in,8.5in}]{geometry}
+
+\usepackage{macros}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{booktabs} 
+\usepackage{multirow} 
+\usepackage[numbers, sort, comma, square]{natbib}
+\usepackage{authblk}
+\usepackage{wrapfig}
+\usepackage{appendix,minitoc,titletoc}
+
+
+\newcommand\DoToC{%
+  \startcontents
+\hypersetup{colorlinks=true, linkcolor=pierCite}
+  \printcontents{}{1}{\subsection*{\textbf{Table of contents}}}
+  \vskip3pt\vskip5pt
+}
+
+\graphicspath{{figures/}}
+
+
+
+\author{Piersilvio De Bartolomeis\footnote{These authors contributed equally.}~}
+\author{Javier Abad$^*$}
+\author{Konstantin Donhauser}
+\author{Fanny Yang}
+\affil{Department of Computer Science, ETH Zürich}
+
+
+\title{Hidden yet quantifiable: A lower bound  for confounding strength using randomized trials}
+
+\date{}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\input{content/abstract}
+
+\end{abstract}
+
+\section{Introduction}
+\input{content/intro}
+
+
+\input{content/rwork}
+
+\section{Setting and notation}
+\label{sec:setting}
+\input{content/notation}
+
+
+
+\input{content/test}
+\input{content/synthetic}
+\input{content/whi}
+\input{content/limitations}
+
+\bibliography{main}
+\bibliographystyle{plainnat}
+
+\clearpage
+
+\section*{Appendices}
+The following appendices provide deferred proofs, experiment details, and ablation studies.
+\appendix
+\DoToC
+\clearpage
+\hypersetup{
+    colorlinks,
+   linkcolor={pierLink},
+    citecolor={pierCite},
+    urlcolor={pierCite}
+}
+\section{Methodology}
+\subsection{Remaining proofs}
+We present here the proofs 
+for~\Cref{lemma:identify_ate,prop:test}.
+\input{appendix/proofs.tex}
+\subsection{Nested design}
+\label{apx:nested_design}
+\input{appendix/nested_design.tex}
+
+\subsection{Limitations of MSM}
+\label{apx:limitations_msm}
+\input{appendix/msm.tex}
+\label{../apx:limitations_msm}
+\section{Experimental details}
+\input{appendix/experiments.tex}
+\label{apx:experimental_details}
+\clearpage
+\section{Additional Experiments}
+\input{appendix/additional.tex}
+\label{apx:additional_experiments}
+
+\end{document}
