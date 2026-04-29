@@ -448,7 +448,7 @@ We also apply both token-wise \(\cpdelta\) and CP-Fuse on top of early-stopped m
 
 \subsection{Grid-Size Ablation}
 
-The token-wise optimization in CP-Fuse is solved by grid search over the coefficients in Equation~\eqref{eq:cpfuse-opt-problem}. Table~\ref{tab:app-cpfuse-grid-ablation} studies the effect of varying the number of grid points in \([0,2)\) while keeping \(9\) steps in \([2,10]\). For StarCoder and Phi-2, the memorization metrics remain close across grid sizes, while perplexity can improve with smaller grids. The LLaMA 2 results show that overly small grids can degrade perplexity.
+The token-wise CP-Fuse update is implemented by grid search over the log-linear coefficients in the representation from \Cref{lem:cpfuse-kkt}. Table~\ref{tab:app-cpfuse-grid-ablation} studies the effect of varying the number of grid points in \([0,2)\) while keeping \(9\) steps in \([2,10]\). For StarCoder and Phi-2, the memorization metrics remain close across grid sizes, while perplexity can improve with smaller grids. The LLaMA 2 results show that overly small grids can degrade perplexity.
 
 \begin{table}[!tbp]
 \centering

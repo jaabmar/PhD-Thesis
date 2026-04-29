@@ -2,116 +2,116 @@
 
 For brevity, write
 \[
-\gamma_i
+c_i
 =
 \log\left(
 \frac{\model(y_{<t}\mid x)}
      {\modeli(y_{<t}\mid x)}
-\right).
+\right),
+\qquad
+q_i(\cdot)
+=
+\modeli(\cdot \mid y_{<t},x).
 \]
 The optimization problem in \Cref{eq:cpfuse-opt-problem} can then be written as
 \begin{equation}
 \begin{aligned}
 \min_{p^*,\,\tau} \quad & \tau \\
 \text{s.t.} \quad &
-\KL\bigl(p^* \,\|\, \modeli(\cdot \mid y_{<t},x)\bigr)
-+ \gamma_i
+\KL\bigl(p^* \,\|\, q_i\bigr)
++ c_i
 \le \tau,
-\qquad \forall i,
+\qquad i\in\{1,2\},
 \end{aligned}
 \end{equation}
-with \(p^*\) constrained to lie on the simplex over \(V\).
+with \(p^*\) constrained to lie on the probability simplex over \(V\). If a token has zero probability under either base conditional, any feasible solution with finite objective must also assign zero probability to that token. Thus the argument below can be read on the common support of \(q_1\) and \(q_2\); under full support this is all of \(V\).
 
-Let \(\lambda_i \ge 0\) be the multipliers of the two inequality constraints and let \(\mu\) enforce simplex normalization. The KKT conditions give
+Let \(\lambda_i \ge 0\) be the multipliers of the two inequality constraints, let \(\mu\) enforce simplex normalization, and let \(\nu_y\geq 0\) be the multiplier for the nonnegativity constraint \(p^*(y)\geq 0\). The KKT condition for \(\tau\) gives
 \[
-\sum_i \lambda_i = 1
+\lambda_1+\lambda_2=1.
 \]
-from stationarity in \(\tau\), and for every coordinate with \(p^*(y_t) > 0\),
-\begin{equation}
-\sum_i \lambda_i
-\Bigl(
-\log p^*(y_t)
-- \log \modeli(y_t \mid y_{<t}, x)
-+ 1
-\Bigr)
+For every token \(y\) with \(p^*(y)>0\), complementary slackness gives \(\nu_y=0\), and stationarity in \(p^*(y)\) gives
+\[
+\sum_{i=1}^2 \lambda_i
+\bigl(
+\log p^*(y)-\log q_i(y)+1
+\bigr)
 + \mu
-= 0.
-\end{equation}
-Using \(\sum_i \lambda_i = 1\), this becomes
-\begin{equation}
-\begin{aligned}
-\log p^*(y_t)
-= {} &
-\lambda_1 \log \modelone(y_t \mid y_{<t},x) \\
-& + \lambda_2 \log \modeltwo(y_t \mid y_{<t},x)
-+ \gamma_t,
-\end{aligned}
-\end{equation}
-where \(\gamma_t = -1-\mu\). Setting \(\alpha_t = \lambda_1\) and \(\beta_t = \lambda_2\) yields the claimed representation. For coordinates with \(p^*(y_t)=0\), the same identity is read in the extended-real convention \(\log(0)=-\infty\).
+=0.
+\]
+Using \(\lambda_1+\lambda_2=1\), this becomes
+\[
+\log p^*(y)
+=
+\lambda_1 \log q_1(y)
++
+\lambda_2 \log q_2(y)
++
+\gamma_t,
+\qquad
+\gamma_t=-1-\mu.
+\]
+Setting \(\alpha_t=\lambda_1\) and \(\beta_t=\lambda_2\) yields the claimed log-linear representation. For the exact convex program, the coefficients additionally satisfy \(\alpha_t+\beta_t=1\); the implementation searches over a broader discretized log-linear family containing this KKT form.
 
 \subsection{Proof of \Cref{lem:cpfuse-balance}}
 
-Assume that both \(\modelone\) and \(\modeltwo\) have full support, and define
+Assume that both base conditionals have full support, and define
 \[
-\gamma_i
+c_i
 =
 \log\left(
 \frac{\model(y_{<t}\mid x)}
      {\modeli(y_{<t}\mid x)}
-\right).
+\right),
+\qquad
+q_i(\cdot)
+=
+\modeli(\cdot \mid y_{<t},x),
 \]
-Also define
+together with
 \[
 f_i(p)
 =
-\KL\bigl(p \,\|\, \modeli(\cdot \mid y_{<t},x)\bigr)
-+
-\gamma_i.
+\KL(p\,\|\,q_i)+c_i.
 \]
-The optimization problem in \Cref{eq:cpfuse-opt-problem} is therefore
-\begin{equation}
-\min_{p} \max\{f_1(p),f_2(p)\}.
-\end{equation}
-At any optimizer \(p^*\), either both terms are active, or exactly one of them is active.
+The optimization problem is \(\min_p \max\{f_1(p),f_2(p)\}\). Since
+\(\modelone(y_{<t}\mid x)>\modeltwo(y_{<t}\mid x)\), we have \(c_1<c_2\). At an optimizer \(p^*\), at least one constraint is active.
 
 \begin{enumerate}
-    \item Both constraints from \Cref{eq:cpfuse-opt-problem} are tight. In that case,
-    \begin{equation}
-    \begin{aligned}
-    \KL\bigl(p^* \,\|\, \modelone(\cdot \mid y_{<t},x)\bigr) + \gamma_1
-    &=
-    \KL\bigl(p^* \,\|\, \modeltwo(\cdot \mid y_{<t},x)\bigr) + \gamma_2.
-    \end{aligned}
-    \end{equation}
-    Expanding the KL terms shows that this is equivalent to
-    \begin{equation}
-    \begin{aligned}
-    \mathbb{E}_{y_t \sim p^*}\log \modelone(y_{\le t}\mid x)
-    &=
-    \mathbb{E}_{y_t \sim p^*}\log \modeltwo(y_{\le t}\mid x),
-    \end{aligned}
-    \end{equation}
-    which is exactly condition (1) in \Cref{lem:cpfuse-balance}.
+    \item Suppose both constraints are active. Then \(f_1(p^*)=f_2(p^*)\), so
+    \[
+    \KL(p^*\,\|\,q_1)+c_1
+    =
+    \KL(p^*\,\|\,q_2)+c_2.
+    \]
+    Expanding the KL terms and substituting the definitions of \(c_1\) and \(c_2\) gives
+    \[
+    \mathbb{E}_{y_t \sim p^*}
+    \log \modelone(y_{\leq t}\mid x)
+    =
+    \mathbb{E}_{y_t \sim p^*}
+    \log \modeltwo(y_{\leq t}\mid x),
+    \]
+    which is condition (1) in \Cref{lem:cpfuse-balance}.
 
-    \item Exactly one term is active. Then \(p^*\) minimizes that active term. Since each function \(f_i\) is minimized on the simplex at the corresponding base conditional, the only possibilities are that \(p^*\) coincides with one of the two base conditionals.
-
-    We now rule out the first possibility. Suppose by contradiction that \(p^* = \modelone(\cdot \mid y_{<t},x)\). Then
-    \begin{align}
-    \KL\bigl(p^* \,\|\, \modeltwo(\cdot \mid y_{<t},x)\bigr) + \gamma_2
-    &>
-    \KL\bigl(\modeltwo(\cdot \mid y_{<t},x) \,\|\, \modeltwo(\cdot \mid y_{<t},x)\bigr) + \gamma_2 \\
-    &=
-    \gamma_2 \\
-    &>
-    \gamma_1 \\
-    &=
-    \KL\bigl(p^* \,\|\, \modelone(\cdot \mid y_{<t},x)\bigr) + \gamma_1.
-    \end{align}
-    Here the strict inequality \(\gamma_2>\gamma_1\) follows from the assumption \(\modelone(y_{<t}\mid x)>\modeltwo(y_{<t}\mid x)\). Hence the objective at \(p^*=\modelone(\cdot \mid y_{<t},x)\) is controlled by the second term, so \(p^*\) cannot be optimal. Therefore the only remaining one-active case is
-    \begin{equation}
-    p^* = \modeltwo(\cdot \mid y_{<t},x),
-    \end{equation}
-    which is exactly condition (2) in \Cref{lem:cpfuse-balance}.
+    \item Suppose exactly one constraint is active. The KKT conditions then put all multiplier mass on that active constraint, so stationarity forces \(p^*=q_i\) for the active index \(i\). If \(p^*=q_1\), then
+    \[
+    f_2(q_1)
+    =
+    \KL(q_1\,\|\,q_2)+c_2
+    \geq c_2
+    >
+    c_1
+    =
+    f_1(q_1).
+    \]
+    Hence the active constraint at \(q_1\) would be the second one, not the first. With only the second constraint active, stationarity instead forces \(p^*=q_2\). Thus the only possible one-active optimizer is
+    \[
+    p^*=q_2
+    =
+    \modeltwo(\cdot\mid y_{<t},x),
+    \]
+    which is condition (2).
 \end{enumerate}
 
-Finally, if one of the base conditionals assigns zero probability to some token \(y_t\), then any optimizer with finite objective must also assign zero probability to that token. Without the full-support assumption, the optimizer need not satisfy either of the two conclusions above in exactly the same form.
+If one of the base conditionals assigns zero probability to some token \(y_t\), any optimizer with finite objective must also assign zero probability to that token. Without the full-support assumption, the optimizer is supported only on the common support of the base conditionals, and the two alternatives above need not hold in exactly the same form.

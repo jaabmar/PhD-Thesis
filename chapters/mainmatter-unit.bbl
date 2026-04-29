@@ -1,14 +1,9 @@
-\begin{thebibliography}{93}
+\begin{thebibliography}{147}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
-
-\bibitem[Abad et~al.(2025)Abad, Donhauser, Pinto, and Yang]{abad2025copyright}
-Javier Abad, Konstantin Donhauser, Francesco Pinto, and Fanny Yang.
-\newblock Copyright-protected language generation via adaptive model fusion.
-\newblock \emph{International Conference on Learning Representations}, 2025.
 
 \bibitem[Abadi et~al.(2016)Abadi, Chu, Goodfellow, McMahan, Mironov, Talwar,
   and Zhang]{abadi2016deep}
@@ -40,6 +35,19 @@ Ahmet Aktay, Shailesh Bavadekar, Gwen Cossoul, John Davis, Damien Desfontaines,
 \newblock {Google COVID-19} community mobility reports: anonymization process
   description (version 1.1).
 \newblock \emph{arXiv preprint arXiv:2004.04145}, 2020.
+
+\bibitem[Anderson et~al.(2003)Anderson, Manson, Wallace, Lund, Hall, Davis,
+  Shumaker, Wang, Stein, and Prentice]{anderson2003implementation}
+Garnet Anderson, Joann Manson, Robert Wallace, Bernedine Lund, Dallas Hall,
+  Scott Davis, Sally Shumaker, Ching-Yun Wang, Evan Stein, and Ross Prentice.
+\newblock Implementation of the {W}omen's {H}ealth {I}nitiative study design.
+\newblock \emph{Annals of Epidemiology}, 13\penalty0 (9):\penalty0 S5--S17,
+  2003.
+
+\bibitem[Andrews and Oster(2017)]{andrews2017weighting}
+Isaiah Andrews and Emily Oster.
+\newblock Weighting for external validity.
+\newblock \emph{NBER: National Bureau of Economic Research}, 2017.
 
 \bibitem[Anil et~al.(2022)Anil, Ghazi, Gupta, Kumar, and
   Manurangsi]{anil2022large}
@@ -83,6 +91,14 @@ Lucas Bourtoule, Varun Chandrasekaran, Christopher~A Choquette-Choo, Hengrui
 \newblock Machine unlearning.
 \newblock In \emph{2021 IEEE Symposium on Security and Privacy (SP)}, pages
   141--159. IEEE, 2021.
+
+\bibitem[Brantner et~al.(2023)Brantner, Chang, Nguyen, Hong, Di~Stefano, and
+  Stuart]{brantner2023methods}
+Carly~Lupton Brantner, Ting-Hsuan Chang, Trang~Quynh Nguyen, Hwanhee Hong, Leon
+  Di~Stefano, and Elizabeth~A Stuart.
+\newblock Methods for integrating trials and non-experimental data to examine
+  treatment effect heterogeneity.
+\newblock \emph{arXiv preprint arXiv:2302.13428}, 2023.
 
 \bibitem[Cai et~al.(2021)Cai, Lei, Wei, and Xiao]{cai2021data}
 Kuntai Cai, Xiaoyu Lei, Jianxin Wei, and Xiaokui Xiao.
@@ -148,6 +164,72 @@ Lenaic Chizat and Francis Bach.
   models using optimal transport.
 \newblock \emph{Advances in neural information processing systems}, 31, 2018.
 
+\bibitem[Choudhry(2017)]{choudhry2017randomized}
+Niteesh~K Choudhry.
+\newblock Randomized, controlled trials in health insurance systems.
+\newblock \emph{New England Journal of Medicine}, 377\penalty0 (10):\penalty0
+  957--964, 2017.
+
+\bibitem[Cole and Stuart(2010)]{cole2010generalizing}
+Stephen Cole and Elizabeth Stuart.
+\newblock Generalizing evidence from randomized clinical trials to target
+  populations: the {ACTG} 320 trial.
+\newblock \emph{American Journal of Epidemiology}, 172\penalty0 (1):\penalty0
+  107--115, 2010.
+
+\bibitem[Colnet et~al.(2020)Colnet, Mayer, Chen, Dieng, Li, Varoquaux, Vert,
+  Josse, and Yang]{colnet2020causal}
+B{\'e}n{\'e}dicte Colnet, Imke Mayer, Guanhua Chen, Awa Dieng, Ruohong Li,
+  Ga{\"e}l Varoquaux, Jean-Philippe Vert, Julie Josse, and Shu Yang.
+\newblock Causal inference methods for combining randomized trials and
+  observational studies: a review.
+\newblock \emph{arXiv preprint arXiv:2011.08047}, 2020.
+
+\bibitem[Colnet et~al.(2022)Colnet, Josse, Varoquaux, and
+  Scornet]{colnet2022reweighting}
+B{\'e}n{\'e}dicte Colnet, Julie Josse, Ga{\"e}l Varoquaux, and Erwan Scornet.
+\newblock Reweighting the {RCT} for generalization: finite sample analysis and
+  variable selection.
+\newblock \emph{arXiv preprint arXiv:2208.07614}, 2022.
+
+\bibitem[Colnet et~al.(2023)Colnet, Josse, Varoquaux, and
+  Scornet]{colnet2023risk}
+B{\'e}n{\'e}dicte Colnet, Julie Josse, Ga{\"e}l Varoquaux, and Erwan Scornet.
+\newblock Risk ratio, odds ratio, risk difference... {W}hich causal measure is
+  easier to generalize?
+\newblock \emph{arXiv preprint arXiv:2303.16008}, 2023.
+
+\bibitem[Cornfield et~al.(1959)Cornfield, Haenszel, Hammond, Lilienfeld,
+  Shimkin, and Wynder]{cornfield59}
+Jerome Cornfield, William Haenszel, E.~Cuyler Hammond, Abraham~M. Lilienfeld,
+  Michael~B. Shimkin, and Ernst~L. Wynder.
+\newblock Smoking and lung cancer: recent evidence and a discussion of some
+  questions.
+\newblock \emph{JNCI: Journal of the National Cancer Institute}, 22\penalty0
+  (1):\penalty0 173--203, 01 1959.
+
+\bibitem[De~Luna and Johansson(2014)]{de2014testing}
+Xavier De~Luna and Per Johansson.
+\newblock Testing for the unconfoundedness assumption using an instrumental
+  assumption.
+\newblock \emph{Journal of Causal Inference}, 2\penalty0 (2):\penalty0
+  187--199, 2014.
+
+\bibitem[Degtiar and Rose(2023)]{degtiar2023review}
+Irina Degtiar and Sherri Rose.
+\newblock A review of generalizability and transportability.
+\newblock \emph{Annual Review of Statistics and Its Application}, 10:\penalty0
+  501--524, 2023.
+
+\bibitem[Demirel et~al.(2024)Demirel, De~Brouwer, Hussain, Oberst, Philippakis,
+  and Sontag]{demirel2024benchmarking}
+Ilker Demirel, Edward De~Brouwer, Zeshan Hussain, Michael Oberst, Anthony
+  Philippakis, and David Sontag.
+\newblock Benchmarking observational studies with experimental data under
+  right-censoring.
+\newblock \emph{International Conference on Artificial Intelligence and
+  Statistics}, 2024.
+
 \bibitem[Deshpande et~al.(2018)Deshpande, Zhang, and
   Schwing]{deshpande2018generative}
 Ishan Deshpande, Ziyu Zhang, and Alexander~G Schwing.
@@ -163,6 +245,13 @@ Ishan Deshpande, Yuan-Ting Hu, Ruoyu Sun, Ayis Pyrros, Nasir Siddiqui, Sanmi
 \newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
   and Pattern Recognition}, pages 10648--10656, 2019.
 
+\bibitem[Donald et~al.(2014)Donald, Hsu, and Lieli]{donald2014testing}
+Stephen Donald, Yu-Chin Hsu, and Robert Lieli.
+\newblock Testing the unconfoundedness assumption via inverse probability
+  weighted estimators of {(L) ATT}.
+\newblock \emph{Journal of Business \& Economic Statistics}, 32\penalty0
+  (3):\penalty0 395--415, 2014.
+
 \bibitem[Donhauser et~al.(2023)Donhauser, Lokna, Sanyal, Boedihardjo, Hönig,
   and Yang]{donhauser2023certified}
 Konstantin Donhauser, Johan Lokna, Amartya Sanyal, March Boedihardjo, Robert
@@ -170,13 +259,25 @@ Konstantin Donhauser, Johan Lokna, Amartya Sanyal, March Boedihardjo, Robert
 \newblock Certified private data release for sparse {L}ipschitz functions,
   2023.
 
-\bibitem[Donhauser et~al.(2024)Donhauser, Abad, Hulkund, and
-  Yang]{donhauser2024privacy}
-Konstantin Donhauser, Javier Abad, Neha Hulkund, and Fanny Yang.
-\newblock Privacy-preserving data release leveraging optimal transport and
-  particle gradient descent.
-\newblock In \emph{Proceedings of the 41st International Conference on Machine
-  Learning}, pages 11453--11473, 2024.
+\bibitem[Dorn and Guo(2022)]{dorn2022sharp}
+Jacob Dorn and Kevin Guo.
+\newblock Sharp sensitivity analysis for inverse propensity weighting via
+  quantile balancing.
+\newblock \emph{Journal of the American Statistical Association}, pages 1--13,
+  2022.
+
+\bibitem[Dorn et~al.(2021)Dorn, Guo, and Kallus]{dorn2021doubly}
+Jacob Dorn, Kevin Guo, and Nathan Kallus.
+\newblock Doubly-valid/doubly-sharp sensitivity analysis for causal inference
+  with unmeasured confounding.
+\newblock \emph{arXiv preprint arXiv:2112.11449}, 2021.
+
+\bibitem[Dreyer(2018)]{dreyer2018advancing}
+Nancy~A Dreyer.
+\newblock Advancing a framework for regulatory use of real-world evidence: when
+  real is reliable.
+\newblock \emph{Therapeutic Innovation and Regulatory Science}, 52\penalty0
+  (3):\penalty0 362--368, 2018.
 
 \bibitem[Dukler et~al.(2023)Dukler, Bowman, Achille, Golatkar, Swaminathan, and
   Soatto]{dukler2023safe}
@@ -225,6 +326,14 @@ Angela Fan, Mike Lewis, and Yann Dauphin.
 \newblock In \emph{Proceedings of the 56th Annual Meeting of the Association
   for Computational Linguistics (Volume 1: Long Papers)}, pages 889--898, 2018.
 
+\bibitem[Franklin et~al.(2019)Franklin, Glynn, Martin, and
+  Schneeweiss]{franklin2019evaluating}
+Jessica Franklin, Robert Glynn, David Martin, and Sebastian Schneeweiss.
+\newblock Evaluating the use of nonrandomized real-world data analyses for
+  regulatory decision making.
+\newblock \emph{Clinical Pharmacology \& Therapeutics}, 105\penalty0
+  (4):\penalty0 867--877, 2019.
+
 \bibitem[Gaboardi et~al.(2014)Gaboardi, Arias, Hsu, Roth, and Wu]{gaboardi14}
 Marco Gaboardi, Emilio Jesus~Gallego Arias, Justin Hsu, Aaron Roth, and
   Zhiwei~Steven Wu.
@@ -232,6 +341,26 @@ Marco Gaboardi, Emilio Jesus~Gallego Arias, Justin Hsu, Aaron Roth, and
   data.
 \newblock In \emph{Proceedings of the International Conference on Machine
   Learning}, volume~32, pages 1170--1178, 22--24 Jun 2014.
+
+\bibitem[Gentzel et~al.(2021)Gentzel, Pruthi, and Jensen]{gentzel2021and}
+Amanda~M Gentzel, Purva Pruthi, and David Jensen.
+\newblock How and why to use experimental data to evaluate methods for
+  observational causal inference.
+\newblock In \emph{International Conference on Machine Learning}, pages
+  3660--3671. PMLR, 2021.
+
+\bibitem[Gerber et~al.(2008)Gerber, Green, and Larimer]{gerber2008social}
+Alan~S Gerber, Donald~P Green, and Christopher~W Larimer.
+\newblock Social pressure and voter turnout: evidence from a large-scale field
+  experiment.
+\newblock \emph{American political Science review}, 102\penalty0 (1):\penalty0
+  33--48, 2008.
+
+\bibitem[Goetz and Schork(2018)]{goetz2018personalized}
+Laura~H Goetz and Nicholas~J Schork.
+\newblock Personalized medicine: motivation, challenges, and progress.
+\newblock \emph{Fertility and sterility}, 109\penalty0 (6):\penalty0 952--963,
+  2018.
 
 \bibitem[Golatkar et~al.(2021)Golatkar, Achille, Ravichandran, Polito, and
   Soatto]{golatkar2021mixed}
@@ -265,6 +394,29 @@ Abhimanyu Hans, Yuxin Wen, Neel Jain, John Kirchenbauer, Hamid Kazemi, Prajwal
   generative {LLMs}.
 \newblock \emph{arXiv preprint arXiv:2406.10209}, 2024.
 
+\bibitem[Hartman et~al.(2015)Hartman, Grieve, Ramsahai, and
+  Sekhon]{hartman2015sample}
+Erin Hartman, Richard Grieve, Roland Ramsahai, and Jasjeet~S Sekhon.
+\newblock From sample average treatment effect to population average treatment
+  effect on the treated: combining experimental with observational studies to
+  estimate population treatment effects.
+\newblock \emph{Journal of the Royal Statistical Society Series A: Statistics
+  in Society}, 178\penalty0 (3):\penalty0 757--778, 2015.
+
+\bibitem[Hayden(2016)]{hayden2016gene}
+Erika~Check Hayden.
+\newblock Gene therapies pose million-dollar conundrum.
+\newblock \emph{Nature}, 534:\penalty0 305--306, 2016.
+
+\bibitem[He et~al.(2020)He, Tang, Yang, Guo, George, Charness, Quan~Hem, Hogan,
+  and Bian]{he2020clinical}
+Zhe He, Xiang Tang, Xi~Yang, Yi~Guo, Thomas George, Neil Charness,
+  Kelsa~Bartley Quan~Hem, William Hogan, and Jiang Bian.
+\newblock Clinical trial generalizability assessment in the big data era: a
+  review.
+\newblock \emph{Clinical and Translational Science}, 13\penalty0 (4):\penalty0
+  675--684, 2020.
+
 \bibitem[Henderson et~al.(2023)Henderson, Li, Jurafsky, Hashimoto, Lemley, and
   Liang]{henderson2023foundation}
 Peter Henderson, Xuechen Li, Dan Jurafsky, Tatsunori Hashimoto, Mark~A Lemley,
@@ -280,12 +432,29 @@ Dan Hendrycks, Steven Basart, Saurav Kadavath, Mantas Mazeika, Akul Arora,
 \newblock Measuring coding challenge competence with apps.
 \newblock \emph{NeurIPS}, 2021.
 
+\bibitem[Hillstrom(2008)]{hillstrom2008}
+Kevin Hillstrom.
+\newblock The {MineThatData} e-mail analytics and data mining challenge, 2008.
+
+\bibitem[Hotz et~al.(2005)Hotz, Imbens, and Mortimer]{hotz2005predicting}
+V~Joseph Hotz, Guido~W Imbens, and Julie~H Mortimer.
+\newblock Predicting the efficacy of future training programs using past
+  experiences at other locations.
+\newblock \emph{Journal of econometrics}, 125\penalty0 (1-2):\penalty0
+  241--270, 2005.
+
 \bibitem[Hsu et~al.(2024)Hsu, Chen, Liao, Ho, Wang, Hsu, and Shiu]{hsu2024let}
 Chan-Jan Hsu, Yi-Chang Chen, Feng-Ting Liao, Pei-Chen Ho, Yu-Hsiang Wang,
   Po-Chun Hsu, and Da-shan Shiu.
 \newblock Let's fuse step by step: A generative fusion decoding algorithm with
   {LLMs} for multi-modal text recognition.
 \newblock \emph{arXiv preprint arXiv:2405.14259}, 2024.
+
+\bibitem[Hsu and Small(2013)]{hsu2013calibrating}
+Jesse~Y Hsu and Dylan~S Small.
+\newblock Calibrating sensitivity analyses to observed covariates in
+  observational studies.
+\newblock \emph{Biometrics}, 69\penalty0 (4):\penalty0 803--811, 2013.
 
 \bibitem[Hu et~al.(2024)Hu, Wu, Li, Long, Garrido, Ge, Ding, Forsyth, Li, and
   Song]{hu2023sok}
@@ -295,6 +464,21 @@ Yuzheng Hu, Fan Wu, Qinbin Li, Yunhui Long, Gonzalo~Munilla Garrido, Chang Ge,
 \newblock In \emph{2024 IEEE Symposium on Security and Privacy (SP)}. IEEE
   Computer Society, may 2024.
 \newblock \doi{10.1109/SP54263.2024.00002}.
+
+\bibitem[Hussain et~al.(2022)Hussain, Oberst, Shih, and
+  Sontag]{hussain2022falsification}
+Zeshan Hussain, Michael Oberst, Ming-Chieh Shih, and David Sontag.
+\newblock Falsification before extrapolation in causal effect estimation.
+\newblock \emph{Advances in Neural Information Processing Systems}, 2022.
+
+\bibitem[Hussain et~al.(2023)Hussain, Shih, Oberst, Demirel, and
+  Sontag]{hussain2023falsification}
+Zeshan Hussain, Ming-Chieh Shih, Michael Oberst, Ilker Demirel, and David
+  Sontag.
+\newblock Falsification of internal and external validity in observational
+  studies via conditional moment restrictions.
+\newblock \emph{International Conference on Artificial Intelligence and
+  Statistics}, 2023.
 
 \bibitem[Ippolito and Yu(2023)]{ippolito2023donottrain}
 Daphne Ippolito and Yun~William Yu.
@@ -322,6 +506,13 @@ Joel Jang, Dongkeun Yoon, Sohee Yang, Sungmin Cha, Moontae Lee, Lajanugen
   for Computational Linguistics (Volume 1: Long Papers)}, pages 14389--14408,
   2023.
 
+\bibitem[Jesson et~al.(2021)Jesson, Mindermann, Gal, and
+  Shalit]{jesson2021quantifying}
+Andrew Jesson, S{\"o}ren Mindermann, Yarin Gal, and Uri Shalit.
+\newblock Quantifying ignorance in individual-level causal-effect estimates
+  under hidden confounding.
+\newblock \emph{International Conference on Machine Learning}, 2021.
+
 \bibitem[Jiang et~al.(2023)Jiang, Ren, and Lin]{jiang2023llm}
 Dongfu Jiang, Xiang Ren, and Bill~Yuchen Lin.
 \newblock {LLM-Blender}: Ensembling large language models with pairwise ranking
@@ -330,17 +521,33 @@ Dongfu Jiang, Xiang Ren, and Bill~Yuchen Lin.
   for Computational Linguistics (Volume 1: Long Papers)}, pages 14165--14178,
   2023.
 
-\bibitem[Jin et~al.(2023)Jin, Ren, Preotiuc-Pietro, and Cheng]{jin2022dataless}
+\bibitem[Jin et~al.(2023{\natexlab{a}})Jin, Ren, Preotiuc-Pietro, and
+  Cheng]{jin2022dataless}
 Xisen Jin, Xiang Ren, Daniel Preotiuc-Pietro, and Pengxiang Cheng.
 \newblock Dataless knowledge fusion by merging weights of language models.
 \newblock In \emph{The Eleventh International Conference on Learning
-  Representations}, 2023.
+  Representations}, 2023{\natexlab{a}}.
+
+\bibitem[Jin et~al.(2023{\natexlab{b}})Jin, Ren, and
+  Cand{\`e}s]{jin2023sensitivity}
+Ying Jin, Zhimei Ren, and Emmanuel~J Cand{\`e}s.
+\newblock Sensitivity analysis of individual treatment effects: A robust
+  conformal inference approach.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 120\penalty0
+  (6):\penalty0 e2214889120, 2023{\natexlab{b}}.
 
 \bibitem[Johnson et~al.(2018)Johnson, Near, and Song]{johnson2018towards}
 Noah Johnson, Joseph~P Near, and Dawn Song.
 \newblock Towards practical differential privacy for {SQL} queries.
 \newblock \emph{Proceedings of the VLDB Endowment}, 11\penalty0 (5):\penalty0
   526--539, 2018.
+
+\bibitem[Kallus et~al.(2019)Kallus, Mao, and Zhou]{kallus2019interval}
+Nathan Kallus, Xiaojie Mao, and Angela Zhou.
+\newblock Interval estimation of individual-level causal effects under
+  unobserved confounding.
+\newblock \emph{International Conference on Artificial Intelligence and
+  Statistics}, 2019.
 
 \bibitem[Kandpal et~al.(2022)Kandpal, Wallace, and
   Raffel]{kandpal2022deduplicating}
@@ -357,6 +564,26 @@ Antonia Karamolegkou, Jiaang Li, Li~Zhou, and Anders S{\o}gaard.
 \newblock In \emph{Proceedings of the 2023 Conference on Empirical Methods in
   Natural Language Processing}, pages 7403--7412, 2023.
 
+\bibitem[Karlsson and Krijthe(2023)]{karlsson2023detecting}
+Rickard Karlsson and Jesse Krijthe.
+\newblock Detecting hidden confounding in observational data using multiple
+  environments.
+\newblock \emph{Advances in Neural Information Processing Systems}, 2023.
+
+\bibitem[Keith et~al.(2023)Keith, Feldman, Jurgens, Bragg, and
+  Bhattacharya]{keith2023rct}
+Katherine~A Keith, Sergey Feldman, David Jurgens, Jonathan Bragg, and Rohit
+  Bhattacharya.
+\newblock {RCT} rejection sampling for causal estimation evaluation.
+\newblock \emph{arXiv preprint arXiv:2307.15176}, 2023.
+
+\bibitem[Kern et~al.(2016)Kern, Stuart, Hill, and Green]{kern2016assessing}
+Holger~L Kern, Elizabeth~A Stuart, Jennifer Hill, and Donald~P Green.
+\newblock Assessing methods for generalizing experimental impact estimates to
+  target populations.
+\newblock \emph{Journal of Research on Educational Effectiveness}, 9\penalty0
+  (1):\penalty0 103--127, 2016.
+
 \bibitem[Kim et~al.(2024)Kim, Suk, Longpre, Lin, Shin, Welleck, Neubig, Lee,
   Lee, and Seo]{kim2024prometheus}
 Seungone Kim, Juyoung Suk, Shayne Longpre, Bill~Yuchen Lin, Jamin Shin, Sean
@@ -364,6 +591,13 @@ Seungone Kim, Juyoung Suk, Shayne Longpre, Bill~Yuchen Lin, Jamin Shin, Sean
 \newblock Prometheus 2: An open source language model specialized in evaluating
   other language models.
 \newblock \emph{arXiv preprint arXiv:2405.01535}, 2024.
+
+\bibitem[Klonoff(2020)]{klonoff2020new}
+David Klonoff.
+\newblock The new {FDA} real-world evidence program to support development of
+  drugs and biologics.
+\newblock \emph{Journal of Diabetes Science and Technology}, 14\penalty0
+  (2):\penalty0 345--349, 2020.
 
 \bibitem[Kocetkov et~al.(2022)Kocetkov, Li, Allal, Li, Mou, Ferrandis, Jernite,
   Mitchell, Hughes, Wolf, et~al.]{kocetkov2022stack}
@@ -388,12 +622,6 @@ Katherine Lee, Daphne Ippolito, Andrew Nystrom, Chiyuan Zhang, Douglas Eck,
   for Computational Linguistics (Volume 1: Long Papers)}, pages 8424--8445,
   2022.
 
-\bibitem[Lee et~al.(2023)Lee, Cooper, and Grimmelmann]{lee2023talkin}
-Katherine Lee, A~Feder Cooper, and James Grimmelmann.
-\newblock Talkin''bout {AI} generation: Copyright and the generative-{AI}
-  supply chain.
-\newblock \emph{arXiv preprint arXiv:2309.08133}, 2023.
-
 \bibitem[Li et~al.(2021)Li, Zhang, and Wang]{li2021dpsyn}
 Ninghui Li, Zhikun Zhang, and Tianhao Wang.
 \newblock {DPSyn}: Experiences in the {NIST} differential privacy data
@@ -411,6 +639,13 @@ Raymond Li, Loubna~Ben Allal, Yangtian Zi, Niklas Muennighoff, Denis Kocetkov,
 Tianlin Li, Qian Liu, Tianyu Pang, Chao Du, Qing Guo, Yang Liu, and Min Lin.
 \newblock Purifying large language models by ensembling a small language model.
 \newblock \emph{arXiv preprint arXiv:2402.14845}, 2024.
+
+\bibitem[Lipsitch et~al.(2010)Lipsitch, Tchetgen, and
+  Cohen]{lipsitch2010negative}
+Marc Lipsitch, Eric~Tchetgen Tchetgen, and Ted Cohen.
+\newblock Negative controls: a tool for detecting confounding and bias in
+  observational studies.
+\newblock \emph{Epidemiology}, 21\penalty0 (3):\penalty0 383, 2010.
 
 \bibitem[Liu et~al.(2021{\natexlab{a}})Liu, Sap, Lu, Swayamdipta, Bhagavatula,
   Smith, and Choi]{liu2021dexperts}
@@ -504,18 +739,54 @@ Sewon Min, Suchin Gururangan, Eric Wallace, Weijia Shi, Hannaneh Hajishirzi,
 \newblock In \emph{The Twelfth International Conference on Learning
   Representations}, 2023.
 
-\bibitem[Mueller et~al.(2024)Mueller, G{\"o}rge, Bernzen, Pirk, and
-  Poretschkin]{mueller2024llms}
-Felix~B Mueller, Rebekka G{\"o}rge, Anna~K Bernzen, Janna~C Pirk, and
-  Maximilian Poretschkin.
-\newblock {LLMs} and memorization: On quality and specificity of copyright
-  compliance.
-\newblock \emph{arXiv preprint arXiv:2405.18492}, 2024.
+\bibitem[Morucci et~al.(2023)Morucci, Orlandi, Parikh, Roy, Rudin, and
+  Volfovsky]{morucci2023double}
+Marco Morucci, Vittorio Orlandi, Harsh Parikh, Sudeepa Roy, Cynthia Rudin, and
+  Alexander Volfovsky.
+\newblock A double machine learning approach to combining experimental and
+  observational data.
+\newblock \emph{arXiv preprint arXiv:2307.01449}, 2023.
 
 \bibitem[Near and Darais(2022)]{NIST-diff-privacy}
 Joseph Near and David Darais.
 \newblock Differential privacy: Future work \& open challenges, 2022.
 \newblock Accessed on 11th October 2023.
+
+\bibitem[Nie et~al.(2021)Nie, Imbens, and Wager]{nie2021covariate}
+Xinkun Nie, Guido Imbens, and Stefan Wager.
+\newblock Covariate balancing sensitivity analysis for extrapolating randomized
+  trials across locations.
+\newblock \emph{arXiv preprint arXiv:2112.04723}, 2021.
+
+\bibitem[Olschewski and Scheurlen(1985)]{olschewski1985comprehensive}
+Manfred Olschewski and H~Scheurlen.
+\newblock Comprehensive cohort study: an alternative to randomized consent
+  design in a breast preservation trial.
+\newblock \emph{Methods of Information in Medicine}, 24\penalty0 (03):\penalty0
+  131--134, 1985.
+
+\bibitem[Olschewski et~al.(1992)Olschewski, Schumacher, and
+  Davis]{olschewski1992analysis}
+Manfred Olschewski, Martin Schumacher, and Kathryn~B Davis.
+\newblock Analysis of randomized and nonrandomized patients in clinical trials
+  using the comprehensive cohort follow-up study design.
+\newblock \emph{Controlled Clinical Trials}, 13\penalty0 (3):\penalty0
+  226--239, 1992.
+
+\bibitem[O'Muircheartaigh and Hedges(2014)]{o2014generalizing}
+Colm O'Muircheartaigh and Larry~V Hedges.
+\newblock Generalizing from unrepresentative experiments: a stratified
+  propensity score approach.
+\newblock \emph{Journal of the Royal Statistical Society Series C: Applied
+  Statistics}, 63\penalty0 (2):\penalty0 195--210, 2014.
+
+\bibitem[Oprescu et~al.(2023)Oprescu, Dorn, Ghoummaid, Jesson, Kallus, and
+  Shalit]{oprescu2023b}
+Miruna Oprescu, Jacob Dorn, Marah Ghoummaid, Andrew Jesson, Nathan Kallus, and
+  Uri Shalit.
+\newblock B-learner: Quasi-oracle bounds on heterogeneous causal effects under
+  hidden confounding.
+\newblock \emph{International Conference on Machine Learning}, 2023.
 
 \bibitem[Pinto et~al.(2024)Pinto, Rauschmayr, Tram\`{e}r, Torr, and
   Tombari]{mm_mem2024}
@@ -527,6 +798,14 @@ Francesco Pinto, Nathalie Rauschmayr, Florian Tram\`{e}r, Philip Torr, and
   pages 40813--40826. PMLR, 21--27 Jul 2024.
 \newblock URL \url{https://proceedings.mlr.press/v235/pinto24a.html}.
 
+\bibitem[Platt et~al.(2018)Platt, Brown, Robb, McClellan, Ball, Nguyen, and
+  Sherman]{platt2018fda}
+Richard Platt, Jeffrey Brown, Melissa Robb, Mark McClellan, Robert Ball,
+  Michael Nguyen, and Rachel Sherman.
+\newblock The {FDA Sentinel Initiative}---an evolving national resource.
+\newblock \emph{New England Journal of Medicine}, 379\penalty0 (22):\penalty0
+  2091--2093, 2018.
+
 \bibitem[Prechelt et~al.(2002)Prechelt, Malpohl, Philippsen,
   et~al.]{prechelt2002finding}
 Lutz Prechelt, Guido Malpohl, Michael Philippsen, et~al.
@@ -534,11 +813,35 @@ Lutz Prechelt, Guido Malpohl, Michael Philippsen, et~al.
 \newblock \emph{J. Univers. Comput. Sci.}, 8\penalty0 (11):\penalty0 1016,
   2002.
 
+\bibitem[Prentice et~al.(2005)Prentice, Langer, Stefanick, Howard, Pettinger,
+  Anderson, Barad, Curb, Kotchen, Kuller, et~al.]{prentice2005combined}
+Ross Prentice, Robert Langer, Marcia Stefanick, Barbara Howard, Mary Pettinger,
+  Garnet Anderson, David Barad, David Curb, Jane Kotchen, Lewis Kuller, et~al.
+\newblock Combined postmenopausal hormone therapy and cardiovascular disease:
+  toward resolving the discrepancy between observational studies and the
+  \text{Women's Health Initiative} clinical trial.
+\newblock \emph{American Journal of Epidemiology}, 162\penalty0 (5):\penalty0
+  404--414, 2005.
+
 \bibitem[Sag(2019)]{sag66new}
 Matthew Sag.
 \newblock The new legal landscape for text mining and machine learning.
 \newblock \emph{Journal of the Copyright Society of the USA}, 66:\penalty0 291,
   2019.
+
+\bibitem[Schurman(2019)]{schurman2019framework}
+Beth Schurman.
+\newblock The framework for {FDA}'s real-world evidence program.
+\newblock \emph{Applied Clinical Trials}, 28\penalty0 (4), 2019.
+
+\bibitem[Sofer et~al.(2016)Sofer, Richardson, Colicino, Schwartz, and
+  Tchetgen]{sofer2016negative}
+Tamar Sofer, David Richardson, Elena Colicino, Joel Schwartz, and Eric~Tchetgen
+  Tchetgen.
+\newblock On negative outcome control of unobserved confounding as a
+  generalization of difference-in-differences.
+\newblock \emph{Statistical Science: a Review Journal of the Institute of
+  Mathematical Statistics}, 31\penalty0 (3):\penalty0 348, 2016.
 
 \bibitem[Somepalli et~al.(2022)Somepalli, Singla, Goldblum, Geiping, and
   Goldstein]{Somepalli2022DiffusionAO}
@@ -548,6 +851,25 @@ Gowthami Somepalli, Vasu Singla, Micah Goldblum, Jonas Geiping, and Tom
   diffusion models.
 \newblock \emph{2023 IEEE/CVF Conference on Computer Vision and Pattern
   Recognition (CVPR)}, pages 6048--6058, 2022.
+
+\bibitem[Stuart et~al.(2011)Stuart, Cole, Bradshaw, and Leaf]{stuart2011use}
+Elizabeth Stuart, Stephen Cole, Catherine Bradshaw, and Philip Leaf.
+\newblock The use of propensity scores to assess the generalizability of
+  results from randomized trials.
+\newblock \emph{Journal of the Royal Statistical Society Series A: Statistics
+  in Society}, 174\penalty0 (2):\penalty0 369--386, 2011.
+
+\bibitem[Sugden and Smith(1984)]{sugden1984ignorable}
+RA~Sugden and TMF Smith.
+\newblock Ignorable and informative designs in survey sampling inference.
+\newblock \emph{Biometrika}, 71\penalty0 (3):\penalty0 495--506, 1984.
+
+\bibitem[Tan(2006)]{tan2006distributional}
+Zhiqiang Tan.
+\newblock A distributional approach for causal inference using propensity
+  scores.
+\newblock \emph{Journal of the American Statistical Association}, 101\penalty0
+  (476):\penalty0 1619--1637, 2006.
 
 \bibitem[Tao et~al.(2021)Tao, McKenna, Hay, Machanavajjhala, and
   Miklau]{tao2021benchmarking}
@@ -579,11 +901,38 @@ S.~S. Vallender.
 \newblock \emph{Theory of Probability \& Its Applications}, 18\penalty0
   (4):\penalty0 784--786, 1974.
 
+\bibitem[Vandenbroucke(2009)]{vandenbroucke2009hrt}
+Jan Vandenbroucke.
+\newblock The {HRT} controversy: observational studies and {RCT}s fall in line.
+\newblock \emph{The Lancet}, 373\penalty0 (9671):\penalty0 1233--1235, 2009.
+
+\bibitem[VanderWeele and Ding(2017)]{vanderweele2017sensitivity}
+Tyler VanderWeele and Peng Ding.
+\newblock Sensitivity analysis in observational research: introducing the
+  e-value.
+\newblock \emph{Annals of Internal Medicine}, 167\penalty0 (4):\penalty0
+  268--274, 2017.
+
+\bibitem[Veitch and Zaveri(2020)]{veitch2020sense}
+Victor Veitch and Anisha Zaveri.
+\newblock Sense and sensitivity analysis: Simple post-hoc analysis of bias due
+  to unobserved confounding.
+\newblock \emph{Advances in Neural Information Processing Systems}, 2020.
+
 \bibitem[Vero et~al.(2023)Vero, Balunovi{\'c}, and
   Vechev]{vero2023programmable}
 Mark Vero, Mislav Balunovi{\'c}, and Martin Vechev.
 \newblock Programmable synthetic tabular data generation.
 \newblock \emph{arXiv preprint arXiv:2307.03577}, 2023.
+
+\bibitem[Viele et~al.(2014)Viele, Berry, Neuenschwander, Amzal, Chen, Enas,
+  Hobbs, Ibrahim, Kinnersley, Lindborg, et~al.]{viele2014use}
+Kert Viele, Scott Berry, Beat Neuenschwander, Billy Amzal, Fang Chen, Nathan
+  Enas, Brian Hobbs, Joseph Ibrahim, Nelson Kinnersley, Stacy Lindborg, et~al.
+\newblock Use of historical control data for assessing treatment effects in
+  clinical trials.
+\newblock \emph{Pharmaceutical Statistics}, 13\penalty0 (1):\penalty0 41--54,
+  2014.
 
 \bibitem[Vietri et~al.(2020)Vietri, Tian, Bun, Steinke, and Wu]{vietri2020new}
 Giuseppe Vietri, Grace Tian, Mark Bun, Thomas Steinke, and Steven Wu.
@@ -599,6 +948,12 @@ Giuseppe Vietri, Cedric Archambeau, Sergul Aydore, William Brown, Michael
 \newblock \emph{Advances in Neural Information Processing Systems},
   35:\penalty0 18282--18295, 2022.
 
+\bibitem[Vlahovi{\'c}-Pal{\v{c}}evski and
+  Mentzer(2011)]{vlahovic2011postmarketing}
+Vera Vlahovi{\'c}-Pal{\v{c}}evski and Dirk Mentzer.
+\newblock Postmarketing surveillance.
+\newblock \emph{Pediatric Clinical Pharmacology}, pages 339--351, 2011.
+
 \bibitem[Vyas et~al.(2023)Vyas, Kakade, and Barak]{vyas2023provable}
 Nikhil Vyas, Sham~M Kakade, and Boaz Barak.
 \newblock On provable copyright protection for generative models.
@@ -611,6 +966,14 @@ Boyi Wei, Weijia Shi, Yangsibo Huang, Noah~A Smith, Chiyuan Zhang, Luke
   Zettlemoyer, Kai Li, and Peter Henderson.
 \newblock Evaluating copyright takedown methods for language models.
 \newblock \emph{arXiv preprint arXiv:2406.18664}, 2024.
+
+\bibitem[Word et~al.(1990)Word, Johnston, Bain, Fulton, Zaharias, Achilles,
+  Lintz, Folger, and Breda]{word1990state}
+Elizabeth Word, John Johnston, Helen~P Bain, B~DeWayne Fulton, Jayne~B
+  Zaharias, Charles~M Achilles, Martha~N Lintz, John Folger, and Carolyn Breda.
+\newblock The state of {T}ennessee's student/teacher achievement ratio ({STAR})
+  project.
+\newblock \emph{Tennessee Board of Education}, 1990.
 
 \bibitem[Wortsman et~al.(2022)Wortsman, Ilharco, Gadre, Roelofs, Gontijo-Lopes,
   Morcos, Namkoong, Farhadi, Carmon, Kornblith, et~al.]{wortsman2022model}
@@ -644,10 +1007,25 @@ Prateek Yadav, Derek Tam, Leshem Choshen, Colin~A Raffel, and Mohit Bansal.
 \newblock Ties-merging: Resolving interference when merging models.
 \newblock \emph{Advances in Neural Information Processing Systems}, 36, 2024.
 
+\bibitem[Yadlowsky et~al.(2022)Yadlowsky, Namkoong, Basu, Duchi, and
+  Tian]{yadlowsky2022bounds}
+Steve Yadlowsky, Hongseok Namkoong, Sanjay Basu, John Duchi, and Lu~Tian.
+\newblock Bounds on the conditional and average treatment effect with
+  unobserved confounding factors.
+\newblock \emph{The Annals of Statistics}, 50\penalty0 (5):\penalty0
+  2587--2615, 2022.
+
 \bibitem[Yan et~al.(2022)Yan, Li, Guo, Li, Li, and Lin]{yan2022arcane}
 Haonan Yan, Xiaoguang Li, Ziyao Guo, Hui Li, Fenghua Li, and Xiaodong Lin.
 \newblock {ARCANE}: An efficient architecture for exact machine unlearning.
 \newblock In \emph{IJCAI}, volume~6, page~19, 2022.
+
+\bibitem[Yang et~al.(2023)Yang, Gao, Zeng, and Wang]{yangelastic}
+Shu Yang, Chenyin Gao, Donglin Zeng, and Xiaofei Wang.
+\newblock {Elastic integrative analysis of randomised trial and real-world data
+  for treatment heterogeneity estimation}.
+\newblock \emph{Journal of the Royal Statistical Society Series B: Statistical
+  Methodology}, 85\penalty0 (3):\penalty0 575--596, 04 2023.
 
 \bibitem[Yu et~al.(2023)Yu, Wu, Zhang, Wang, Vorobeychik, and
   Xiao]{yu2023codeiipprompt}
@@ -699,5 +1077,12 @@ Zhikun Zhang, Tianhao Wang, Ninghui Li, Jean Honorio, Michael Backes, Shibo He,
 \newblock {PrivSyn}: Differentially private data synthesis.
 \newblock In \emph{30th USENIX Security Symposium (USENIX Security 21)}, pages
   929--946, 2021.
+
+\bibitem[Zhao et~al.(2019)Zhao, Small, and Bhattacharya]{zhao2019sensitivity}
+Qingyuan Zhao, Dylan~S Small, and Bhaswar~B Bhattacharya.
+\newblock Sensitivity analysis for inverse probability weighting estimators via
+  the percentile bootstrap.
+\newblock \emph{Journal of the Royal Statistical Society Series B: Statistical
+  Methodology}, 81\penalty0 (4):\penalty0 735--761, 2019.
 
 \end{thebibliography}

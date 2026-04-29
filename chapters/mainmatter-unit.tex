@@ -3,10 +3,19 @@
 \insertchapterseparator
 \input{chapters/background}
 
+\cleardoublepage
+\part{Safety and Alignment}
+
 \insertchapterseparator
 \input{chapters/paper-01-privpgd}
 \insertchapterseparator
 \input{chapters/paper-02-cp-fuse}
+
+\cleardoublepage
+\part{Reliable Inference}
+
+\insertchapterseparator
+\input{chapters/paper-03-confounding-test}
 
 \insertchapterseparator
 \input{chapters/conclusion}
@@ -16,5 +25,5 @@
 {
 \renewcommand*{\bibfont}{\normalfont\footnotesize}
 \bibliographystyle{plainnat}
-\bibliography{bib/references,papers/PrivPGD/main,papers/CP_Fuse/main}
+\bibliography{bib/references,papers/PrivPGD/main,papers/CP_Fuse/main,papers/confounding_test/main}
 }

@@ -1,15 +1,18 @@
 \chapter{Introduction}
 \label{chap:introduction}
 
-\TODO{Write a short thesis-level introduction that frames the dissertation, motivates the common theme across the paper chapters, and sets up the roadmap.}
+Modern data analysis increasingly supports decisions in domains where errors have concrete consequences: sensitive personal data must be released without exposing individuals, language models must generate useful outputs without reproducing protected training material, and observational studies must inform clinical decisions despite hidden confounding. This thesis develops methods for such settings. Across the chapters, the common theme is reliable inference and generation under constraints that are not fully visible from the data alone, including privacy constraints, copyright constraints, and unobserved confounding.
+
+The thesis is organized as three paper-based chapters. The first two chapters concern trustworthy generative modeling: private tabular data synthesis and copyright-protected language generation. The third chapter turns to reliable causal inference, using randomized trials to quantify hidden confounding in observational studies. Together, these chapters study how additional structure, whether geometric, algorithmic, or experimental, can be used to make data-driven conclusions more trustworthy.
 
 \section{Contributions}
 
-This thesis brings together contributions on trustworthy generative modeling in two settings: privacy-preserving tabular data synthesis and copyright-protected language generation. The main contributions are organized around the two technical chapters of the dissertation.
+The main contributions are organized around the three technical chapters of the dissertation.
 
 \begin{itemize}
   \item \textbf{Chapter~\ref{chap:privpgd}: privacy-preserving tabular data synthesis.} The thesis introduces PrivPGD, a geometry-aware generation method for marginal-based differentially private tabular data synthesis. By combining optimal transport with particle gradient descent, the method generates synthetic datasets directly from privatized marginals, scales to realistic problem sizes, preserves geometric structure in the data, and naturally accommodates domain-specific constraints.
   \item \textbf{Chapter~\ref{chap:cpfuse}: copyright-protected language generation.} The thesis introduces CP-Fuse, an adaptive inference-time fusion method for language models trained on disjoint copyright-sensitive corpora. By choosing history-dependent fusion weights during decoding, the method reduces regurgitation of memorized text and code while preserving strong utility on held-out generation tasks.
+  \item \textbf{Chapter~\ref{chap:confounding-test}: quantifying hidden confounding.} The thesis introduces a testing framework that uses randomized trials to quantify hidden confounding in observational causal inference. By comparing randomized target effects with observational sensitivity bounds, the method tests whether unobserved confounding exceeds a specified strength and inverts these tests into an asymptotically valid lower bound on the true confounding strength.
 \end{itemize}
 
 \section{Relevant Publications}
@@ -17,10 +20,13 @@ This thesis brings together contributions on trustworthy generative modeling in 
 The main technical chapters of this thesis are based on the following publications.
 
 \begin{itemize}
-  \item \textbf{Chapter~\ref{chap:privpgd}.} Konstantin Donhauser, Javier Abad, Neha Hulkund, and Fanny Yang. ``Privacy-preserving data release leveraging optimal transport and particle gradient descent.'' In \emph{Proceedings of the 41st International Conference on Machine Learning}, 2024.
+  \item \textbf{Chapter~\ref{chap:privpgd}.} Konstantin Donhauser\equalcontributionmark, Javier Abad\equalcontributionmark, Neha Hulkund, and Fanny Yang. ``Privacy-preserving data release leveraging optimal transport and particle gradient descent.'' In \emph{Proceedings of the 41st International Conference on Machine Learning}, 2024.
   \item \textbf{Chapter~\ref{chap:cpfuse}.} Javier Abad, Konstantin Donhauser, Francesco Pinto, and Fanny Yang. ``Copyright-Protected Language Generation via Adaptive Model Fusion.'' In \emph{International Conference on Learning Representations}, 2025.
+  \item \textbf{Chapter~\ref{chap:confounding-test}.} Piersilvio De Bartolomeis\equalcontributionmark, Javier Abad\equalcontributionmark, Konstantin Donhauser, and Fanny Yang. ``Hidden yet quantifiable: A lower bound for confounding strength using randomized trials.'' In \emph{International Conference on Artificial Intelligence and Statistics}, 2024.
 \end{itemize}
+
+\noindent\equalcontributionnote
 
 \section{Thesis Roadmap}
 
-Chapter~\ref{chap:background} collects general background on trustworthy generative modeling, privacy-preserving data release, geometry-aware generation, and memorization-related risks in language models. Chapter~\ref{chap:privpgd} is the first paper-based chapter and presents PrivPGD for differentially private tabular data synthesis. Chapter~\ref{chap:cpfuse} is the second paper-based chapter and presents CP-Fuse for copyright-protected language generation. The thesis closes with Chapter~\ref{chap:conclusion} and the chapter-specific appendices beginning in Chapter~\ref{chap:appendix}.
+Chapter~\ref{chap:background} collects general background on trustworthy generative modeling, privacy-preserving data release, geometry-aware generation, memorization-related risks in language models, and the causal-inference setting needed for the confounding chapter. Chapter~\ref{chap:privpgd} presents PrivPGD for differentially private tabular data synthesis. Chapter~\ref{chap:cpfuse} presents CP-Fuse for copyright-protected language generation. Chapter~\ref{chap:confounding-test} presents the lower-bound framework for quantifying hidden confounding with randomized trials. The thesis closes with Chapter~\ref{chap:conclusion} and the chapter-specific appendices beginning in Chapter~\ref{chap:appendix-privpgd}.

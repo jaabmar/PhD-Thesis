@@ -76,7 +76,7 @@ After optimization in the embedded space, each particle is mapped to the nearest
 For completeness, the privacy argument from the main chapter is restated below in proof-sketch form.
 
 \begin{proofsketch}[Proof sketch of \Cref{lem:privpgd-privacy}]
-Let the privatized marginals be released by an \((\epsilon_1,\delta_1)\)-differentially private mechanism, and let an optional auxiliary regularization statistic be released independently by an \((\epsilon_2,\delta_2)\)-differentially private mechanism. By composition, their joint release is \((\epsilon_1+\epsilon_2,\delta_1+\delta_2)\)-differentially private. PrivPGD then applies only post-processing to these released objects: embedding, projection, quantization, gradient-based optimization, and final discretization. Therefore, the final synthetic dataset inherits the same privacy guarantee. In the unregularized setting, the second mechanism is absent.
+Let the privatized marginals be released by an \((\epsilon_1,\delta_1)\)-differentially private mechanism, and let an optional auxiliary regularization statistic be released by an \((\epsilon_2,\delta_2)\)-differentially private mechanism. By basic composition, their joint release is \((\epsilon_1+\epsilon_2,\delta_1+\delta_2)\)-differentially private. PrivPGD then applies only post-processing to these released objects: embedding, projection, quantization, gradient-based optimization, and final discretization. Therefore, the final synthetic dataset inherits the same privacy guarantee. In the unregularized setting, the second mechanism is absent.
 \end{proofsketch}
 
 \clearpage
@@ -85,13 +85,13 @@ Let the privatized marginals be released by an \((\epsilon_1,\delta_1)\)-differe
 
 \subsection{Target statistic and smooth surrogate}
 
-The constrained synthesis experiment from the main chapter augments the standard PrivPGD objective with a differentiable penalty designed to suppress a chosen population-level threshold statistic. For any integer \(r \geq 1\) and point cloud \(Z = (z_1,\dots,z_r) \in \Omega^r\), the target statistic in the embedded space is
+The constrained synthesis experiment from the main chapter augments the standard PrivPGD objective with a differentiable penalty designed to make a chosen population-level threshold statistic differ from its value on the sensitive data. For any integer \(r \geq 1\) and point cloud \(Z = (z_1,\dots,z_r) \in \Omega^r\), the target statistic in the embedded space is
 \[
   q_{\theta,b}(Z)
   =
   \frac{1}{r}\sum_{j=1}^r \mathbf{1}\!\left\{\langle z_j, \theta \rangle + b > 0\right\}.
 \]
-Because this quantity is not differentiable with respect to the particle positions, the implementation replaces it by the smooth surrogate
+Because this quantity is not differentiable with respect to the particle positions, the implementation replaces it by a smooth surrogate based on the same affine score,
 \[
   \tilde q_{\theta,b}(Z)
   =
@@ -110,7 +110,7 @@ The regularization term optimized in this experiment is
   =
   \frac{0.01}{0.0001 + \left(\tilde q_{\theta,b}(Z) - \widehat{\tilde q}_{\theta,b}(D)\right)^2},
 \]
-and the reported sweeps vary the regularization strength \(\lambda\) from \(10^{-2}\) to \(10\). The resulting tradeoff curves for the ACS Income and ACS Employment datasets are reproduced in Figure~\ref{fig:app-privpgd-constraints}.
+and the reported sweeps vary the regularization strength \(\lambda\) from \(10^{-2}\) to \(10\). Since this term is added to a loss that is minimized, increasing \(\lambda\) encourages a larger discrepancy between the synthetic statistic and the differentially private estimate of the sensitive statistic. The resulting tradeoff curves for the ACS Income and ACS Employment datasets are reproduced in Figure~\ref{fig:app-privpgd-constraints}.
 
 \begin{figure}[!tbp]
   \centering

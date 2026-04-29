@@ -163,9 +163,13 @@
 \setlength{\textwidth}{11.6cm}
 \areaset[current]{\textwidth}{1.618034\textwidth}
 
-% Page numbers in plain style
+% Page numbers in the upper-right corner, including plain chapter-opening pages.
+\clearpairofpagestyles
 \clearplainofpairofpagestyles
-\ofoot[\pagemark]{}
+\lehead{\headmark}
+\lohead{\headmark}
+\rehead[\small\pagemark]{\small\pagemark}
+\rohead[\small\pagemark]{\small\pagemark}
 \setlength{\footskip}{19pt}
 \setlength{\emergencystretch}{1.5em}
 
