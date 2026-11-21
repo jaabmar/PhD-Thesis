@@ -1,14 +1,60 @@
 \chapter{Background}
 \label{chap:background}
 
-This chapter establishes the shared mathematical and statistical foundations used across Parts~I and~II so that Chapters~\ref{chap:privpgd}--\ref{chap:confounding-test} can focus on their specific formulations, algorithms, and empirical studies. Readers already familiar with a given area can consult the four sections selectively.
+This chapter establishes the shared mathematical and statistical foundations used across the thesis so that Chapters~\ref{chap:confounding-test}--\ref{chap:cpfuse} can focus on their specific formulations, algorithms, and empirical studies. Readers already familiar with a given area can consult the four sections selectively.
 
 We follow the front-matter Notation summary throughout. Shared mathematical symbols, including \(\RR\), \(\mathbb{P}\), \(\mathbb{E}\), \(\mathbf{1}\{\cdot\}\), \(\supp(\cdot)\), \(\KL\), \(\TV\), \(W_q\), and \(\SW_q\), keep a single meaning across the thesis. Symbols that serve different standard roles across the three studies, including \(T\), \(\mu\), \(\alpha\), \(\sigma\), \(p\), \(k\), and chapter-specific operators such as \(\mathcal{A}\) and \(\mathcal{M}\), are scoped locally to their respective chapters.
+
+\section{Causal Inference, Sensitivity Analysis, and Trial Integration}
+\label{sec:bg-causal}
+
+Chapter~\ref{chap:confounding-test} studies causal inference from observational data, integrating sensitivity analysis with randomized trial evidence to test and lower-bound hidden confounding strength. This section reviews potential outcomes, partial identification under the marginal sensitivity model, trial transportability, and hypothesis-test inversion.
+
+\paragraph{Potential outcomes, propensity scores, and IPW.}
+In the Neyman--Rubin framework \citep{neyman1923application,rubin1978bayesian}, each unit has observed covariates \(X \in \RR^d\), unobserved confounders \(U \in \RR^k\), a binary treatment \(T \in \{0, 1\}\), and bounded potential outcomes \(Y(0), Y(1) \in \RR\). Under consistency, we observe \(Y = Y(T)\). The main estimands are the conditional average treatment effect (CATE), \(\mu(X) = \mathbb{E}[Y(1) - Y(0) \mid X]\), and the average treatment effect (ATE) over a target distribution \(\mathbb{P}_X\), \(\mu(\mathbb{P}_X) = \mathbb{E}_{\mathbb{P}_X}[\mu(X)]\).
+
+The propensity score \(e(X) = \mathbb{P}(T = 1 \mid X)\) characterizes treatment assignment given observed covariates \citep{rosenbaum1983central}. When treatment is unconfounded given \(X\), meaning \((Y(0), Y(1))\) is conditionally independent of \(T\) given \(X\), and \(0 < e(X) < 1\), both CATE and ATE are point-identified from the distribution of \((X, T, Y)\). In a completely randomized trial with assignment probability \(\pi = \mathbb{P}(T = 1 \mid X, U) \in (0, 1)\), randomization guarantees internal validity and gives the unbiased inverse probability weighting (IPW) identity \citep{horvitz1952generalization}:
+\[
+  \mathbb{E}\!\left[\frac{T Y}{\pi} - \frac{(1 - T) Y}{1 - \pi}\right]
+  =
+  \mathbb{E}\bigl[Y(1) - Y(0)\bigr].
+\]
+In observational studies, unobserved confounders \(U\) may affect both \(T\) and \((Y(0), Y(1))\). Multiple full distributions over \((X, U, Y(0), Y(1), Y, T)\) then produce the same observed distribution of \((X, T, Y)\), preventing point identification.
+
+\paragraph{Partial identification and the marginal sensitivity model.}
+Sensitivity analysis replaces unconfoundedness with a parameterized class of confounding mechanisms indexed by \(\Gamma \geq 1\), yielding a partial identification interval \([\mu^-_\Gamma, \mu^+_\Gamma]\) that widens monotonically with \(\Gamma\). Following Cornfield's analysis \citep{cornfield59}, robustness diagnostics often summarize an observational study by its critical value (or E-value), the smallest confounding strength capable of explaining away the estimated effect \citep{vanderweele2017sensitivity,jin2023sensitivity}.
+
+The marginal sensitivity model (MSM) of \citet{tan2006distributional} bounds the odds ratio between the full propensity score \(e(X, U) = \mathbb{P}(T = 1 \mid X, U)\) and the observed propensity score \(e(X)\):
+\[
+  \frac{1}{\Gamma}
+  \leq
+  \frac{e(X, U) / \bigl(1 - e(X, U)\bigr)}{e(X) / \bigl(1 - e(X)\bigr)}
+  \leq
+  \Gamma
+  \qquad\text{almost surely.}
+\]
+At \(\Gamma = 1\), the odds ratio equals one and unconfoundedness holds; larger \(\Gamma\) allows stronger hidden selection bias. Modern estimators compute valid or sharp MSM bounds for CATE and ATE directly from observational data \citep{kallus2019interval,zhao2019sensitivity,jesson2021quantifying,scharfstein2021semiparametric,dorn2021doubly,dorn2022sharp,yadlowsky2022bounds,oprescu2023b}. Chapter~\ref{chap:confounding-test} states the exact full-distribution factorization (Equation~\eqref{eq:confounding-factorization}), defines the sensitivity set (\Cref{def:confounding-msm}) and bounds (\Cref{def:confounding-sensitivity-bounds}), and analyzes MSM tightness in Appendix~\ref{app:confounding-msm-tightness}.
+
+\paragraph{External validity, transportability, and nested trial designs.}
+Randomized trials achieve internal validity, yet eligibility criteria often yield a trial distribution \(\mathbb{P}^{\mathrm{rct}}_X\) that differs from the clinical target population \(\mathbb{P}^\star_X\) \citep{rothwell2005external,kennedy2015literature}. Transporting randomized effects to \(\mathbb{P}^\star_X\) relies on CATE invariance across populations and support overlap so that the density ratio \(w_\star(X) = (d\mathbb{P}^\star_X / d\mathbb{P}^{\mathrm{rct}}_X)(X)\) is well defined \citep{cole2010generalizing,colnet2020causal,degtiar2023review,colnet2023risk,colnet2022reweighting}. Weighting the randomized IPW summand by \(w_\star(X)\) then yields an unbiased estimator of \(\mu(\mathbb{P}^\star_X)\).
+
+Under a \emph{nested trial design} (or comprehensive cohort study), eligible individuals from one cohort either enter the randomized trial or decline randomization and are observed under routine care \citep{olschewski1985comprehensive,olschewski1992analysis,choudhry2017randomized,dahabreh2021study}. Because both groups originate from the same cohort, trial-participation probabilities identify \(w_\star(X)\) up to normalization; Appendix~\ref{app:confounding-nested-design} connects this design to Chapter~\ref{chap:confounding-test}.
+
+\paragraph{Hypothesis-test inversion and asymptotic tools.}
+To quantify an unknown confounding strength \(\Gamma^\star \geq 1\), Chapter~\ref{chap:confounding-test} uses hypothesis-test inversion \citep{van2000asymptotic}. Given a family of level-\(\alpha\) tests \(\widehat{\phi}(\Gamma, \alpha) \in \{0, 1\}\) for \(H_0(\Gamma)\colon \Gamma^\star \leq \Gamma\) satisfying \(\limsup \mathbb{P}_{H_0(\Gamma)}(\widehat{\phi}(\Gamma, \alpha) = 1) \leq \alpha\), taking the infimum of non-rejected values,
+\[
+  \widehat{\Gamma}_{\mathrm{LB}}
+  =
+  \inf \bigl\{\Gamma \geq 1 : \widehat{\phi}(\Gamma, \alpha) = 0\bigr\},
+\]
+forms an asymptotically valid \((1 - \alpha)\) confidence lower bound on \(\Gamma^\star\), since \(\widehat{\Gamma}_{\mathrm{LB}} > \Gamma^\star\) requires rejecting the true null \(H_0(\Gamma^\star)\).
+
+Establishing asymptotic validity of the test statistics relies on three standard large-sample tools \citep{van2000asymptotic,serfling2009approximation}: the central limit theorem establishes asymptotic normality of reweighted IPW and plug-in sensitivity-bound estimators, Slutsky's theorem justifies replacing unknown variances with consistent standard errors in studentized statistics, and the delta method propagates asymptotic normality through smooth transformations (such as differences of jointly asymptotically normal estimators). Chapter~\ref{chap:confounding-test} combines these ingredients in Algorithm~\ref{alg:confounding-test} and proves validity in \Cref{prop:confounding-test-validity} and \Cref{prop:confounding-lower-bound-validity}, with full derivations in Appendix~\ref{app:confounding-proofs}.
 
 \section{Probability Divergences and Optimal Transport}
 \label{sec:bg-ot}
 
-Both chapters in Part~I compare and optimize probability distributions: Chapter~\ref{chap:privpgd} matches tabular marginals in a Euclidean embedding space, while Chapter~\ref{chap:cpfuse} combines next-token distributions over a finite vocabulary.
+Chapters~\ref{chap:privpgd} and~\ref{chap:cpfuse} both compare and optimize probability distributions: Chapter~\ref{chap:privpgd} matches tabular marginals in a Euclidean embedding space, while Chapter~\ref{chap:cpfuse} combines next-token distributions over a finite vocabulary.
 
 \paragraph{Total variation distance.}
 For probability measures \(\mu\) and \(\nu\) on a measurable space \((\mathcal{Z}, \mathcal{F})\), the total variation distance is \(\TV(\mu, \nu) = \sup_{B \in \mathcal{F}} \lvert \mu(B) - \nu(B) \rvert\). When \(\mathcal{Z}\) is finite or countable with mass functions \(p\) and \(q\), this reduces to \(\TV(p, q) = \frac{1}{2} \sum_{z \in \mathcal{Z}} \lvert p(z) - q(z) \rvert\). Total variation bounds the largest probability discrepancy across all events, yet it is blind to the geometry of \(\mathcal{Z}\). Because it depends only on cellwise mass differences, moving mass to an adjacent bin incurs the exact same \(\TV\) penalty as moving it across the entire domain. Chapter~\ref{chap:privpgd} returns to this property when contrasting \(\TV\) and sliced Wasserstein fidelity (Figure~\ref{fig:comp-sw-tv}).
@@ -105,49 +151,3 @@ Language models can memorize training passages and regurgitate them verbatim or 
 Although training-data extraction resembles privacy leakage, copyright law and differential privacy pursue distinct goals \citep{elkin2023can,henderson2023foundation,sag66new,lee2023talkin}. Differential privacy conceals whether any individual record participated in training, treating all statistical influence identically regardless of textual similarity. Copyright law instead protects concrete expression rather than underlying facts or general patterns. Under doctrines such as United States fair use (17 U.S.C.~107), transformative generation that does not substitute for the original market may be lawful, whereas verbatim or quasi-verbatim copying of substantial passages creates infringement risk \citep{henderson2023foundation,sag66new}.
 
 Training large language models with differentially private stochastic gradient descent \citep{abadi2016deep,anil2022large} is also computationally expensive, degrades utility, and enforces record-level indistinguishability rather than passage-level non-reproduction \citep{elkin2023can,mueller2024llms,chen2024copybench}. This mismatch motivates dedicated copyright criteria such as the Near-Access Free (\(k\)-NAF) framework \citep{vyas2023provable}. Chapter~\ref{chap:cpfuse} formalizes dataset separability, states \Cref{def:cpfuse-knaf}, and derives the adaptive fusion algorithm CP-Fuse.
-
-\section{Causal Inference, Sensitivity Analysis, and Trial Integration}
-\label{sec:bg-causal}
-
-Part~II turns from safe generation to trustworthy causal conclusions on observational data. Chapter~\ref{chap:confounding-test} integrates sensitivity analysis with randomized trial evidence to test and lower-bound hidden confounding strength.
-
-\paragraph{Potential outcomes, propensity scores, and IPW.}
-In the Neyman--Rubin framework \citep{neyman1923application,rubin1978bayesian}, each unit has observed covariates \(X \in \RR^d\), unobserved confounders \(U \in \RR^k\), a binary treatment \(T \in \{0, 1\}\), and bounded potential outcomes \(Y(0), Y(1) \in \RR\). Under consistency, we observe \(Y = Y(T)\). The main estimands are the conditional average treatment effect (CATE), \(\mu(X) = \mathbb{E}[Y(1) - Y(0) \mid X]\), and the average treatment effect (ATE) over a target distribution \(\mathbb{P}_X\), \(\mu(\mathbb{P}_X) = \mathbb{E}_{\mathbb{P}_X}[\mu(X)]\).
-
-The propensity score \(e(X) = \mathbb{P}(T = 1 \mid X)\) characterizes treatment assignment given observed covariates \citep{rosenbaum1983central}. When treatment is unconfounded given \(X\), meaning \((Y(0), Y(1))\) is conditionally independent of \(T\) given \(X\), and \(0 < e(X) < 1\), both CATE and ATE are point-identified from the distribution of \((X, T, Y)\). In a completely randomized trial with assignment probability \(\pi = \mathbb{P}(T = 1 \mid X, U) \in (0, 1)\), randomization guarantees internal validity and gives the unbiased inverse probability weighting (IPW) identity \citep{horvitz1952generalization}:
-\[
-  \mathbb{E}\!\left[\frac{T Y}{\pi} - \frac{(1 - T) Y}{1 - \pi}\right]
-  =
-  \mathbb{E}\bigl[Y(1) - Y(0)\bigr].
-\]
-In observational studies, unobserved confounders \(U\) may affect both \(T\) and \((Y(0), Y(1))\). Multiple full distributions over \((X, U, Y(0), Y(1), Y, T)\) then produce the same observed distribution of \((X, T, Y)\), preventing point identification.
-
-\paragraph{Partial identification and the marginal sensitivity model.}
-Sensitivity analysis replaces unconfoundedness with a parameterized class of confounding mechanisms indexed by \(\Gamma \geq 1\), yielding a partial identification interval \([\mu^-_\Gamma, \mu^+_\Gamma]\) that widens monotonically with \(\Gamma\). Following Cornfield's analysis \citep{cornfield59}, robustness diagnostics often summarize an observational study by its critical value (or E-value), the smallest confounding strength capable of explaining away the estimated effect \citep{vanderweele2017sensitivity,jin2023sensitivity}.
-
-The marginal sensitivity model (MSM) of \citet{tan2006distributional} bounds the odds ratio between the full propensity score \(e(X, U) = \mathbb{P}(T = 1 \mid X, U)\) and the observed propensity score \(e(X)\):
-\[
-  \frac{1}{\Gamma}
-  \leq
-  \frac{e(X, U) / \bigl(1 - e(X, U)\bigr)}{e(X) / \bigl(1 - e(X)\bigr)}
-  \leq
-  \Gamma
-  \qquad\text{almost surely.}
-\]
-At \(\Gamma = 1\), the odds ratio equals one and unconfoundedness holds; larger \(\Gamma\) allows stronger hidden selection bias. Modern estimators compute valid or sharp MSM bounds for CATE and ATE directly from observational data \citep{kallus2019interval,zhao2019sensitivity,jesson2021quantifying,scharfstein2021semiparametric,dorn2021doubly,dorn2022sharp,yadlowsky2022bounds,oprescu2023b}. Chapter~\ref{chap:confounding-test} states the exact full-distribution factorization (Equation~\eqref{eq:confounding-factorization}), defines the sensitivity set (\Cref{def:confounding-msm}) and bounds (\Cref{def:confounding-sensitivity-bounds}), and analyzes MSM tightness in Appendix~\ref{app:confounding-msm-tightness}.
-
-\paragraph{External validity, transportability, and nested trial designs.}
-Randomized trials achieve internal validity, yet eligibility criteria often yield a trial distribution \(\mathbb{P}^{\mathrm{rct}}_X\) that differs from the clinical target population \(\mathbb{P}^\star_X\) \citep{rothwell2005external,kennedy2015literature}. Transporting randomized effects to \(\mathbb{P}^\star_X\) relies on CATE invariance across populations and support overlap so that the density ratio \(w_\star(X) = (d\mathbb{P}^\star_X / d\mathbb{P}^{\mathrm{rct}}_X)(X)\) is well defined \citep{cole2010generalizing,colnet2020causal,degtiar2023review,colnet2023risk,colnet2022reweighting}. Weighting the randomized IPW summand by \(w_\star(X)\) then yields an unbiased estimator of \(\mu(\mathbb{P}^\star_X)\).
-
-Under a \emph{nested trial design} (or comprehensive cohort study), eligible individuals from one cohort either enter the randomized trial or decline randomization and are observed under routine care \citep{olschewski1985comprehensive,olschewski1992analysis,choudhry2017randomized,dahabreh2021study}. Because both groups originate from the same cohort, trial-participation probabilities identify \(w_\star(X)\) up to normalization; Appendix~\ref{app:confounding-nested-design} connects this design to Chapter~\ref{chap:confounding-test}.
-
-\paragraph{Hypothesis-test inversion and asymptotic tools.}
-To quantify an unknown confounding strength \(\Gamma^\star \geq 1\), Chapter~\ref{chap:confounding-test} uses hypothesis-test inversion \citep{van2000asymptotic}. Given a family of level-\(\alpha\) tests \(\widehat{\phi}(\Gamma, \alpha) \in \{0, 1\}\) for \(H_0(\Gamma)\colon \Gamma^\star \leq \Gamma\) satisfying \(\limsup \mathbb{P}_{H_0(\Gamma)}(\widehat{\phi}(\Gamma, \alpha) = 1) \leq \alpha\), taking the infimum of non-rejected values,
-\[
-  \widehat{\Gamma}_{\mathrm{LB}}
-  =
-  \inf \bigl\{\Gamma \geq 1 : \widehat{\phi}(\Gamma, \alpha) = 0\bigr\},
-\]
-forms an asymptotically valid \((1 - \alpha)\) confidence lower bound on \(\Gamma^\star\), since \(\widehat{\Gamma}_{\mathrm{LB}} > \Gamma^\star\) requires rejecting the true null \(H_0(\Gamma^\star)\).
-
-Establishing asymptotic validity of the test statistics relies on three standard large-sample tools \citep{van2000asymptotic,serfling2009approximation}: the central limit theorem establishes asymptotic normality of reweighted IPW and plug-in sensitivity-bound estimators, Slutsky's theorem justifies replacing unknown variances with consistent standard errors in studentized statistics, and the delta method propagates asymptotic normality through smooth transformations (such as differences of jointly asymptotically normal estimators). Chapter~\ref{chap:confounding-test} combines these ingredients in Algorithm~\ref{alg:confounding-test} and proves validity in \Cref{prop:confounding-test-validity} and \Cref{prop:confounding-lower-bound-validity}, with full derivations in Appendix~\ref{app:confounding-proofs}.
