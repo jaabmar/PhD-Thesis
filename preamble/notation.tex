@@ -1,19 +1,58 @@
 \chapter*{Notation}
 \pdfbookmark[1]{Notation}{notation}
+\markboth{\spacedlowsmallcaps{Notation}}{\spacedlowsmallcaps{Notation}}
 
-\vskip -2em
+Symbols listed under \emph{General and Shared Notation} are used across the thesis. Because the three main chapters adapt self-contained published papers, symbols listed under a specific chapter heading are chapter-local and may be reused with a different meaning in other chapters.
+
+\medskip
+\noindent\textbf{General and Shared Notation}\par\smallskip
 \begin{tabularx}{\textwidth}{lX}
-  $D$ & original sensitive dataset in chapter-specific notation. \\
-  $D_{\mathrm{syn}}$ & synthetic dataset in the PrivPGD chapter. \\
-  $\dataset$ & dataset symbol used in the CP-Fuse chapter. \\
-  $\model, \modelone, \modeltwo$ & fused model and the two base models in the CP-Fuse chapter. \\
-  $\epsilon, \delta$ & differential-privacy parameters when applicable. \\
-  $\KL$ & Kullback--Leibler divergence. \\
-  $\SW$ & sliced Wasserstein distance. \\
-  $\TV$ & total variation distance. \\
-  $\RR$ & real numbers. \\
+  \(\RR\) & real numbers. \\
+  \(\mathbb{P}, \mathbb{E}\) & probability distribution or probability operator, and expectation operator. \\
+  \(\mathbf{1}\{\cdot\}\) & indicator function. \\
+  \(\supp(\cdot)\) & support of a probability distribution. \\
+  \(\KL(\cdot\,\|\,\cdot)\) & Kullback--Leibler divergence. \\
+  \(\TV(\cdot,\cdot)\) & total variation distance. \\
+  \(\SW_q(\cdot,\cdot), W_q(\cdot,\cdot)\) & \(q\)-sliced Wasserstein distance and one-dimensional \(q\)-Wasserstein distance. \\
 \end{tabularx}
 
-\bigskip
+\medskip
+\noindent\textbf{Chapter~\ref{chap:privpgd}: PrivPGD}\par\smallskip
+\begin{tabularx}{\textwidth}{lX}
+  \(\mathcal{X} = \prod_{i=1}^d \mathcal{X}_i\) & discretized \(d\)-dimensional tabular domain, with \(\mathcal{X}_i = \{1,\dots,k_i\}\). \\
+  \(D, D_{\mathrm{syn}}\) & sensitive dataset of size \(n\) and synthetic dataset of size \(m\). \\
+  \(\mathcal{A}, (\epsilon,\delta)\) & randomized differentially private mechanism and privacy parameters. \\
+  \(S \subseteq [d], \mathcal{S}\) & feature subset and workload of selected marginals. \\
+  \(\nu_S[D], \hat{\nu}_S\) & exact empirical marginal on \(S\) and its privatized signed version. \\
+  \(\Emb\colon \mathcal{X} \to \Omega\) & tabular embedding into \(\Omega = [0,1]^d\). \\
+  \(Z, \mu_S[Z], \hat{\mu}_S\) & particle cloud in \(\Omega^m\), embedded empirical marginal, and quantized target marginal. \\
+  \(\hat{\mathcal{R}}, \lambda\) & differentially private differentiable regularizer and regularization strength. \\
+\end{tabularx}
 
-\TODO{Replace this provisional notation page with the final thesis-wide notation once the third paper chapter and the global notation policy are settled.}
+\medskip
+\noindent\textbf{Chapter~\ref{chap:cpfuse}: CP-Fuse}\par\smallskip
+\begin{tabularx}{\textwidth}{lX}
+  \(\dataset, \dataset_1, \dataset_2\) & training dataset and its two subsets under separability. \\
+  \(\domainconcepts, \domainconcepts_1, \domainconcepts_2\) & set of copyright-protected material and its disjoint subsets (\(\domainconcepts_1 \cap \domainconcepts_2 = \emptyset\)). \\
+  \(V, x, y_{0:T}\) & token alphabet, input prompt, and generated token sequence up to \(y_T = \mathrm{EOS}\). \\
+  \(\model, \modelone, \modeltwo\) & fused protected language model and the two base language models. \\
+  \(k\text{-NAF}, \Delta\) & \(k\)-Near Access Free criterion with respect to divergence \(\Delta\). \\
+  \(\cpdelta\) & token-wise fixed-weight fusion baseline from the \(k\)-NAF framework. \\
+  \(\alpha_t, \beta_t, \gamma_t\) & adaptive history-dependent log-linear fusion weights and normalizer at step \(t\). \\
+\end{tabularx}
+
+\medskip
+\noindent\textbf{Chapter~\ref{chap:confounding-test}: Confounding Strength}\par\smallskip
+\begin{tabularx}{\textwidth}{lX}
+  \(D_{\mathrm{rct}}, D_{\mathrm{os}}\) & randomized trial (size \(n_{\mathrm{rct}}\)) and observational study (size \(n_{\mathrm{os}}\)). \\
+  \(X, U\) & observed covariates (\(X \in \RR^d\)) and unobserved confounders (\(U \in \RR^k\)). \\
+  \(T, Y, Y(0), Y(1)\) & binary treatment indicator, observed outcome, and potential outcomes. \\
+  \(\mathbb{P}^{\diamond}_{\mathrm{full}}, \mathbb{P}^{\mathrm{rct}}, \mathbb{P}^{\mathrm{os}}\) & full and observed distributions for source \(\diamond \in \{\mathrm{rct}, \mathrm{os}\}\), linked by marginalization \(\mathcal{M}\). \\
+  \(\Gamma, \Gamma^{\star}\) & candidate confounding strength in the marginal sensitivity model and true confounding strength. \\
+  \(\mathcal{E}(\mathbb{P}^{\mathrm{os}}, \Gamma)\) & marginal sensitivity set of full distributions compatible with \(\mathbb{P}^{\mathrm{os}}\) at strength \(\Gamma\). \\
+  \(\mu(\cdot,\cdot), \mu^{\pm}_{\Gamma}\) & conditional or average treatment effect and its lower and upper sensitivity bounds. \\
+  \(\mathbb{P}^{\star}_X, w_{\star}(X)\) & target covariate distribution (\(\star \in \{\mathrm{rct}, \widetilde{\mathrm{os}}\}\)) and density-ratio weights. \\
+  \(\widehat{\phi}_{\star}(\Gamma,\alpha), \alpha\) & statistical test for \(H_0(\Gamma)\) at significance level \(\alpha \in (0,1)\). \\
+  \(\widehat{\Gamma}_{\mathrm{LB}}^{\star}, \widehat{\Gamma}_{\mathrm{CT}}\) & inverted lower bound on \(\Gamma^{\star}\) (instantiated as \(\widehat{\Gamma}_{\mathrm{LB}}^{\mathrm{rct}}\) and \(\widehat{\Gamma}_{\mathrm{LB}}^{\widetilde{\mathrm{os}}}\)) and observational critical value. \\
+  \(\rho_{u,y}\) & correlation between the hidden confounder \(U\) and potential outcome \(Y(1)\). \\
+\end{tabularx}
