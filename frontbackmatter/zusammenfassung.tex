@@ -4,12 +4,19 @@
 \pdfbookmark[1]{Zusammenfassung}{zusammenfassung}
 \begingroup
 \selectlanguage{ngerman}
+\hyphenation{trennt stark muss bleibt setzt stellt Tests Mo-dell Mo-del-le Mo-del-len gra-fi-schen ta-bel-la-ri-scher Kon-fun-die-rung Sen-si-ti-vi-taets-ana-ly-se Ver-fah-ren Schran-ke Be-ob-ach-tungs-da-ten Rand-ver-tei-lun-gen Par-ti-kel-op-ti-mie-rung Ein-bet-tungs-raum Arbeits-las-ten Merk-mals-ge-o-me-trie Ne-ben-be-din-gun-gen Ur-he-ber-rechts-schutz De-ko-die-rungs-schritt Ex-trak-ti-o-nen Ri-si-ko-kon-trol-le}
 \let\clearpage\relax
 \let\cleardoublepage\relax
 \chapter*{Zusammenfassung}
 
-\TODO{Eine deutschsprachige Zusammenfassung auf Thesisebene ergänzen.}
+Systeme des maschinellen Lernens kommen zunehmend im Gesundheitswesen, in der Verwaltung und in der Softwareentwicklung zum Einsatz, wo Genauigkeit allein weder sichere noch ver\-läss\-li\-che Ergebnisse garantiert. Diese Dissertation entwickelt statistische Verfahren, um Einsatzrisiken in drei Bereichen zu kontrollieren und zu quantifizieren, während der Nutzen erhalten bleibt.
 
-Dieser Platzhalter sollte später durch eine kurze deutschsprachige Zusammenfassung der Dissertation ersetzt werden. Sie sollte das übergreifende Forschungsproblem, die zentralen methodischen Beiträge, die wichtigsten Ergebnisse und den wissenschaftlichen Gesamtbeitrag der Arbeit beschreiben.
+Erstens untersuchen wir unbeobachtete Konfundierung in der kausalen Inferenz mit Beobachtungsdaten. Klassische Sen\-si\-ti\-vi\-täts\-ana\-ly\-sen bestimmen, wie stark Konfundierung sein muss, um eine Schlussfolgerung umzukehren, ohne ihr Ausmaß zu messen, während studienbasierte Tests nur auf fehlende Konfundierung prüfen. Durch die Verbindung marginaler Sen\-si\-ti\-vi\-täts\-ana\-ly\-se mit randomisierten Studien konstruieren wir asymptotisch gül\-ti\-ge Tests auf Konfundierung oberhalb einer vorgegebenen Stärke und invertieren sie zu einer asymptotisch gül\-ti\-gen unteren Schranke. Synthetische und semisynthetische Experimente sowie Analysen der Women's Health Initiative zeigen, dass der Vergleich dieser Schranke mit beobachtungsbasierten kritischen Werten substanzielle Konfundierung von ver\-nach\-läs\-sig\-ba\-rer Verzerrung trennt.
+
+Zweitens befassen wir uns mit differentiell privater Synthese tabellarischer Daten. Wir führen Private Particle Gradient Descent (PrivPGD) ein, das die Stichprobenziehung aus grafischen Modellen durch Partikeloptimierung in einem euklidischen Einbettungsraum ersetzt. PrivPGD projiziert verrauschte vorzeichenbehaftete Randverteilungen unter der Sliced-\(1\)-Wasserstein-Distanz und aktualisiert Partikel durch GPU-parallelisierbaren Gradientenabstieg auf der quadrierten Sliced-\(2\)-Wasserstein-Verlustfunktion. Auf neun Datensätzen skaliert PrivPGD auf große Arbeitslasten, bewahrt die Merkmalsgeometrie, schneidet bei nachgelagerten und statistischen Kennzahlen wett\-be\-werbs\-fä\-hig ab und setzt differenzierbare Nebenbedingungen über additive private Strafterme um.
+
+Drittens untersuchen wir Urheberrechtsschutz zur Inferenzzeit für Sprachmodelle. Wir stellen Copyright-Protecting Model Fusion (CP-Fuse) vor, das zwei auf disjunkten geschützten Korpora trainierte Modelle in jedem Dekodierungsschritt über ein lokales Minimax-Kullback--Leibler-Problem unter Be\-rück\-sich\-ti\-gung der Präfix-Likelihoods kombiniert. Seine geschlossene log-lineare Regel gewichtet adaptiv jenes Modell herunter, das das Präfix dominiert. Bei über\-an\-ge\-pass\-ten Text- und Codemodellen verringert CP-Fuse exaktes und approximatives Kopieren deutlich, bewahrt Sprach\-flüs\-sig\-keit und Korrektheit, lässt sich mit Schutz\-maß\-nah\-men zur Trainingszeit kombinieren und widersteht Präfix-Prompt-Extraktionen.
+
+In diesen Bereichen er\-mög\-li\-chen kalibrierte quantitative Verfahren unter expliziten strukturellen Annahmen eine praxistaugliche Risikokontrolle, ohne den Nutzen zu opfern.
 
 \endgroup
