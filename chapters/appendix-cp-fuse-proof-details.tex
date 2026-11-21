@@ -1,4 +1,4 @@
-\subsection{Proof of \Cref{lem:cpfuse-kkt}}
+\subsection{Proof of Lemma~\ref{lem:cpfuse-kkt}}
 
 For brevity, write
 \[
@@ -13,7 +13,7 @@ q_i(\cdot)
 =
 \modeli(\cdot \mid y_{<t},x).
 \]
-The optimization problem in \Cref{eq:cpfuse-opt-problem} can then be written as
+The optimization problem in Equation~\eqref{eq:cpfuse-opt-problem} can then be written in epigraph form (Equation~\eqref{eq:cpfuse-opt-epigraph}) as
 \begin{equation}
 \begin{aligned}
 \min_{p^*,\,\tau} \quad & \tau \\
@@ -24,13 +24,13 @@ The optimization problem in \Cref{eq:cpfuse-opt-problem} can then be written as
 \qquad i\in\{1,2\},
 \end{aligned}
 \end{equation}
-with \(p^*\) constrained to lie on the probability simplex over \(V\). If a token has zero probability under either base conditional, any feasible solution with finite objective must also assign zero probability to that token. Thus the argument below can be read on the common support of \(q_1\) and \(q_2\); under full support this is all of \(V\).
+with \(p^*\) constrained to lie on the probability simplex over \(V\). Assume that \(q_1\) and \(q_2\) have nonempty common support (under full support, as for softmax language models, this is all of \(V\)). If a token has zero probability under either base conditional, any feasible solution with finite objective must also assign zero probability to that token. Thus the argument below holds on the common support of \(q_1\) and \(q_2\).
 
 Let \(\lambda_i \ge 0\) be the multipliers of the two inequality constraints, let \(\mu\) enforce simplex normalization, and let \(\nu_y\geq 0\) be the multiplier for the nonnegativity constraint \(p^*(y)\geq 0\). The KKT condition for \(\tau\) gives
 \[
 \lambda_1+\lambda_2=1.
 \]
-For every token \(y\) with \(p^*(y)>0\), complementary slackness gives \(\nu_y=0\), and stationarity in \(p^*(y)\) gives
+For every token \(y\) in the common support, \(\log p^*(y) \to -\infty\) as \(p^*(y) \to 0^+\) while \(\lambda_1+\lambda_2=1\), so any optimizer must satisfy \(p^*(y)>0\) on the common support. Complementary slackness therefore gives \(\nu_y=0\), and stationarity in \(p^*(y)\) gives
 \[
 \sum_{i=1}^2 \lambda_i
 \bigl(
@@ -53,7 +53,7 @@ Using \(\lambda_1+\lambda_2=1\), this becomes
 \]
 Setting \(\alpha_t=\lambda_1\) and \(\beta_t=\lambda_2\) yields the claimed log-linear representation. For the exact convex program, the coefficients additionally satisfy \(\alpha_t+\beta_t=1\); the implementation searches over a broader discretized log-linear family containing this KKT form.
 
-\subsection{Proof of \Cref{lem:cpfuse-balance}}
+\subsection{Proof of Lemma~\ref{lem:cpfuse-balance}}
 
 Assume that both base conditionals have full support, and define
 \[
