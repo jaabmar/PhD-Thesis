@@ -1,6 +1,6 @@
 \chapter{Hidden Yet Quantifiable: A Lower Bound for Confounding Strength Using Randomized Trials}
 \label{chap:confounding-test}
-\chaptermark{Reliable Inference Under Hidden Confounding}
+\chaptermark{Quantifying Hidden Confounding}
 
 \chapterabstract{In the era of fast-paced precision medicine, observational studies play a major role in properly evaluating new treatments in clinical practice. Yet unobserved confounding can significantly compromise causal conclusions drawn from non-randomized data. This chapter develops a strategy that leverages randomized trials to quantify unobserved confounding. First, it designs a statistical test to detect unobserved confounding above a certain strength. Then, it uses the test to estimate an asymptotically valid lower bound on the true confounding strength. The chapter evaluates the power and validity of the test on synthetic and semi-synthetic datasets, and shows how the lower bound can identify the absence or presence of practically important unobserved confounding in a real-world example.}
 
@@ -13,7 +13,7 @@
 
 \section{Motivation and Scope}
 
-Part~I of this thesis focused on controlling privacy and copyright risks when releasing synthetic datasets or deploying generative models. Part~II shifts attention to reliable inference when statistical and machine learning methods are applied to observational data in high-stakes domains. Even when data release and model deployment respect privacy and legal boundaries, causal conclusions drawn from observational studies can fail if unobserved confounders bias treatment assignment.
+Building on the causal inference and sensitivity analysis preliminaries in Chapter~\ref{chap:background}, this chapter asks whether observational datasets support valid causal conclusions before they are acted upon or shared. In high-stakes domains such as healthcare, observational treatment-effect estimates can fail whenever unobserved confounders bias treatment assignment. This chapter therefore uses randomized trials and marginal sensitivity analysis to quantify the strength of such hidden confounding.
 
 Monitoring the performance of a newly approved treatment is crucial, a process commonly referred to as post-marketing surveillance \citep{vlahovic2011postmarketing}. Nowadays, regulatory and clinical practice increasingly integrate observational data in this process to address the shortcomings of randomized evidence \citep{platt2018fda,klonoff2020new}. This strategy is essential for validating personalized and high-cost treatments, such as immunotherapy for some cancers, where randomized evidence may be scarce and treatment costs substantial \citep{goetz2018personalized}.
 
