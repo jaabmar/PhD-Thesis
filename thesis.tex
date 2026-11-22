@@ -34,12 +34,6 @@
 }
 \newcommand{\insertchapterseparator}{\insertblankpage}
 
-% ETH Zurich (RSETHZ 340.311 Sec. 11.4, Appendix 2): CV is mandatory in the
-% examination copy and printed deposit copies, and may be omitted from the
-% electronic Research Collection upload by setting \includeCVfalse.
-\newif\ifincludeCV
-\includeCVtrue
-
 \begin{document}
 
 \frenchspacing
@@ -87,10 +81,5 @@
 \part*{Appendix}
 \appendix
 \include{chapters/appendix-unit}
-
-\ifincludeCV
-  \cleardoublepage
-  \input{frontbackmatter/cv}
-\fi
 
 \end{document}

@@ -92,7 +92,7 @@ For the restricted-observational target, transportability of the CATE gives
   \right].
 \end{aligned}
 \]
-Under the absolute-continuity condition \(\mathbb{P}^{\widetilde{\mathrm{os}}}_X\ll\mathbb{P}^{\mathrm{rct}}_X\), with
+Since \(\mathbb{P}^{\widetilde{\mathrm{os}}}_X\ll\mathbb{P}^{\mathrm{rct}}_X\), with
 \[
   w_{\widetilde{\mathrm{os}}}(X)
   =
@@ -232,7 +232,7 @@ and
   =
   o_{\mathbb{P}}(1).
 \]
-By Chebyshev's inequality, \(\mathbb{P}(|R_n|>\varepsilon\mid D_{\mathrm{os}})=o_{\mathbb{P}}(1)\) for every \(\varepsilon>0\). Since \(0\leq\mathbb{P}(|R_n|>\varepsilon\mid D_{\mathrm{os}})\leq 1\), bounded convergence implies \(\mathbb{P}(|R_n|>\varepsilon)=\mathbb{E}[\mathbb{P}(|R_n|>\varepsilon\mid D_{\mathrm{os}})]\to 0\), so \(R_n=o_{\mathbb{P}}(1)\). Slutsky's theorem then gives the same limiting distribution with \(\widehat{\mu}^+_{\Gamma,\mathrm{rct}}\) in place of the oracle average:
+By Chebyshev's inequality, for every \(\varepsilon>0\), \(\mathbb{P}(|R_n|>\varepsilon\mid D_{\mathrm{os}}) \leq \varepsilon^{-2}(\Var(R_n\mid D_{\mathrm{os}}) + \mathbb{E}[R_n\mid D_{\mathrm{os}}]^2) = o_{\mathbb{P}}(1)\). Since \(0\leq\mathbb{P}(|R_n|>\varepsilon\mid D_{\mathrm{os}})\leq 1\), bounded convergence implies \(\mathbb{P}(|R_n|>\varepsilon)=\mathbb{E}[\mathbb{P}(|R_n|>\varepsilon\mid D_{\mathrm{os}})]\to 0\), so \(R_n=o_{\mathbb{P}}(1)\). Slutsky's theorem then gives the same limiting distribution with \(\widehat{\mu}^+_{\Gamma,\mathrm{rct}}\) in place of the oracle average:
 \[
   \sqrt{n_{\mathrm{rct}}}
   \left[
@@ -248,7 +248,7 @@ By Chebyshev's inequality, \(\mathbb{P}(|R_n|>\varepsilon\mid D_{\mathrm{os}})=o
   \mathcal{N}\bigl(0,V^+_{\Gamma,\mathrm{rct}}\bigr).
 \]
 
-By the consistency of the sampling-variance estimators,
+By the consistency of the sampling-variance estimators (\(n_{\mathrm{rct}}\widehat{\sigma}_{\mathrm{rct}}^2 \xrightarrow{p} \sigma_{\mathrm{rct}}^2\) and \(n_{\mathrm{rct}}(\widehat{\sigma}^+_{\Gamma,\mathrm{rct}})^2 \xrightarrow{p} (\sigma^+_{\Gamma,\mathrm{rct}})^2\)),
 \[
 \begin{aligned}
   n_{\mathrm{rct}}(\widehat{s}^+_{\Gamma,\mathrm{rct}})^2
@@ -384,7 +384,7 @@ Applying the delta method to the difference yields
   \right).
 \end{aligned}
 \]
-By consistency of the sampling-variance estimators,
+By consistency of the sampling-variance estimators (\(n_{\mathrm{os}}(\widehat{\sigma}^+_{\Gamma,\widetilde{\mathrm{os}}})^2 \xrightarrow{p} (\sigma^+_{\Gamma,\widetilde{\mathrm{os}}})^2\) and \(n_{\mathrm{rct}}\widehat{\sigma}_{\widetilde{\mathrm{os}}}^2 \xrightarrow{p} \sigma_{\widetilde{\mathrm{os}}}^2\)),
 \[
   n(\widehat{s}^+_{\Gamma,\widetilde{\mathrm{os}}})^2
   =
@@ -432,7 +432,7 @@ The same argument applies to the lower endpoint. The union bound over the two on
 \subsection{Validity of the Lower Bound}
 \label{app:confounding-proof-lower-bound}
 
-Assume \(\Gamma^\star < \infty\). Because the marginal sensitivity constraint in \(\mathcal{E}(\Gamma)\) is closed under taking a countable intersection along a sequence \(\Gamma_k\downarrow\Gamma^\star\), the infimum is attained:
+By definition of the true confounding strength (assuming \(\Gamma^\star < \infty\)),
 \[
   \mathbb{P}^{\mathrm{os}}_{\mathrm{full}}
   \in

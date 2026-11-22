@@ -14,7 +14,7 @@
 
 \section{Motivation and Scope}
 
-Whereas Chapter~\ref{chap:confounding-test} audited observational tabular datasets for hidden confounding, many real-world applications also require sharing sensitive tabular datasets without exposing individual records. Building on the differential privacy and optimal transport preliminaries in Chapter~\ref{chap:background}, this chapter addresses that release stage through scalable, geometry-aware private data synthesis.
+Chapter~\ref{chap:confounding-test} examined how to audit observational datasets before acting on their causal estimates. A complementary challenge arises earlier, when organizations need to share sensitive tabular datasets for research or policy analysis without exposing individual records. Building on the optimal transport and differential privacy foundations in Chapter~\ref{chap:background}, this chapter develops a scalable, geometry-aware method for differentially private tabular data synthesis.
 
 Distributing sensitive datasets is crucial for data-driven decision-making and methodological research in many fields, including healthcare and government. At the same time, there are significant concerns about the use and disclosure of personal information, especially among vulnerable groups \citep{el2011case}. Differential privacy has therefore gained prominence as a practical approach to mitigate privacy concerns, with adoption extending beyond theoretical frameworks and finding practical utility across industries and government organizations \citep{johnson2018towards,abowd2018us,aktay2020google}.
 
@@ -52,9 +52,9 @@ Differential privacy is an algorithmic property that guarantees that individual 
 \label{def:privpgd-dp}
 A randomized mechanism \(\mathcal{A}\) is \((\epsilon,\delta)\)-differentially private with \(\epsilon > 0\) and \(\delta \geq 0\) if for any neighboring datasets \(D \sim D'\) and any measurable subset \(B\) of the output space of \(\mathcal{A}\), we have
 \[
-  \prob[\mathcal{A}(D)\in B]
+  \mathbb{P}[\mathcal{A}(D)\in B]
   \leq
-  \exp(\epsilon)\prob[\mathcal{A}(D')\in B] + \delta.
+  \exp(\epsilon)\mathbb{P}[\mathcal{A}(D')\in B] + \delta.
 \]
 \end{definition}
 
@@ -333,7 +333,7 @@ We benchmark PrivPGD against representative marginal-based and query-based metho
 
 \subsection{Main Benchmark Results}
 
-We now present how the performance of PrivPGD compares against state-of-the-art algorithms for differentially private data synthesis. Figure~\ref{fig:comp} illustrates the relative performance of PrivPGD compared to other methods across the benchmark datasets and metrics, and full numerical results appear in Appendix~\ref{app:privpgd-tables}. Overall, PrivPGD consistently ranks as either the best or the second-best method in most metrics and datasets, with a few exceptions such as the covariance error on the ACS Public Coverage dataset.
+We now present how the performance of PrivPGD compares against state-of-the-art algorithms for differentially private data synthesis. Figure~\ref{fig:comp} illustrates the relative performance of PrivPGD compared to other methods across the benchmark datasets and metrics, and we show full numerical results in Appendix~\ref{app:privpgd-tables}. Overall, PrivPGD consistently ranks as either the best or the second-best method in most metrics and datasets, with a few exceptions such as the covariance error on the ACS Public Coverage dataset.
 
 \paragraph{Comparison with PGM.}
 PrivPGD systematically outperforms both variants of PGM, which are the state-of-the-art for marginal-based tabular data synthesis, often by a significant margin. In particular, it is better than PGM+MST in covariance and query errors across datasets, except for threshold query error on the Diabetes dataset, and performs at least as well as PGM+AIM in most settings, with the notable exception of threshold query error on the ACS Mobility dataset. For downstream tasks, PrivPGD performs comparably to PGM+AIM and generally better than or comparable to PGM+MST.

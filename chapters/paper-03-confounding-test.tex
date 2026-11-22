@@ -432,7 +432,7 @@ where \(z_{\alpha/2}=\Phi^{-1}(\alpha/2)\) is the lower \(\alpha/2\)-quantile of
 
 \begin{proposition}[Validity of the tests]
 \label{prop:confounding-test-validity}
-Fix \(\Gamma\geq 1\) and \(\alpha\in(0,1)\). Under the setting of Section~\ref{sec:confounding-setting} and Assumptions~\ref{asm:confounding-transportability}--\ref{asm:confounding-support-inclusion}, suppose the sampling-variance estimators in Algorithm~\ref{alg:confounding-test} are consistent with respect to the asymptotic variances \(\sigma_{\star}^2\) and \((\sigma^{\pm}_{\Gamma,\star})^2\) defined in Appendix~\ref{app:confounding-proof-tests}, namely \(n_{\mathrm{rct}}\widehat{\sigma}_{\star}^2 \xrightarrow{p} \sigma_{\star}^2\) for \(\star\in\{\mathrm{rct},\widetilde{\mathrm{os}}\}\), \(n_{\mathrm{rct}}(\widehat{\sigma}^{\pm}_{\Gamma,\mathrm{rct}})^2 \xrightarrow{p} (\sigma^{\pm}_{\Gamma,\mathrm{rct}})^2\), and \(n_{\mathrm{os}}(\widehat{\sigma}^{\pm}_{\Gamma,\widetilde{\mathrm{os}}})^2 \xrightarrow{p} (\sigma^{\pm}_{\Gamma,\widetilde{\mathrm{os}}})^2\). Then the tests in Algorithm~\ref{alg:confounding-test} are asymptotically valid for \(H_0(\Gamma)\) under the following regularity conditions:
+Fix \(\Gamma\geq 1\) and \(\alpha\in(0,1)\). Under the setting of Section~\ref{sec:confounding-setting} and Assumptions~\ref{asm:confounding-transportability}--\ref{asm:confounding-support-inclusion}, suppose the sampling-variance estimators in Algorithm~\ref{alg:confounding-test} are consistent. Then the tests in Algorithm~\ref{alg:confounding-test} are asymptotically valid for \(H_0(\Gamma)\) under the following regularity conditions:
 \begin{enumerate}
   \item If \(n_{\mathrm{rct}}/n_{\mathrm{os}}\to 0\) and the estimated CATE sensitivity bounds satisfy
   \[
