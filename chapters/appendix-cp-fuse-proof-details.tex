@@ -51,7 +51,7 @@ Using \(\lambda_1+\lambda_2=1\), this becomes
 \qquad
 \gamma_t=-1-\mu.
 \]
-Setting \(\alpha_t=\lambda_1\) and \(\beta_t=\lambda_2\) yields the claimed log-linear representation. For the exact convex program, the coefficients additionally satisfy \(\alpha_t+\beta_t=1\); the implementation searches over a broader discretized log-linear family containing this KKT form.
+Setting \(\alpha_t=\lambda_1\) and \(\beta_t=\lambda_2\) yields the claimed log-linear representation. For the exact convex program, the coefficients additionally satisfy \(\alpha_t+\beta_t=1\); the implementation approximates this KKT form by a grid search over a finite set of values for \(\alpha_t\) and \(\beta_t\).
 
 \subsection{Proof of Lemma~\ref{lem:cpfuse-balance}}
 

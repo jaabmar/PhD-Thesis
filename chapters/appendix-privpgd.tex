@@ -92,14 +92,14 @@ The constrained synthesis experiment from the main chapter augments the standard
 \[
   q_{\theta,b}(Z)
   =
-  \frac{1}{r}\sum_{j=1}^r \mathbf{1}\!\left\{\langle z_j, \theta \rangle + b > 0\right\}.
+  \frac{1}{r}\sum_{j=1}^r \mathbf{1}\!\left\{\langle z_j, \theta \rangle - b > 0\right\}.
 \]
 Because this quantity is not differentiable with respect to the particle positions, the implementation replaces it by a smooth surrogate based on the same affine score,
 \[
   \tilde q_{\theta,b}(Z)
   =
   \frac{1}{r}\sum_{j=1}^r
-  \left(1 + \exp\!\left(-\kappa(\langle z_j, \theta \rangle + b)\right)\right)^{-1},
+  \left(1 + \exp\!\left(-\kappa(\langle z_j, \theta \rangle - b)\right)\right)^{-1},
 \]
 with smoothing parameter \(\kappa = 5.0\).
 
@@ -113,7 +113,7 @@ The regularization term optimized in this experiment is
   =
   \frac{0.01}{0.0001 + \left(\tilde q_{\theta,b}(Z) - \widehat{\tilde q}_{\theta,b}(D)\right)^2},
 \]
-and the reported sweeps vary the regularization strength \(\lambda\) from \(10^{-2}\) to \(10^{2}\) (that is, \(\log_{10}\lambda \in \{-2, -1, 0, 1, 2\}\)). Since this term is added to a loss that is minimized, increasing \(\lambda\) encourages a larger discrepancy between the synthetic statistic and the differentially private estimate of the sensitive statistic. The resulting tradeoff curves for the ACS Income and ACS Employment datasets are shown in Figure~\ref{fig:constraints-main} in Chapter~\ref{chap:privpgd}.
+and the reported sweeps vary the log regularization strength \(\log\lambda\) from \(-2\) to \(2\). Since this term is added to a loss that is minimized, increasing \(\lambda\) encourages a larger discrepancy between the synthetic statistic and the differentially private estimate of the sensitive statistic. The resulting tradeoff curves for the ACS Income and ACS Employment datasets are shown in Figure~\ref{fig:constraints-main} in Chapter~\ref{chap:privpgd}.
 
 \clearpage
 \section{Lower-Budget Experiments}

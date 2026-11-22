@@ -1,77 +1,62 @@
 \chapter{Background}
 \label{chap:background}
 
-This chapter establishes the shared mathematical and statistical foundations used across the thesis so that Chapters~\ref{chap:confounding-test}--\ref{chap:cpfuse} can focus on their specific formulations, algorithms, and empirical studies. Readers already familiar with a given area can consult the four sections selectively.
-
-We follow the front-matter Notation summary throughout. Shared mathematical symbols, including \(\RR\), \(\mathbb{P}\), \(\mathbb{E}\), \(\mathbf{1}\{\cdot\}\), \(\supp(\cdot)\), \(\KL\), \(\TV\), \(W_q\), and \(\SW_q\), keep a single meaning across the thesis. Symbols that serve different standard roles across the three studies, including \(T\), \(\mu\), \(\alpha\), \(\sigma\), \(p\), \(k\), and chapter-specific operators such as \(\mathcal{A}\) and \(\mathcal{M}\), are scoped locally to their respective chapters.
+This chapter collects the background shared by Chapters~\ref{chap:confounding-test}--\ref{chap:cpfuse}: causal inference with sensitivity analysis, probability divergences and optimal transport, differential privacy, and autoregressive language models. Shared symbols, including \(\RR\), \(\mathbb{P}\), \(\mathbb{E}\), \(\mathbf{1}\{\cdot\}\), \(\supp(\cdot)\), \(\KL\), \(\TV\), \(W_q\), and \(\SW_q\), have one meaning throughout the thesis (see the Notation summary). Symbols with different standard roles in the three studies, such as \(T\), \(\mu\), \(\alpha\), \(\sigma\), \(p\), \(k\), \(\mathcal{A}\), and \(\mathcal{M}\), are local to each chapter.
 
 \section{Causal Inference, Sensitivity Analysis, and Trial Integration}
 \label{sec:bg-causal}
 
-Chapter~\ref{chap:confounding-test} studies causal inference from observational data, integrating sensitivity analysis with randomized trial evidence to test and lower-bound hidden confounding strength. This section reviews potential outcomes, partial identification under the marginal sensitivity model, trial transportability, and hypothesis-test inversion.
+\paragraph{Potential outcomes and identification.}
+In the Neyman--Rubin framework \citep{neyman1923application,rubin1978bayesian}, each unit has observed covariates \(X \in \RR^d\), unobserved confounders \(U \in \RR^k\), a binary treatment \(T \in \{0, 1\}\), and bounded potential outcomes \(Y(0), Y(1) \in \RR\), and we observe \(Y = Y(T)\). The conditional average treatment effect (CATE) is \(\mu(X) = \mathbb{E}[Y(1) - Y(0) \mid X]\), and the average treatment effect (ATE) over a covariate distribution \(\mathbb{P}_X\) is \(\mu(\mathbb{P}_X) = \mathbb{E}_{\mathbb{P}_X}[\mu(X)]\).
 
-\paragraph{Potential outcomes, propensity scores, and IPW.}
-In the Neyman--Rubin framework \citep{neyman1923application,rubin1978bayesian}, each unit has observed covariates \(X \in \RR^d\), unobserved confounders \(U \in \RR^k\), a binary treatment \(T \in \{0, 1\}\), and bounded potential outcomes \(Y(0), Y(1) \in \RR\). Under consistency, we observe \(Y = Y(T)\). The main estimands are the conditional average treatment effect (CATE), \(\mu(X) = \mathbb{E}[Y(1) - Y(0) \mid X]\), and the average treatment effect (ATE) over a target distribution \(\mathbb{P}_X\), \(\mu(\mathbb{P}_X) = \mathbb{E}_{\mathbb{P}_X}[\mu(X)]\).
-
-The propensity score \(e(X) = \mathbb{P}(T = 1 \mid X)\) characterizes treatment assignment given observed covariates \citep{rosenbaum1983central}. When treatment is unconfounded given \(X\), meaning \((Y(0), Y(1))\) is conditionally independent of \(T\) given \(X\), and \(0 < e(X) < 1\), both CATE and ATE are point-identified from the distribution of \((X, T, Y)\). In a completely randomized trial with assignment probability \(\pi = \mathbb{P}(T = 1 \mid X, U) \in (0, 1)\), randomization guarantees internal validity and gives the unbiased inverse probability weighting (IPW) identity \citep{horvitz1952generalization}:
+If \((Y(0), Y(1))\) is conditionally independent of \(T\) given \(X\) and the propensity score \(e(X) = \mathbb{P}(T = 1 \mid X)\) \citep{rosenbaum1983central} satisfies \(0 < e(X) < 1\), both effects are identified from the distribution of \((X, T, Y)\). In a completely randomized trial with \(\mathbb{P}(T = 1 \mid X, U) = \pi \in (0, 1)\), the inverse probability weighting (IPW) identity \citep{horvitz1952generalization}
 \[
   \mathbb{E}\!\left[\frac{T Y}{\pi} - \frac{(1 - T) Y}{1 - \pi}\right]
   =
-  \mathbb{E}\bigl[Y(1) - Y(0)\bigr].
+  \mathbb{E}\bigl[Y(1) - Y(0)\bigr]
 \]
-In observational studies, unobserved confounders \(U\) may affect both \(T\) and \((Y(0), Y(1))\). Multiple full distributions over \((X, U, Y(0), Y(1), Y, T)\) then produce the same observed distribution of \((X, T, Y)\), preventing point identification.
+gives an unbiased estimator of the ATE. In observational studies, \(U\) may affect both \(T\) and \((Y(0), Y(1))\). Different joint distributions of \((X, U, Y(0), Y(1), Y, T)\) can then induce the same distribution of \((X, T, Y)\), and the effects are no longer point-identified.
 
-\paragraph{Partial identification and the marginal sensitivity model.}
-Sensitivity analysis replaces unconfoundedness with a parameterized class of confounding mechanisms indexed by \(\Gamma \geq 1\), yielding a partial identification interval \([\mu^-_\Gamma, \mu^+_\Gamma]\) that widens monotonically with \(\Gamma\). Following Cornfield's analysis \citep{cornfield59}, robustness diagnostics often summarize an observational study by its critical value (or E-value), the smallest confounding strength capable of explaining away the estimated effect \citep{vanderweele2017sensitivity,jin2023sensitivity}.
+\paragraph{Sensitivity analysis and the marginal sensitivity model.}
+Sensitivity analysis, which goes back to \citet{cornfield59}, replaces unconfoundedness with a family of confounding mechanisms indexed by a strength \(\Gamma \geq 1\). Each \(\Gamma\) gives a partial identification interval \([\mu^-_\Gamma, \mu^+_\Gamma]\) for the effect, and the interval widens as \(\Gamma\) grows. The critical value of a study is the smallest confounding strength that would explain away the estimated effect \citep{vanderweele2017sensitivity,jin2023sensitivity}. The marginal sensitivity model (MSM) of \citet{tan2006distributional} requires the odds ratio between the full propensity score \(e(X, U) = \mathbb{P}(T = 1 \mid X, U)\) and \(e(X)\) to lie in \([1/\Gamma, \Gamma]\) almost surely. At \(\Gamma = 1\), the treatment odds do not depend on \(U\) given \(X\), so the model allows no hidden confounding. Several estimators compute CATE and ATE bounds under the MSM from observational data \citep{kallus2019interval,zhao2019sensitivity,jesson2021quantifying,dorn2021doubly,dorn2022sharp,oprescu2023b}, and related work develops sensitivity analyses and treatment-effect bounds for unobserved confounding \citep{scharfstein2021semiparametric,yadlowsky2022bounds}. Chapter~\ref{chap:confounding-test} defines the sensitivity set (\Cref{def:confounding-msm}) and bounds (\Cref{def:confounding-sensitivity-bounds}) under the factorization in Equation~\eqref{eq:confounding-factorization}, and Appendix~\ref{app:confounding-msm-tightness} discusses the tightness of the MSM.
 
-The marginal sensitivity model (MSM) of \citet{tan2006distributional} bounds the odds ratio between the full propensity score \(e(X, U) = \mathbb{P}(T = 1 \mid X, U)\) and the observed propensity score \(e(X)\):
-\[
-  \frac{1}{\Gamma}
-  \leq
-  \frac{e(X, U) / \bigl(1 - e(X, U)\bigr)}{e(X) / \bigl(1 - e(X)\bigr)}
-  \leq
-  \Gamma
-  \qquad\text{almost surely.}
-\]
-At \(\Gamma = 1\), the odds ratio equals one and unconfoundedness holds; larger \(\Gamma\) allows stronger hidden selection bias. Modern estimators compute valid or sharp MSM bounds for CATE and ATE directly from observational data \citep{kallus2019interval,zhao2019sensitivity,jesson2021quantifying,scharfstein2021semiparametric,dorn2021doubly,dorn2022sharp,yadlowsky2022bounds,oprescu2023b}. Chapter~\ref{chap:confounding-test} states the exact full-distribution factorization (Equation~\eqref{eq:confounding-factorization}), defines the sensitivity set (\Cref{def:confounding-msm}) and bounds (\Cref{def:confounding-sensitivity-bounds}), and analyzes MSM tightness in Appendix~\ref{app:confounding-msm-tightness}.
+\paragraph{Transportability and nested trial designs.}
+Randomized trials are internally valid, but eligibility criteria can make the trial covariate distribution \(\mathbb{P}^{\mathrm{rct}}_X\) differ from a target population \(\mathbb{P}^\star_X\) \citep{rothwell2005external,kennedy2015literature}. Transporting the trial effect to \(\mathbb{P}^\star_X\) requires the CATE to be the same in both populations and the density ratio \(w_\star = d\mathbb{P}^\star_X / d\mathbb{P}^{\mathrm{rct}}_X\) to be well defined \citep{cole2010generalizing,colnet2020causal,degtiar2023review,colnet2023risk,colnet2022reweighting}. Multiplying the IPW summand by \(w_\star(X)\) then identifies the ATE under \(\mathbb{P}^\star_X\). The resulting estimator is unbiased when \(w_\star\) is known and consistent when \(w_\star\) is estimated consistently.
 
-\paragraph{External validity, transportability, and nested trial designs.}
-Randomized trials achieve internal validity, yet eligibility criteria often yield a trial distribution \(\mathbb{P}^{\mathrm{rct}}_X\) that differs from the clinical target population \(\mathbb{P}^\star_X\) \citep{rothwell2005external,kennedy2015literature}. Transporting randomized effects to \(\mathbb{P}^\star_X\) relies on CATE invariance across populations and support overlap so that the density ratio \(w_\star(X) = (d\mathbb{P}^\star_X / d\mathbb{P}^{\mathrm{rct}}_X)(X)\) is well defined \citep{cole2010generalizing,colnet2020causal,degtiar2023review,colnet2023risk,colnet2022reweighting}. Weighting the randomized IPW summand by \(w_\star(X)\) then yields an unbiased estimator of \(\mu(\mathbb{P}^\star_X)\).
+In a \emph{nested trial design}, eligible members of one cohort either enter the randomized trial or decline randomization and are observed under routine care \citep{olschewski1985comprehensive,olschewski1992analysis,choudhry2017randomized,dahabreh2021study}. Because both groups come from the same cohort, trial-participation probabilities identify \(w_\star\) up to normalization (Appendix~\ref{app:confounding-nested-design}).
 
-Under a \emph{nested trial design} (or comprehensive cohort study), eligible individuals from one cohort either enter the randomized trial or decline randomization and are observed under routine care \citep{olschewski1985comprehensive,olschewski1992analysis,choudhry2017randomized,dahabreh2021study}. Because both groups originate from the same cohort, trial-participation probabilities identify \(w_\star(X)\) up to normalization; Appendix~\ref{app:confounding-nested-design} connects this design to Chapter~\ref{chap:confounding-test}.
-
-\paragraph{Hypothesis-test inversion and asymptotic tools.}
-To quantify an unknown confounding strength \(\Gamma^\star \geq 1\), Chapter~\ref{chap:confounding-test} uses hypothesis-test inversion \citep{van2000asymptotic}. Given a family of level-\(\alpha\) tests \(\widehat{\phi}(\Gamma, \alpha) \in \{0, 1\}\) for \(H_0(\Gamma)\colon \Gamma^\star \leq \Gamma\) satisfying \(\limsup \mathbb{P}_{H_0(\Gamma)}(\widehat{\phi}(\Gamma, \alpha) = 1) \leq \alpha\), taking the infimum of non-rejected values,
+\paragraph{Test inversion and asymptotic tools.}
+Chapter~\ref{chap:confounding-test} lower-bounds the unknown confounding strength \(\Gamma^\star \geq 1\) by inverting tests. Given tests \(\widehat{\phi}(\Gamma, \alpha) \in \{0, 1\}\) of \(H_0(\Gamma)\colon \Gamma^\star \leq \Gamma\) with \(\limsup \mathbb{P}_{H_0(\Gamma)}(\widehat{\phi}(\Gamma, \alpha) = 1) \leq \alpha\), the smallest non-rejected value
 \[
   \widehat{\Gamma}_{\mathrm{LB}}
   =
-  \inf \bigl\{\Gamma \geq 1 : \widehat{\phi}(\Gamma, \alpha) = 0\bigr\},
+  \inf \bigl\{\Gamma \geq 1 : \widehat{\phi}(\Gamma, \alpha) = 0\bigr\}
 \]
-forms an asymptotically valid \((1 - \alpha)\) confidence lower bound on \(\Gamma^\star\), since \(\widehat{\Gamma}_{\mathrm{LB}} > \Gamma^\star\) requires rejecting the true null \(H_0(\Gamma^\star)\).
+is an asymptotically valid \((1 - \alpha)\) lower confidence bound on \(\Gamma^\star\), because \(\widehat{\Gamma}_{\mathrm{LB}} > \Gamma^\star\) requires rejecting the true null \(H_0(\Gamma^\star)\).
 
-Establishing asymptotic validity of the test statistics relies on three standard large-sample tools \citep{van2000asymptotic,serfling2009approximation}: the central limit theorem establishes asymptotic normality of reweighted IPW and plug-in sensitivity-bound estimators, Slutsky's theorem justifies replacing unknown variances with consistent standard errors in studentized statistics, and the delta method propagates asymptotic normality through smooth transformations (such as differences of jointly asymptotically normal estimators). Chapter~\ref{chap:confounding-test} combines these ingredients in Algorithm~\ref{alg:confounding-test} and proves validity in \Cref{prop:confounding-test-validity} and \Cref{prop:confounding-lower-bound-validity}, with full derivations in Appendix~\ref{app:confounding-proofs}.
+The validity proofs use three standard large-sample tools \citep{van2000asymptotic,serfling2009approximation}. The central limit theorem gives asymptotic normality of the reweighted IPW and sensitivity-bound estimators, Slutsky's theorem allows studentizing with consistent standard errors, and the delta method carries asymptotic normality through smooth transformations such as differences of estimators. Chapter~\ref{chap:confounding-test} uses them in \Cref{prop:confounding-test-validity} and \Cref{prop:confounding-lower-bound-validity}, with proofs in Appendix~\ref{app:confounding-proofs}.
 
 \section{Probability Divergences and Optimal Transport}
 \label{sec:bg-ot}
 
-Chapters~\ref{chap:privpgd} and~\ref{chap:cpfuse} both compare and optimize probability distributions: Chapter~\ref{chap:privpgd} matches tabular marginals in a Euclidean embedding space, while Chapter~\ref{chap:cpfuse} combines next-token distributions over a finite vocabulary.
+Chapter~\ref{chap:privpgd} compares distributions of tabular marginals embedded in a Euclidean space, and Chapter~\ref{chap:cpfuse} combines next-token distributions over a finite vocabulary.
 
 \paragraph{Total variation distance.}
-For probability measures \(\mu\) and \(\nu\) on a measurable space \((\mathcal{Z}, \mathcal{F})\), the total variation distance is \(\TV(\mu, \nu) = \sup_{B \in \mathcal{F}} \lvert \mu(B) - \nu(B) \rvert\). When \(\mathcal{Z}\) is finite or countable with mass functions \(p\) and \(q\), this reduces to \(\TV(p, q) = \frac{1}{2} \sum_{z \in \mathcal{Z}} \lvert p(z) - q(z) \rvert\). Total variation bounds the largest probability discrepancy across all events, yet it is blind to the geometry of \(\mathcal{Z}\). Because it depends only on cellwise mass differences, moving mass to an adjacent bin incurs the exact same \(\TV\) penalty as moving it across the entire domain. Chapter~\ref{chap:privpgd} returns to this property when contrasting \(\TV\) and sliced Wasserstein fidelity (Figure~\ref{fig:comp-sw-tv}).
+For probability measures \(\mu\) and \(\nu\) on a measurable space \((\mathcal{Z}, \mathcal{F})\), the total variation distance is \(\TV(\mu, \nu) = \sup_{B \in \mathcal{F}} \lvert \mu(B) - \nu(B) \rvert\). When \(\mathcal{Z}\) is finite or countable with mass functions \(p\) and \(q\), this reduces to \(\TV(p, q) = \frac{1}{2} \sum_{z \in \mathcal{Z}} \lvert p(z) - q(z) \rvert\). Total variation depends only on cellwise mass differences and ignores the geometry of \(\mathcal{Z}\): moving mass to a neighboring cell costs as much as moving it across the domain. Chapter~\ref{chap:privpgd} returns to this property when comparing \(\TV\) and sliced Wasserstein fidelity (Figure~\ref{fig:comp-sw-tv}).
 
 \paragraph{Kullback--Leibler divergence and log-linear pooling.}
 For probability distributions \(p\) and \(q\) on a finite alphabet \(V\), the Kullback--Leibler (KL) divergence is
 \[
   \KL(p \,\|\, q) = \sum_{y \in V} p(y) \log \frac{p(y)}{q(y)},
 \]
-with \(0 \log 0 = 0\) and \(\KL(p \,\|\, q) = \infty\) whenever \(\supp(p) \not\subseteq \supp(q)\). The KL divergence is nonnegative, equals zero if and only if \(p = q\), and is strictly convex in \(p\) on the probability simplex \(\Delta(V)\). Given two distributions \(q_1\) and \(q_2\) on \(V\) with common support and weights \(\alpha_1, \alpha_2 \geq 0\) summing to one, minimizing \(\alpha_1 \KL(p \,\|\, q_1) + \alpha_2 \KL(p \,\|\, q_2)\) over \(p \in \Delta(V)\) yields the stationarity condition
+with \(0 \log 0 = 0\) and \(\KL(p \,\|\, q) = \infty\) whenever \(\supp(p) \not\subseteq \supp(q)\). The KL divergence is nonnegative, equals zero if and only if \(p = q\), and is strictly convex in \(p\) on the probability simplex \(\Delta(V)\). Given two distributions \(q_1\) and \(q_2\) on \(V\) with common support and weights \(\alpha_1, \alpha_2 \geq 0\) summing to one, minimizing \(\alpha_1 \KL(p \,\|\, q_1) + \alpha_2 \KL(p \,\|\, q_2)\) over \(p \in \Delta(V)\) gives the stationarity condition
 \[
   \log p(y) = \alpha_1 \log q_1(y) + \alpha_2 \log q_2(y) + \gamma,
 \]
-where \(\gamma \in \RR\) normalizes \(p\). Minimizing a weighted KL objective therefore produces a log-linear (exponential-family) pool \(p(y) \propto q_1(y)^{\alpha_1} q_2(y)^{\alpha_2}\). Chapter~\ref{chap:cpfuse} extends this simplex optimality principle to a history-dependent minimax KL problem (Equation~\eqref{eq:cpfuse-opt-epigraph} and \Cref{lem:cpfuse-kkt}, proved in Appendix~\ref{app:cpfuse-proofs}).
+where \(\gamma \in \RR\) normalizes \(p\). The minimizer is therefore the log-linear pool \(p(y) \propto q_1(y)^{\alpha_1} q_2(y)^{\alpha_2}\). Chapter~\ref{chap:cpfuse} applies the same argument to a history-dependent minimax KL problem (Equation~\eqref{eq:cpfuse-opt-epigraph} and \Cref{lem:cpfuse-kkt}, proved in Appendix~\ref{app:cpfuse-proofs}).
 
-\paragraph{Wasserstein distance, one-dimensional sorting, and slicing.}
-Unlike total variation, optimal transport reflects the metric of the ground space \citep{torres2021survey}. Let \(\Omega \subset \RR^p\) be a Euclidean domain and let \(\mu, \nu\) be probability measures on \(\Omega\) with finite \(q\)-th moments for \(q \geq 1\). Writing \(\Pi(\mu, \nu)\) for the set of couplings on \(\Omega \times \Omega\) with marginals \(\mu\) and \(\nu\), the \(q\)-Wasserstein distance is
+\paragraph{Wasserstein distance and slicing.}
+Optimal transport takes the metric of the ground space into account \citep{torres2021survey}. Let \(\Omega \subset \RR^p\) and let \(\mu, \nu\) be probability measures on \(\Omega\) with finite \(q\)-th moments for \(q \geq 1\). Writing \(\Pi(\mu, \nu)\) for the set of couplings on \(\Omega \times \Omega\) with marginals \(\mu\) and \(\nu\), the \(q\)-Wasserstein distance is
 \[
   W_q(\mu, \nu)
   =
@@ -80,59 +65,50 @@ Unlike total variation, optimal transport reflects the metric of the ground spac
     \int_{\Omega \times \Omega} \|x - y\|_2^q \, d\pi(x, y)
   \right)^{1/q}.
 \]
-Weighting transport plans by \(\|x - y\|_2^q\) assigns small cost to local shifts and large cost to distant mismatches.
+The cost \(\|x - y\|_2^q\) makes local shifts cheap and distant mismatches expensive.
 
-In one dimension (\(p = 1\)), optimal transport admits a direct closed form. For equal-size empirical measures \(\alpha = \frac{1}{m}\sum_{j=1}^m \delta_{y_j}\) and \(\beta = \frac{1}{m}\sum_{j=1}^m \delta_{y'_j}\) on \(\RR\), the optimal coupling pairs sorted order statistics \(y_{(1)} \leq \dots \leq y_{(m)}\) and \(y'_{(1)} \leq \dots \leq y'_{(m)}\):
+In one dimension (\(p = 1\)), optimal transport has a closed form. For equal-size empirical measures \(\alpha = \frac{1}{m}\sum_{j=1}^m \delta_{y_j}\) and \(\beta = \frac{1}{m}\sum_{j=1}^m \delta_{y'_j}\) on \(\RR\), the optimal coupling pairs the order statistics \(y_{(1)} \leq \dots \leq y_{(m)}\) and \(y'_{(1)} \leq \dots \leq y'_{(m)}\):
 \[
   W_q^q(\alpha, \beta) = \frac{1}{m} \sum_{j=1}^m \lvert y_{(j)} - y'_{(j)} \rvert^q,
 \]
-which runs in \(O(m \log m)\) time. For \(q = 1\), Vallender's identity expresses \(W_1(\alpha, \beta)\) as the \(L^1\) distance between the cumulative distribution functions of \(\alpha\) and \(\beta\) \citep{vallander}. Restricting that \(L^1\) integral to a compact interval extends \(W_1\) to finite signed measures, enabling geometric projection of noisy histograms onto probability measures \citep{boedihardjo2022private}.
+which takes \(O(m \log m)\) time. For \(q = 1\), \(W_1\) equals the \(L^1\) distance between cumulative distribution functions \citep{vallander}, and restricting this integral to a compact interval extends \(W_1\) to finite signed measures \citep{boedihardjo2022private}.
 
-In higher dimensions (\(p > 1\)), computing \(W_q\) over \(m\) support points requires solving a linear program whose cost scales at least quadratically and up to cubically in \(m\). The sliced Wasserstein distance \(\SW_q\) avoids this bottleneck by projecting both measures onto random unit directions in \(\mathbb{S}^{p-1}\) and averaging the one-dimensional \(W_q^q\) distances \citep{bonneel2015sliced,kolouri2018sliced,deshpande2018generative}. Each projection costs \(O(m \log m)\) while preserving Euclidean geometry. Chapter~\ref{chap:privpgd} gives the formal definition of \(\SW_q\), its signed-measure projection step, and its role in particle updates.
+For \(p > 1\), computing \(W_q\) exactly between measures with \(m\) support points requires solving a linear program whose cost grows roughly cubically in \(m\). The sliced Wasserstein distance projects both measures onto directions \(\theta \in \mathbb{S}^{p-1}\). Its \(q\)-th power \(\SW_q^q\) is the average of the one-dimensional \(W_q^q\) over uniformly distributed directions, and in practice this average is approximated with finitely many random directions \citep{bonneel2015sliced,kolouri2018sliced,deshpande2018generative}. Each projection costs \(O(m \log m)\). Chapter~\ref{chap:privpgd} gives the formal definition of \(\SW_q\).
 
-\paragraph{Particle representation and optimization over measures.}
-A probability measure on \(\Omega\) can be represented by an empirical cloud of \(m\) particles \(Z = (z_1, \dots, z_m) \in \Omega^m\) as \(\mu[Z] = \frac{1}{m}\sum_{j=1}^m \delta_{z_j}\). Rather than fitting a parametric generator and sampling from it, particle optimization minimizes a functional \(\mathcal{F}(\mu[Z])\) directly over the coordinates \(Z\) via first-order updates \citep{chizat2018global,chizat2022sparse,bonet2022efficient}. For the squared sliced \(2\)-Wasserstein objective, sorting gradients are piecewise linear in \(Z\), parallelize across random directions on GPUs, and accommodate domain constraints through additive differentiable penalties, as developed in Chapter~\ref{chap:privpgd}.
+\paragraph{Particle optimization over measures.}
+A probability measure on \(\Omega\) can be represented by a cloud of \(m\) particles \(Z = (z_1, \dots, z_m) \in \Omega^m\) as \(\mu[Z] = \frac{1}{m}\sum_{j=1}^m \delta_{z_j}\). Particle methods minimize a functional \(\mathcal{F}(\mu[Z])\) directly over the coordinates \(Z\) with first-order updates \citep{chizat2018global,chizat2022sparse,bonet2022efficient}. Chapter~\ref{chap:privpgd} applies this approach to the squared sliced \(2\)-Wasserstein distance.
 
 \section{Differential Privacy Fundamentals}
 \label{sec:bg-dp}
 
-Differential privacy bounds individual-level information leakage when releasing statistics or synthetic data from a sensitive dataset \citep{dp,dwork2014algorithmic}. It forms the privacy guarantee of Chapter~\ref{chap:privpgd} and provides a technical reference point for copyright protection in Chapter~\ref{chap:cpfuse}.
+Differential privacy limits what the output of an algorithm reveals about any individual record of a sensitive dataset \citep{dp,dwork2014algorithmic}. It is the privacy guarantee of Chapter~\ref{chap:privpgd}, and Chapter~\ref{chap:cpfuse} discusses differentially private training as a training-time approach to copyright protection.
 
-\paragraph{Privacy goal and dataset adjacency.}
-A randomized mechanism \(\mathcal{A}\) is differentially private if its output distribution changes little when any single individual's record in a dataset \(D\) is modified. Even an adversary who observes every other record in \(D\) and holds arbitrary auxiliary knowledge cannot reliably distinguish whether a specific record was included or determine its values.
+\paragraph{Privacy guarantee and dataset adjacency.}
+A randomized mechanism \(\mathcal{A}\) is \((\epsilon, \delta)\)-differentially private if, for any two neighboring datasets \(D \sim D'\) and any output event, the probability of the event under \(\mathcal{A}(D)\) is at most \(e^{\epsilon}\) times its probability under \(\mathcal{A}(D')\), plus \(\delta\). Thus \(\epsilon > 0\) bounds a ratio of output probabilities and \(\delta\) is an additive slack. The guarantee holds even against an adversary who knows all other records in the dataset \citep{dp}. Under \emph{unbounded} adjacency, \(D'\) adds or removes one record. Under \emph{bounded} adjacency, the sample size \(n\) is fixed and \(D, D' \in \mathcal{X}^n\) differ in exactly one record (replacement), so the guarantee protects the value of any single record. Chapter~\ref{chap:privpgd} uses bounded adjacency in \Cref{def:privpgd-dp}.
 
-Two conventions define neighboring datasets \(D \sim D'\). Under \emph{unbounded} adjacency, \(D'\) adds or removes one record, changing sample size by one. Under \emph{bounded} adjacency, the sample size \(n\) is fixed and \(D, D' \in \mathcal{X}^n\) differ in exactly one record (replacement). Chapter~\ref{chap:privpgd} adopts bounded \((\epsilon, \delta)\)-differential privacy in \Cref{def:privpgd-dp}, where \(\epsilon > 0\) bounds the multiplicative log-odds shift of output events and \(\delta \in [0, 1)\) permits a small additive failure probability, typically chosen well below \(1/n\).
-
-\paragraph{Post-processing invariance and basic composition.}
-Two properties allow privacy guarantees to carry through multi-step algorithms \citep{dwork2014algorithmic}. Under \emph{post-processing invariance}, if \(\mathcal{A}\) is \((\epsilon, \delta)\)-differentially private and \(g\) is any (possibly randomized) mapping independent of the sensitive dataset \(D\), then \(g \circ \mathcal{A}\) remains \((\epsilon, \delta)\)-differentially private. Once empirical marginals are privatized, all subsequent projection, particle optimization, and discretization steps consume zero additional privacy budget.
-
-Under \emph{basic composition}, releasing the outputs of an \((\epsilon_1, \delta_1)\)-differentially private mechanism \(\mathcal{A}_1\) and an \((\epsilon_2, \delta_2)\)-differentially private mechanism \(\mathcal{A}_2\) jointly satisfies \((\epsilon_1 + \epsilon_2, \delta_1 + \delta_2)\)-differential privacy, even if \(\mathcal{A}_2\) adapts to \(\mathcal{A}_1(D)\). Chapter~\ref{chap:privpgd} and Appendix~\ref{app:privpgd-privacy} combine these two properties to prove \Cref{lem:privpgd-privacy} and to split the budget between marginals and constraint statistics in Appendix~\ref{app:privpgd-constraints}.
+\paragraph{Post-processing and basic composition.}
+Two properties carry privacy guarantees through multi-step algorithms \citep{dwork2014algorithmic}. Under \emph{post-processing}, if \(\mathcal{A}\) is \((\epsilon, \delta)\)-differentially private and \(g\) is any (possibly randomized) mapping that does not access the sensitive dataset, then \(g \circ \mathcal{A}\) is also \((\epsilon, \delta)\)-differentially private. Under \emph{basic composition}, releasing the outputs of an \((\epsilon_1, \delta_1)\)-differentially private mechanism \(\mathcal{A}_1\) and an \((\epsilon_2, \delta_2)\)-differentially private mechanism \(\mathcal{A}_2\) satisfies \((\epsilon_1 + \epsilon_2, \delta_1 + \delta_2)\)-differential privacy, even if \(\mathcal{A}_2\) depends on \(\mathcal{A}_1(D)\). Chapter~\ref{chap:privpgd} combines the two properties to prove \Cref{lem:privpgd-privacy} (Appendix~\ref{app:privpgd-privacy}) and to split the budget between marginals and constraint statistics (Appendix~\ref{app:privpgd-constraints}).
 
 \paragraph{\(\ell_2\)-sensitivity and the Gaussian mechanism.}
-Privatizing a real statistic \(f\colon \mathcal{X}^n \to \RR^r\) requires calibrating noise to its \(\ell_2\)-sensitivity under the chosen adjacency relation,
+To privatize a statistic \(f\colon \mathcal{X}^n \to \RR^r\), noise is calibrated to its \(\ell_2\)-sensitivity under the chosen adjacency relation,
 \[
   \Delta_2(f) = \sup_{D \sim D'} \|f(D) - f(D')\|_2.
 \]
-The Gaussian mechanism \citep{dwork2014algorithmic} releases \(\mathcal{A}(D) = f(D) + \xi\) with isotropic Gaussian noise \(\xi \sim \mathcal{N}(0, \sigma_{\mathrm{DP}}^2 I_r)\). For \(\epsilon \in (0, 1)\) and \(\delta \in (0, 1)\), setting \(\sigma_{\mathrm{DP}} \geq \Delta_2(f)\sqrt{2\ln(1.25/\delta)}/\epsilon\) ensures \((\epsilon, \delta)\)-differential privacy, and tighter analytic calibrations extend to arbitrary \(\epsilon > 0\).
+The Gaussian mechanism releases \(\mathcal{A}(D) = f(D) + \xi\) with \(\xi \sim \mathcal{N}(0, \sigma_{\mathrm{DP}}^2 I_r)\), where the classical calibration takes \(\sigma_{\mathrm{DP}}\) proportional to \(\Delta_2(f)\sqrt{\log(1/\delta)}/\epsilon\) \citep{dwork2014algorithmic}.
 
-When \(f(D)\) is an empirical probability histogram over discrete cells, replacing one record under bounded adjacency changes at most two entries by \(1/n\), giving \(\Delta_2(f) = \sqrt{2}/n\). Adding independent zero-mean Gaussian noise cellwise therefore violates nonnegativity and unit total mass: noisy cells can become negative, and their sum need not equal one. The privatized marginal is a finite signed measure rather than a probability measure, which motivates the \(\SW_1\) projection step in Chapter~\ref{chap:privpgd}.
+When \(f(D)\) is an empirical probability histogram over discrete cells, replacing one record changes at most two entries by \(1/n\) each, so \(\Delta_2(f) = \sqrt{2}/n\) under bounded adjacency. Independent Gaussian noise added to each cell can make cells negative and the total mass differ from one. The privatized marginal is then a finite signed measure, which is why Chapter~\ref{chap:privpgd} first projects it onto probability measures with \(\SW_1\).
 
-\paragraph{Practical privacy-budget regimes.}
-Choosing \(\epsilon\) balances formal worst-case protection against statistical accuracy \citep{NIST-diff-privacy}. Small budgets such as \(\epsilon \leq 1\) yield stronger guarantees at higher noise variance, whereas moderate budgets around \(\epsilon \in [1, 10]\) appear frequently in government and industrial deployments, including census releases, mobility reports, and SQL analytics \citep{johnson2018towards,abowd2018us,aktay2020google}. Chapter~\ref{chap:privpgd} and Appendix~\ref{app:privpgd-low-eps} evaluate performance across \(\epsilon \in \{2.5, 1.0, 0.2\}\).
+\paragraph{Choice of the privacy budget.}
+A smaller \(\epsilon\) gives a stronger guarantee but requires more noise, so the choice of \(\epsilon\) trades protection against accuracy. Differential privacy is used in practice by industry and government \citep{johnson2018towards,abowd2018us,aktay2020google}, and NIST regards values of \(\epsilon\) below \(5\) as strong protection \citep{NIST-diff-privacy}. Chapter~\ref{chap:privpgd} uses \(\epsilon = 2.5\) in the main experiments and \(\epsilon \in \{1.0, 0.2\}\) in Appendix~\ref{app:privpgd-low-eps}.
 
 \section{Autoregressive Language Models, Memorization, and Copyright}
 \label{sec:bg-lm}
 
-Chapter~\ref{chap:cpfuse} studies inference-time mitigation of copyright infringement in language generation. This section reviews autoregressive decoding, log-linear logit combination, memorization behavior, and how copyright protection differs from differential privacy.
+\paragraph{Autoregressive decoding.}
+An autoregressive language model \(\model\) over a finite vocabulary \(V\), which contains an end-of-sequence token \(\mathrm{EOS}\), factorizes the probability of a sequence \(y_{0:T}\) with \(y_T = \mathrm{EOS}\) given a prompt \(x\) into next-token conditionals \(\model(y_t \mid y_{<t}, x)\). At step \(t\), the model outputs unnormalized log-probabilities (logits) \(\ell_t \in \RR^{|V|}\) and maps them to next-token probabilities with the softmax, \(\model(y_t = v \mid y_{<t}, x) = \exp(\ell_{t, v}) / \sum_{u \in V} \exp(\ell_{t, u})\). Greedy decoding selects the most likely token at each step. Perplexity, the exponential of the average negative log-likelihood per token, measures how well a model fits a sequence.
 
-\paragraph{Autoregressive decoding and logit-level combination.}
-Over a finite token vocabulary \(V\) containing an end-of-sequence token \(\mathrm{EOS}\), an autoregressive language model maps a prompt \(x\) to a conditional distribution over sequences \(y_{0:T} = (y_0, \dots, y_T)\) with \(y_T = \mathrm{EOS}\):
-\[
-  \model(y_{0:T} \mid x) = \prod_{t=0}^T \model(y_t \mid y_{<t}, x),
-\]
-where \(y_{<0} = \emptyset\). At step \(t\), the model outputs unnormalized log-probabilities (logits) \(\ell_t \in \RR^{|V|}\) conditioned on \((y_{<t}, x)\) and converts them into next-token probabilities via softmax, \(\model(y_t = v \mid y_{<t}, x) = \exp(\ell_{t, v}) / \sum_{u \in V} \exp(\ell_{t, u})\). Greedy decoding selects \(\argmax_{v \in V} \model(v \mid y_{<t}, x)\) at each step, whereas temperature sampling divides \(\ell_t\) by a positive scalar temperature before softmax to trade concentration against diversity. Sequence fit is commonly measured by perplexity, the exponentiated average negative log-likelihood per token.
-
-Combining two models \(\modelone\) and \(\modeltwo\) via the log-linear rule
+\paragraph{Log-linear fusion.}
+Two models \(\modelone\) and \(\modeltwo\) can be combined at each step by the log-linear rule
 \[
   \log \model(v \mid y_{<t}, x)
   =
@@ -140,14 +116,12 @@ Combining two models \(\modelone\) and \(\modeltwo\) via the log-linear rule
   +
   \beta_t \log \modeltwo(v \mid y_{<t}, x)
   +
-  \gamma_t
+  \gamma_t,
 \]
-takes a weighted linear combination of their logits at step \(t\) and normalizes through \(\gamma_t\). Because this update acts token by token, it preserves autoregressive tractability using only forward evaluations \citep{liu2021dexperts,hsu2024let} and mirrors the KL pooling form of Section~\ref{sec:bg-ot}.
+where \(\alpha_t, \beta_t \geq 0\) and \(\gamma_t\) normalizes the distribution. Since log-probabilities equal logits up to an additive constant, the rule takes a weighted sum of the two models' logits, as in inference-time fusion methods \citep{liu2021dexperts,jiang2023llm,gururangan2023scaling,mavromatis2024pack}. When \(\alpha_t + \beta_t = 1\), it is the weighted KL pool of Section~\ref{sec:bg-ot}. Chapter~\ref{chap:cpfuse} shows that the CP-Fuse update has this form with history-dependent weights (\Cref{lem:cpfuse-kkt}).
 
-\paragraph{Empirical drivers of memorization.}
-Language models can memorize training passages and regurgitate them verbatim or near-verbatim when prompted with matching prefixes \citep{carlini2021extracting,carlini2023quantifying,nasr2023scalable,hartmann2023sok,mm_mem2024}. Empirical studies identify three recurring drivers: larger model capacity, higher duplication frequency in the training corpus, and longer prompt context or repeated fine-tuning epochs \citep{carlini2023quantifying,hartmann2023sok}. Once decoding enters a memorized trajectory, next-token mass concentrates sharply on the stored continuation.
+\paragraph{Memorization.}
+Language models can memorize parts of their training data and reproduce them verbatim \citep{carlini2021extracting,carlini2023quantifying,nasr2023scalable,hartmann2023sok,mm_mem2024}. Removing duplicated samples from the training data reduces this regurgitation \citep{lee2021deduplicating,kandpal2022deduplicating,carlini2023quantifying}, but such preprocessing is only partially effective \citep{lee2023talkin,ippolito2023preventing}.
 
-\paragraph{Copyright protection versus differential privacy.}
-Although training-data extraction resembles privacy leakage, copyright law and differential privacy pursue distinct goals \citep{elkin2023can,henderson2023foundation,sag66new,lee2023talkin}. Differential privacy conceals whether any individual record participated in training, treating all statistical influence identically regardless of textual similarity. Copyright law instead protects concrete expression rather than underlying facts or general patterns. Under doctrines such as United States fair use (17 U.S.C.~107), transformative generation that does not substitute for the original market may be lawful, whereas verbatim or quasi-verbatim copying of substantial passages creates infringement risk \citep{henderson2023foundation,sag66new}.
-
-Training large language models with differentially private stochastic gradient descent \citep{abadi2016deep,anil2022large} is also computationally expensive, degrades utility, and enforces record-level indistinguishability rather than passage-level non-reproduction \citep{elkin2023can,mueller2024llms,chen2024copybench}. This mismatch motivates dedicated copyright criteria such as the Near-Access Free (\(k\)-NAF) framework \citep{vyas2023provable}. Chapter~\ref{chap:cpfuse} formalizes dataset separability, states \Cref{def:cpfuse-knaf}, and derives the adaptive fusion algorithm CP-Fuse.
+\paragraph{Copyright protection and differential privacy.}
+Reproducing copyrighted training material creates a risk of copyright infringement \citep{sag66new,karamolegkou2023copyright}. The fair use doctrine (17 U.S.C.~107) can limit liability for uses of protected works that are transformative and do not harm their market value \citep{henderson2023foundation}. Differentially private training \citep{dwork2014algorithmic,abadi2016deep} limits the influence of individual training points and has been proposed against memorization, but scaling it to large language models is computationally demanding and degrades utility \citep{anil2022large}. Its guarantees can also lose relevance when samples are duplicated in the training set, and its goals have been argued to differ from those of copyright protection \citep{elkin2023can}. \citet{vyas2023provable} propose the Near Access Free (\(k\)-NAF) framework, which gives a quantitative guarantee for copyright protection. Chapter~\ref{chap:cpfuse} states it in \Cref{def:cpfuse-knaf} and builds CP-Fuse on it.
