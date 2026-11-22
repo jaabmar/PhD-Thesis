@@ -1,4 +1,4 @@
-\begin{thebibliography}{161}
+\begin{thebibliography}{155}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -81,12 +81,6 @@ Sergul Aydore, William Brown, Michael Kearns, Krishnaram Kenthapadi, Luca
 March Boedihardjo, Thomas Strohmer, and Roman Vershynin.
 \newblock Private measures, random walks, and synthetic data.
 \newblock \emph{arXiv preprint arXiv:2204.09167}, 2022.
-
-\bibitem[Bonet et~al.(2022)Bonet, Courty, Septier, and
-  Drumetz]{bonet2022efficient}
-Cl{\'e}ment Bonet, Nicolas Courty, Fran{\c{c}}ois Septier, and Lucas Drumetz.
-\newblock Efficient gradient flows in sliced-{W}asserstein space.
-\newblock \emph{Transactions on Machine Learning Research}, 2022.
 
 \bibitem[Bonneel et~al.(2015)Bonneel, Rabin, Peyr{\'e}, and
   Pfister]{bonneel2015sliced}
@@ -211,14 +205,6 @@ Jerome Cornfield, William Haenszel, E.~Cuyler Hammond, Abraham~M. Lilienfeld,
   questions.
 \newblock \emph{JNCI: Journal of the National Cancer Institute}, 22\penalty0
   (1):\penalty0 173--203, 01 1959.
-
-\bibitem[Dahabreh et~al.(2021)Dahabreh, Haneuse, Robins, Robertson, Buchanan,
-  Stuart, and Hern{\'a}n]{dahabreh2021study}
-Issa~J Dahabreh, Sebastien JP~A Haneuse, James~M Robins, Sarah~E Robertson,
-  Ashley~L Buchanan, Elizabeth~A Stuart, and Miguel~A Hern{\'a}n.
-\newblock Study designs for extending causal inferences from a randomized trial
-  to a target population.
-\newblock \emph{American journal of epidemiology}, 2021.
 
 \bibitem[De~Bartolomeis et~al.(2024)De~Bartolomeis, Abad, Donhauser, and
   Yang]{de2023hidden}
@@ -462,13 +448,6 @@ Dan Hendrycks, Steven Basart, Saurav Kadavath, Mantas Mazeika, Akul Arora,
 \bibitem[Hillstrom(2008)]{hillstrom2008}
 Kevin Hillstrom.
 \newblock The {MineThatData} e-mail analytics and data mining challenge, 2008.
-
-\bibitem[Horvitz and Thompson(1952)]{horvitz1952generalization}
-Daniel~G Horvitz and Donovan~J Thompson.
-\newblock A generalization of sampling without replacement from a finite
-  universe.
-\newblock \emph{Journal of the American Statistical Association}, 47\penalty0
-  (260):\penalty0 663--685, 1952.
 
 \bibitem[Hotz et~al.(2005)Hotz, Imbens, and Mortimer]{hotz2005predicting}
 V~Joseph Hotz, Guido~W Imbens, and Julie~H Mortimer.
@@ -915,23 +894,10 @@ Matthew Sag.
 \newblock \emph{Journal of the Copyright Society of the USA}, 66:\penalty0 291,
   2019.
 
-\bibitem[Scharfstein et~al.(2021)Scharfstein, Nabi, Kennedy, Huang, Bonvini,
-  and Smid]{scharfstein2021semiparametric}
-Daniel Scharfstein, Razieh Nabi, Edward Kennedy, Ming-Yueh Huang, Matteo
-  Bonvini, and Marcela Smid.
-\newblock Semiparametric sensitivity analysis: Unmeasured confounding in
-  observational studies.
-\newblock \emph{arXiv preprint arXiv:2104.08300}, 2021.
-
 \bibitem[Schurman(2019)]{schurman2019framework}
 Beth Schurman.
 \newblock The framework for {FDA}'s real-world evidence program.
 \newblock \emph{Applied Clinical Trials}, 28\penalty0 (4), 2019.
-
-\bibitem[Serfling(1980)]{serfling2009approximation}
-{Robert} Serfling.
-\newblock \emph{Approximation Theorems of Mathematical Statistics}.
-\newblock Wiley, 1980.
 
 \bibitem[Somepalli et~al.(2022)Somepalli, Singla, Goldblum, Geiping, and
   Goldstein]{Somepalli2022DiffusionAO}
@@ -996,11 +962,6 @@ S.~S. Vallender.
   distributions on the line.
 \newblock \emph{Theory of Probability \& Its Applications}, 18\penalty0
   (4):\penalty0 784--786, 1974.
-
-\bibitem[Van~der Vaart(2000)]{van2000asymptotic}
-Aad~W Van~der Vaart.
-\newblock \emph{Asymptotic statistics}, volume~3.
-\newblock Cambridge university press, 2000.
 
 \bibitem[Vandenbroucke(2009)]{vandenbroucke2009hrt}
 Jan Vandenbroucke.
