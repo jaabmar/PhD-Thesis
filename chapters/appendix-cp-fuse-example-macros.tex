@@ -5,8 +5,10 @@
 \definecolor{cpfuseboxbg}{RGB}{248,248,248}
 \definecolor{cpfuseboxline}{RGB}{210,220,228}
 \definecolor{cpfuseboxtitlebg}{RGB}{239,244,247}
+\definecolor{cpfusefilterblue}{HTML}{1F5AA6}
 
-\lstdefinestyle{mystyle}{
+\lstdefinestyle{cpfusecode}{
+    language=Python,
     backgroundcolor=\color{cpfusebackcolour},
     commentstyle=\color{cpfusecodegreen},
     keywordstyle=\color{magenta},
@@ -23,6 +25,7 @@
     showstringspaces=false,
     showtabs=false,
     tabsize=2,
+    escapeinside={(*@}{@*)},
 }
 
 \newtcolorbox{promptmdf}{
@@ -43,78 +46,6 @@
     coltitle=black
 }
 
-\newtcolorbox{promptmdftwo}{
-    breakable,
-    enhanced,
-    colback=cpfuseboxbg,
-    colframe=cpfuseboxline,
-    boxrule=2pt,
-    arc=10pt,
-    left=10pt,
-    right=10pt,
-    top=10pt,
-    bottom=10pt,
-    fonttitle=\small,
-    halign title=flush left,
-    title={\textbf{Prompt:}\\Write a Python 3 function for reading a package file\\as text to get its name and version.},
-    colbacktitle=cpfuseboxtitlebg,
-    coltitle=black
-}
-
-\newtcolorbox{promptmdfthree}{
-    breakable,
-    enhanced,
-    colback=cpfuseboxbg,
-    colframe=cpfuseboxline,
-    boxrule=2pt,
-    arc=10pt,
-    left=10pt,
-    right=10pt,
-    top=10pt,
-    bottom=10pt,
-    fonttitle=\small,
-    halign title=flush left,
-    title={\textbf{Prompt:}\\How would you implement a Python 3 function that calculates\\the mean heart rate from a set of RR intervals?},
-    colbacktitle=cpfuseboxtitlebg,
-    coltitle=black
-}
-
-\newtcolorbox{promptmdfmem}{
-    breakable,
-    enhanced,
-    colback=cpfuseboxbg,
-    colframe=cpfuseboxline,
-    boxrule=2pt,
-    arc=10pt,
-    left=10pt,
-    right=10pt,
-    top=10pt,
-    bottom=10pt,
-    fonttitle=\small,
-    halign title=flush left,
-    title={\textbf{Prompt:}\\Given two strings, return true if they share a common substring\\longer than one letter, and false otherwise.},
-    colbacktitle=cpfuseboxtitlebg,
-    coltitle=black
-}
-
-\newtcolorbox{promptmdftwomem}{
-    breakable,
-    enhanced,
-    colback=cpfuseboxbg,
-    colframe=cpfuseboxline,
-    boxrule=2pt,
-    arc=10pt,
-    left=10pt,
-    right=10pt,
-    top=10pt,
-    bottom=10pt,
-    fonttitle=\small,
-    halign title=flush left,
-    title={\textbf{Prompt:}\\Given a string \texttt{s}, write a function that returns true if it is\\a valid integer or floating-point number, and false otherwise.},
-    colbacktitle=cpfuseboxtitlebg,
-    coltitle=black
-}
-
 \newtcolorbox{promptmdfthreemem}{
     breakable,
     enhanced,
@@ -131,12 +62,6 @@
     title={\textbf{Prompt:}\\Create a function that returns the total cost of a meal, including\\tax and tip, without tipping on the tax.},
     colbacktitle=cpfuseboxtitlebg,
     coltitle=black
-}
-
-\lstset{
-    language=Python,
-    basicstyle=\ttfamily\scriptsize,
-    escapeinside={(*@}{@*)},
 }
 
 \newenvironment{breakablefigure}

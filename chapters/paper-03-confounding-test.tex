@@ -1,16 +1,19 @@
 \chapter{Hidden Yet Quantifiable: A Lower Bound for Confounding Strength Using Randomized Trials}
 \label{chap:confounding-test}
-\chaptermark{Reliable Inference Under Hidden Confounding}
+\chaptermark{Quantifying Hidden Confounding}
 
 \chapterabstract{In the era of fast-paced precision medicine, observational studies play a major role in properly evaluating new treatments in clinical practice. Yet unobserved confounding can significantly compromise causal conclusions drawn from non-randomized data. This chapter develops a strategy that leverages randomized trials to quantify unobserved confounding. First, it designs a statistical test to detect unobserved confounding above a certain strength. Then, it uses the test to estimate an asymptotically valid lower bound on the true confounding strength. The chapter evaluates the power and validity of the test on synthetic and semi-synthetic datasets, and shows how the lower bound can identify the absence or presence of practically important unobserved confounding in a real-world example.}
 
 \chapterpublication
   {This chapter is based on joint work co-led by the author of this thesis and appeared as:}
-  {Piersilvio De Bartolomeis\equalcontributionmark, Javier Abad\equalcontributionmark, Konstantin Donhauser, and Fanny Yang (2024). ``Hidden yet quantifiable: A lower bound for confounding strength using randomized trials.'' In \emph{International Conference on Artificial Intelligence and Statistics}. \equalcontributionnote}
+  {Piersilvio De Bartolomeis\equalcontributionmark, Javier Abad\equalcontributionmark, Konstantin Donhauser, and Fanny Yang (2024). ``Hidden yet quantifiable: A lower bound for confounding strength using randomized trials.'' In \emph{International Conference on Artificial Intelligence and Statistics}. \equalcontributionnote\ Source code is available at \url{https://github.com/jaabmar/confounder-lower-bound}.}
+% TODO: Add personal contribution breakdown between Javier Abad and Piersilvio De Bartolomeis.
 
 \vspace{-0.6\baselineskip}
 
 \section{Motivation and Scope}
+
+Building on the introduction to causal inference and sensitivity analysis in Chapter~\ref{chap:background}, this chapter asks whether observational datasets support valid causal conclusions before they are acted upon. In high-stakes domains such as healthcare, observational treatment-effect estimates can fail whenever unobserved confounders bias treatment assignment. This chapter therefore uses randomized trials and marginal sensitivity analysis to quantify the strength of such hidden confounding.
 
 Monitoring the performance of a newly approved treatment is crucial, a process commonly referred to as post-marketing surveillance \citep{vlahovic2011postmarketing}. Nowadays, regulatory and clinical practice increasingly integrate observational data in this process to address the shortcomings of randomized evidence \citep{platt2018fda,klonoff2020new}. This strategy is essential for validating personalized and high-cost treatments, such as immunotherapy for some cancers, where randomized evidence may be scarce and treatment costs substantial \citep{goetz2018personalized}.
 
@@ -40,9 +43,7 @@ Sensitivity analysis is the classical framework for reasoning about hidden confo
 
 A related line of work designs tests for the presence of unobserved confounding. Several such tests use randomized trials as a reference point and compare treatment-effect estimates obtained from randomized and observational data \citep{viele2014use,hussain2022falsification,yangelastic}. Extensions test for discrepancies in conditional treatment-effect estimates or adapt the testing problem to censored outcomes \citep{hussain2023falsification,demirel2024benchmarking}. Other approaches use instrumental variables, negative controls, or multiple observational studies to detect violations of the unconfoundedness assumption \citep{lipsitch2010negative,de2014testing,donald2014testing,karlsson2023detecting}. These tests answer an important but binary question: whether hidden confounding can be detected. In many applications, this question is too stringent: residual confounding may be expected and may not invalidate the practical conclusion of a study. 
 
-% A separate line of work combines randomized and observational estimators to improve causal estimation across populations \citep{colnet2020causal,brantner2023methods}. These methods address a complementary goal, but often require prior knowledge about the structure of the confounding bias or the relationship between the two data sources.
-
-% Another line of work calibrates the value of the confounding strength using only observational data \citep{hsu2013calibrating,veitch2020sense}. Such calibration can be useful for interpreting robustness values, but the calibrated strength may still be arbitrarily different from the true confounding strength, even in infinite samples.
+Another line of work calibrates the value of the confounding strength using only observational data \citep{hsu2013calibrating,veitch2020sense}. However, the true confounding strength can differ arbitrarily from the calibrated strength, and there is no theoretical result relating the two, even with infinite samples.
 
 The approach in this chapter sits between these directions. Like sensitivity analysis, it works with a quantitative notion of confounding strength. Like tests based on randomized trials, it uses randomized evidence to diagnose confounding. Its distinctive contribution is to move beyond detecting whether any hidden confounding is present: the chapter tests whether confounding exceeds a specified strength and then inverts those tests to obtain a lower bound on the true confounding strength.
 
@@ -87,7 +88,7 @@ Here \(\mathbb{P}_{\mathrm{det}}\) is given by \(Y=Y(T)\), \(\mathbb{P}_{\mathrm
   \label{fig:confounding-dag}
 \end{figure}
 
-We now introduce three additional assumptions required for the validity of the statistical tests and the resulting lower bound. First, we require transportability of the conditional average treatment effect.
+We now introduce three additional assumptions required for the validity of the statistical tests and the resulting lower bound. First, we require transportability of the conditional average treatment effect (CATE).
 
 \begin{assumption}[Transportability]
 \label{asm:confounding-transportability}
@@ -126,9 +127,9 @@ The third assumption ensures that the observational study can support the compar
 \label{asm:confounding-support-inclusion}
 The covariate support of the randomized trial is contained in the covariate support of the observational study:
 \[
-  \operatorname{supp}\bigl(\mathbb{P}^{\mathrm{rct}}_X\bigr)
+  \supp\bigl(\mathbb{P}^{\mathrm{rct}}_X\bigr)
   \subseteq
-  \operatorname{supp}\bigl(\mathbb{P}^{\mathrm{os}}_X\bigr).
+  \supp\bigl(\mathbb{P}^{\mathrm{os}}_X\bigr).
 \]
 \end{assumption}
 
@@ -202,7 +203,7 @@ The lower and upper CATE bounds under confounding strength \(\Gamma\) are
   \mathcal{E}(\mathbb{P}^{\mathrm{os}},\Gamma)}
   \mu(X,\widetilde{\mathbb{P}}_{\mathrm{full}}).
 \]
-For a target covariate distribution \(\mathbb{P}_X\), define
+For a target covariate distribution \(\mathbb{P}_X\), define the average treatment effect (ATE) as
 \[
   \mu(\mathbb{P}_X,\mathbb{P}_{\mathrm{full}})
   =
@@ -241,9 +242,9 @@ In real-world scenarios, binary tests can be overly stringent because they inval
 \label{lem:confounding-testing-observation}
 Let \(\mathbb{P}_X\) be any target covariate distribution satisfying
 \[
-  \operatorname{supp}(\mathbb{P}_X)
+  \supp(\mathbb{P}_X)
   \subseteq
-  \operatorname{supp}(\mathbb{P}^{\mathrm{os}}_X).
+  \supp(\mathbb{P}^{\mathrm{os}}_X).
 \]
 Let \(\mathbb{P}_{\mathrm{full}}\) be any full distribution satisfying
 \[
@@ -251,7 +252,7 @@ Let \(\mathbb{P}_{\mathrm{full}}\) be any full distribution satisfying
   =
   \mu(X,\mathbb{P}^{\mathrm{os}}_{\mathrm{full}})
 \]
-on \(\operatorname{supp}(\mathbb{P}_X)\).
+on \(\supp(\mathbb{P}_X)\).
 If \(H_0(\Gamma)\) holds, then
 \[
   \mu(\mathbb{P}_X,\mathbb{P}_{\mathrm{full}})
@@ -289,7 +290,7 @@ We discuss here how the average treatment effect can be estimated using data fro
   =
   \mathbb{P}^{\mathrm{os}}_X
   \bigm|
-  X \in \operatorname{supp}(\mathbb{P}^{\mathrm{rct}}_X).
+  X \in \supp(\mathbb{P}^{\mathrm{rct}}_X).
 \]
 The second target is useful when the corresponding shift from the trial population can be estimated or identified; nested trial designs provide one setting where these weights are naturally available. For \(\star \in \{\mathrm{rct},\widetilde{\mathrm{os}}\}\), when \(\mathbb{P}^{\star}_X\) is absolutely continuous with respect to the randomized-trial covariate distribution, define the reweighting function
 \[
@@ -299,6 +300,8 @@ The second target is useful when the corresponding shift from the trial populati
 \]
 with \(w_{\mathrm{rct}}(X)=1\). Under the transportability, internal-validity, and support-inclusion assumptions, and with these weights well defined, the target ATE can be identified from the randomized trial as
 \[
+  \mu\bigl(\mathbb{P}^{\star}_X,\mathbb{P}^{\mathrm{os}}_{\mathrm{full}}\bigr)
+  =
   \mu\bigl(\mathbb{P}^{\star}_X,\mathbb{P}^{\mathrm{rct}}_{\mathrm{full}}\bigr)
   =
   \mathbb{E}_{\mathbb{P}^{\mathrm{rct}}}
@@ -312,7 +315,7 @@ with \(w_{\mathrm{rct}}(X)=1\). Under the transportability, internal-validity, a
     w_{\star}(X)
   \right].
 \]
-This identification result is the standard transportability argument for estimating a target-population ATE from randomized data \citep{cole2010generalizing,colnet2023risk}: when the distribution shift between \(\mathbb{P}^{\mathrm{rct}}_X\) and \(\mathbb{P}^{\star}_X\) can be corrected by \(w_{\star}\), randomized outcomes identify the target effect. It gives the empirical estimate
+This identification result is the standard transportability argument for estimating a target-population ATE from randomized data \citep{cole2010generalizing,colnet2023risk}; see Appendix~\ref{app:confounding-proof-ate} for the derivation. When the distribution shift between \(\mathbb{P}^{\mathrm{rct}}_X\) and \(\mathbb{P}^{\star}_X\) can be corrected by \(w_{\star}\), randomized outcomes identify the target effect. It gives the empirical estimate
 \[
   \widehat{\mu}_{\star}
   =
@@ -415,12 +418,13 @@ where \(z_{\alpha/2}=\Phi^{-1}(\alpha/2)\) is the lower \(\alpha/2\)-quantile of
   \centering
   \fbox{
     \begin{minipage}{0.92\textwidth}
+      \textbf{Inputs:} target \(\star\in\{\mathrm{rct},\widetilde{\mathrm{os}}\}\), datasets \(D_{\mathrm{rct}}\) and \(D_{\mathrm{os}}\), significance level \(\alpha\in(0,1)\), and confounding strength \(\Gamma\geq 1\).
       \begin{enumerate}
-        \item \textbf{Choose target:} select \(\star\in\{\mathrm{rct},\widetilde{\mathrm{os}}\}\), define \(\mathbb{P}^{\star}_X\), and estimate or specify the corresponding weights \(w_{\star}\).
-        \item \textbf{Estimate randomized target effect:} compute \(\widehat{\mu}_{\star}\) from the randomized trial using inverse treatment-probability weighting and target-population weights.
-        \item \textbf{Estimate sensitivity interval:} use the observational study to estimate \(\widehat{\mu}^-_{\Gamma,\star}\) and \(\widehat{\mu}^+_{\Gamma,\star}\), together with their sampling uncertainty.
-        \item \textbf{Compare:} form the one-sided statistics \(\widehat{T}^+_{\Gamma,\star}\) and \(\widehat{T}^-_{\Gamma,\star}\).
-        \item \textbf{Reject:} output \(\widehat{\phi}_{\star}(\Gamma,\alpha)=1\) if the randomized estimate lies significantly outside the estimated sensitivity interval.
+        \item \textbf{Choose target:} set \(\mathbb{P}^{\star}_X\) and specify (or estimate, when unknown) the corresponding importance weights \(w_{\star}\).
+        \item \textbf{Estimate randomized target effect:} compute \(\widehat{\mu}_{\star}\) from \(D_{\mathrm{rct}}\) using inverse treatment-probability weighting and \(w_{\star}\), together with a consistent sampling-variance estimate \(\widehat{\sigma}_{\star}^2\).
+        \item \textbf{Estimate sensitivity interval:} use \(D_{\mathrm{os}}\) to estimate \(\widehat{\mu}^-_{\Gamma,\star}\) and \(\widehat{\mu}^+_{\Gamma,\star}\) over \(\mathbb{P}^{\star}_X\), together with consistent sampling-variance estimates \((\widehat{\sigma}^-_{\Gamma,\star})^2\) and \((\widehat{\sigma}^+_{\Gamma,\star})^2\).
+        \item \textbf{Compare:} form the one-sided statistics \(\widehat{T}^+_{\Gamma,\star}\) and \(\widehat{T}^-_{\Gamma,\star}\) using \(\widehat{s}^{\pm}_{\Gamma,\star}\).
+        \item \textbf{Reject:} output \(\widehat{\phi}_{\star}(\Gamma,\alpha)=\mathbf{1}\bigl\{\min(\widehat{T}^+_{\Gamma,\star},\widehat{T}^-_{\Gamma,\star})<z_{\alpha/2}\bigr\}\).
       \end{enumerate}
     \end{minipage}
   }
@@ -428,7 +432,7 @@ where \(z_{\alpha/2}=\Phi^{-1}(\alpha/2)\) is the lower \(\alpha/2\)-quantile of
 
 \begin{proposition}[Validity of the tests]
 \label{prop:confounding-test-validity}
-Fix \(\Gamma\geq 1\) and \(\alpha\in(0,1)\). Under the setting of \Cref{sec:confounding-setting} and Assumptions~\ref{asm:confounding-transportability}--\ref{asm:confounding-support-inclusion}, the tests in \Cref{alg:confounding-test} are asymptotically valid for \(H_0(\Gamma)\) under the following regularity conditions:
+Fix \(\Gamma\geq 1\) and \(\alpha\in(0,1)\). Under the setting of Section~\ref{sec:confounding-setting} and Assumptions~\ref{asm:confounding-transportability}--\ref{asm:confounding-support-inclusion}, suppose the sampling-variance estimators in Algorithm~\ref{alg:confounding-test} are consistent. Then the tests in Algorithm~\ref{alg:confounding-test} are asymptotically valid for \(H_0(\Gamma)\) under the following regularity conditions:
 \begin{enumerate}
   \item If \(n_{\mathrm{rct}}/n_{\mathrm{os}}\to 0\) and the estimated CATE sensitivity bounds satisfy
   \[
@@ -441,12 +445,33 @@ Fix \(\Gamma\geq 1\) and \(\alpha\in(0,1)\). Under the setting of \Cref{sec:conf
     O_{\mathbb{P}}(n_{\mathrm{os}}^{-1/2}),
   \]
   then \(\widehat{\phi}_{\mathrm{rct}}(\Gamma,\alpha)\) is an asymptotically valid level-\(\alpha\) test.
-  \item If \(n_{\mathrm{rct}}/(n_{\mathrm{rct}}+n_{\mathrm{os}})\to\rho\in(0,1)\), \(\mathbb{E}_{\mathbb{P}^{\mathrm{rct}}}[w_{\widetilde{\mathrm{os}}}(X)^2]<\infty\), and the estimated ATE sensitivity bounds are consistent and asymptotically normal, then \(\widehat{\phi}_{\widetilde{\mathrm{os}}}(\Gamma,\alpha)\) is an asymptotically valid level-\(\alpha\) test.
+  \item If \(n_{\mathrm{rct}}/(n_{\mathrm{rct}}+n_{\mathrm{os}})\to\rho\in(0,1)\), \(\mathbb{E}_{\mathbb{P}^{\mathrm{rct}}}[w_{\widetilde{\mathrm{os}}}(X)^2]<\infty\), and the estimated ATE sensitivity bounds are consistent and satisfy
+  \[
+  \begin{aligned}
+    \sqrt{n_{\mathrm{os}}}
+    \bigl(
+      \widehat{\mu}^{+}_{\Gamma,\widetilde{\mathrm{os}}}
+      -
+      \mu^{+}_{\Gamma}(\mathbb{P}^{\widetilde{\mathrm{os}}}_X)
+    \bigr)
+    &\xrightarrow{d}
+    \mathcal{N}\bigl(0,(\sigma^{+}_{\Gamma,\widetilde{\mathrm{os}}})^2\bigr), \\
+    \sqrt{n_{\mathrm{os}}}
+    \bigl(
+      \widehat{\mu}^{-}_{\Gamma,\widetilde{\mathrm{os}}}
+      -
+      \mu^{-}_{\Gamma}(\mathbb{P}^{\widetilde{\mathrm{os}}}_X)
+    \bigr)
+    &\xrightarrow{d}
+    \mathcal{N}\bigl(0,(\sigma^{-}_{\Gamma,\widetilde{\mathrm{os}}})^2\bigr),
+  \end{aligned}
+  \]
+  then \(\widehat{\phi}_{\widetilde{\mathrm{os}}}(\Gamma,\alpha)\) is an asymptotically valid level-\(\alpha\) test.
 \end{enumerate}
 That is, in either case,
 \[
   \limsup_{n_{\mathrm{rct}},n_{\mathrm{os}}\to\infty}
-  \Pr_{H_0(\Gamma)}
+  \mathbb{P}_{H_0(\Gamma)}
   \bigl(
     \widehat{\phi}_{\star}(\Gamma,\alpha)=1
   \bigr)
@@ -457,7 +482,7 @@ That is, in either case,
 
 The full proof is reserved for Appendix~\ref{app:confounding-proof-tests}. It is based on asymptotic normality of the randomized target-effect estimator and the estimated sensitivity endpoints. Notably, the condition for \(\widehat{\phi}_{\widetilde{\mathrm{os}}}\), together with the fixed limiting proportions of the randomized trial and observational study, is relatively mild and expected to hold for a range of ATE sensitivity-bound estimators, including DVDS \citep{dorn2021doubly}. On the other hand, the condition for \(\widehat{\phi}_{\mathrm{rct}}\) is stronger and generally expected to hold only when \(n_{\mathrm{os}}\gg n_{\mathrm{rct}}\).
 
-In essence, the two tests work under different estimation assumptions: \(\widehat{\phi}_{\mathrm{rct}}\) relies on a consistent estimate of the CATE sensitivity bounds, while \(\widehat{\phi}_{\widetilde{\mathrm{os}}}\) relies on directly estimating the ATE sensitivity bounds together with the importance weights \(w_{\widetilde{\mathrm{os}}}\). The importance weights can be identified when the observational study and randomized trial follow a nested trial design \citep{olschewski1985comprehensive,olschewski1992analysis,choudhry2017randomized}; Appendix~\ref{app:confounding-nested-design} discusses how these weights are estimated in this setting.
+In essence, the two tests work under different estimation assumptions: \(\widehat{\phi}_{\mathrm{rct}}\) relies on a consistent estimate of the CATE sensitivity bounds, while \(\widehat{\phi}_{\widetilde{\mathrm{os}}}\) relies on directly estimating the ATE sensitivity bounds together with the importance weights \(w_{\widetilde{\mathrm{os}}}\). Proposition~\ref{prop:confounding-test-validity}(2) treats \(w_{\widetilde{\mathrm{os}}}\) as known for the theoretical guarantee; in practice, the importance weights can be identified and estimated when the observational study and randomized trial follow a nested trial design \citep{olschewski1985comprehensive,olschewski1992analysis,choudhry2017randomized}, as discussed in Appendix~\ref{app:confounding-nested-design}.
 
 \paragraph{Advantages of each test.}
 The restricted-observational test \(\widehat{\phi}_{\widetilde{\mathrm{os}}}\) can be advantageous when CATE estimation is challenging, for example when outcomes are binary and classes are imbalanced, or when the observational study has limited sample size but the weights \(w_{\widetilde{\mathrm{os}}}\) can be identified. Conversely, the trial-targeted test \(\widehat{\phi}_{\mathrm{rct}}\) is useful when estimating the CATE sensitivity bounds over the trial population is more reliable than identifying the restricted-observational weights. In addition, \(\widehat{\phi}_{\widetilde{\mathrm{os}}}\) can benefit directly from large observational studies as the uncertainty in the ATE sensitivity-bound estimates decreases with \(n_{\mathrm{os}}\).
@@ -479,10 +504,10 @@ A practical alternative is to estimate a conservative lower bound. The true conf
     \mathcal{E}(\mathbb{P}^{\mathrm{os}},\Gamma)
   \right\}.
 \]
-The test from the previous section can be inverted over values of \(\Gamma\). Starting from \(\Gamma=1\), small values of \(\Gamma\) are rejected when their sensitivity intervals are too narrow to be compatible with the randomized evidence. The first value that is not rejected is therefore the first confounding strength for which the proposed explanation is statistically compatible with both data sources. Given a test \(\widehat{\phi}_{\star}\), define this value as
+The test from the previous section can be inverted over values of \(\Gamma\). For a given test \(\widehat{\phi}_{\star}\), note that \(\widehat{\phi}_{\star}(\Gamma,\alpha)\) is a deterministic function of the data across \(\Gamma\) (when bootstrap resampling is used to estimate sampling variances, the same bootstrap resamples are held fixed for all \(\Gamma\)). Starting from \(\Gamma=1\), small values of \(\Gamma\) are rejected when their sensitivity intervals are too narrow to be compatible with the randomized evidence. The first value that is not rejected is therefore the first confounding strength for which the proposed explanation is statistically compatible with both data sources. Define this value as
 \begin{equation}
 \label{eq:confounding-lower-bound}
-  \widehat{\Gamma}_{\mathrm{LB},\star}
+  \widehat{\Gamma}_{\mathrm{LB}}^{\star}
   =
   \inf
   \left\{
@@ -490,15 +515,15 @@ The test from the previous section can be inverted over values of \(\Gamma\). St
     \widehat{\phi}_{\star}(\Gamma,\alpha)=0
   \right\}.
 \end{equation}
-In implementation, this quantity is computed by evaluating the test over a grid of \(\Gamma\) values and returning the first accepted value. The logic is deliberately one-sided: values below \(\widehat{\Gamma}_{\mathrm{LB},\star}\) have been rejected as too small to explain the discrepancy, while \(\widehat{\Gamma}_{\mathrm{LB},\star}\) itself is the first value not ruled out by the test.
+In implementation, this quantity is computed by evaluating the test over a grid of \(\Gamma\) values and returning the first accepted value. The logic is deliberately one-sided: values below \(\widehat{\Gamma}_{\mathrm{LB}}^{\star}\) have been rejected as too small to explain the discrepancy, while \(\widehat{\Gamma}_{\mathrm{LB}}^{\star}\) itself is the first value not ruled out by the test.
 
 \begin{proposition}[Validity of the lower bound]
 \label{prop:confounding-lower-bound-validity}
-Let \(\widehat{\Gamma}_{\mathrm{LB},\star}\) be defined as in \eqref{eq:confounding-lower-bound} for a fixed significance level \(\alpha\). Under the same assumptions and regularity conditions as \Cref{prop:confounding-test-validity},
+Let \(\widehat{\Gamma}_{\mathrm{LB}}^{\star}\) be defined as in \eqref{eq:confounding-lower-bound} for a fixed significance level \(\alpha\). Under the same assumptions and regularity conditions as \Cref{prop:confounding-test-validity},
 \[
-  \Pr
+  \mathbb{P}
   \left(
-    \widehat{\Gamma}_{\mathrm{LB},\star}
+    \widehat{\Gamma}_{\mathrm{LB}}^{\star}
     \leq
     \Gamma^{\star}
   \right)
@@ -533,17 +558,23 @@ The hidden confounder is sampled as \(U\sim\operatorname{Unif}(0,1)\). The rando
   \qquad
   \mathbb{P}^{\mathrm{os}}_X=\operatorname{Unif}(-2,2).
 \]
-The observational treatment rule is constructed to satisfy the marginal sensitivity model with odds ratio \(\Gamma^{\star}\). The randomized trial uses treatment probability \(\pi=1/2\). Additional details are reserved for Appendix~\ref{app:confounding-synthetic-details}.
+The observational treatment rule is constructed to satisfy the marginal sensitivity model with odds ratio \(\Gamma^{\star}\), fixing the observed marginal propensity score to
+\[
+  \mathbb{P}^{\mathrm{os}}_{\mathrm{cnf}}(T=1\mid X)
+  =
+  \operatorname{logistic}(0.75X + 0.5),
+\]
+and designing the full propensity score \(\mathbb{P}^{\mathrm{os}}_{\mathrm{cnf}}(T=1\mid X,U)\) so that it marginalizes to this observed propensity. The randomized trial uses treatment probability \(\pi=1/2\). Additional details are reserved for Appendix~\ref{app:confounding-synthetic-details}.
 
 \paragraph{Semi-synthetic data.}
 The semi-synthetic benchmark uses three real-world randomized trials: Hillstrom's MineThatData Email dataset \citep{hillstrom2008}, the VOTE dataset \citep{gerber2008social}, and the Tennessee STAR project \citep{word1990state}. In contrast to the synthetic experiments, these datasets involve real outcome functions, although the treatment assignment used to construct observational studies is still controlled.
 
-The main text focuses on Hillstrom for clarity. This dataset studies the effect of email campaigns on customer spending. A subset of the original randomized trial is used as \(D_{\mathrm{rct}}\), and observational studies are generated from the remaining data by subsampling according to treatment propensities that satisfy a fixed \(\Gamma^{\star}\). Different choices of the hidden covariate \(U\) induce different relationships between \(U\) and the potential outcomes, while keeping the nominal confounding strength fixed. This subsampling strategy follows the same spirit as prior semi-synthetic constructions from randomized trials \citep{gentzel2021and,keith2023rct}. Additional semi-synthetic experiments on VOTE and STAR show similar trends and are reserved for Appendix~\ref{app:confounding-additional-experiments}.
+The main text focuses on Hillstrom for clarity. This dataset studies the effect of email campaigns on customer spending. A subset of the original randomized trial is used as \(D_{\mathrm{rct}}\), and observational studies are generated from the remaining data by subsampling according to treatment propensities that satisfy a fixed \(\Gamma^{\star}\). Different choices of the hidden covariate \(U\) induce different relationships between \(U\) and the potential outcomes, while keeping the nominal confounding strength fixed. This subsampling strategy follows the same spirit as prior semi-synthetic constructions from randomized trials \citep{gentzel2021and,keith2023rct}; see Appendix~\ref{app:confounding-semisynthetic-details} for full details of the subsampling procedure and dataset preprocessing. Additional semi-synthetic experiments on VOTE and STAR show similar trends and are reserved for Appendix~\ref{app:confounding-additional-experiments}.
 
 \paragraph{Metrics and estimators.}
-For both synthetic and semi-synthetic experiments, the main reported quantities are the probability of rejection as a function of \(\Gamma\) and the resulting lower bounds \(\widehat{\Gamma}_{\mathrm{LB},\mathrm{rct}}\) and \(\widehat{\Gamma}_{\mathrm{LB},\widetilde{\mathrm{os}}}\). The experiments also track the correlation
+For both synthetic and semi-synthetic experiments, the main reported quantities are the probability of rejection as a function of \(\Gamma\) and the resulting lower bounds \(\widehat{\Gamma}_{\mathrm{LB}}^{\mathrm{rct}}\) and \(\widehat{\Gamma}_{\mathrm{LB}}^{\widetilde{\mathrm{os}}}\). The experiments also track the correlation
 \[
-  \rho_{U,Y}
+  \rho_{u,y}
   =
   \frac{
     \operatorname{Cov}_{\mathbb{P}^{\mathrm{os}}_{\mathrm{full}}}(Y(1),U)
@@ -551,87 +582,92 @@ For both synthetic and semi-synthetic experiments, the main reported quantities 
     \sigma_{Y(1)}\sigma_U
   },
 \]
-which serves as a proxy for how informative the hidden confounder is about the potential outcomes. Intuitively, sensitivity-analysis bounds are tight for a given \(\Gamma^{\star}\) when the confounding mechanism maximally biases the estimable ATE, for instance by assigning patients with smaller potential outcomes to control and those with larger potential outcomes to treatment. Such a scenario is only possible when \(U\) is informative about the potential outcomes. When \(U\) carries little information about the potential outcomes, the marginal sensitivity bounds can be conservative, leading to lower power and looser lower bounds. For \(\widehat{\phi}_{\mathrm{rct}}\), the experiments estimate CATE sensitivity bounds with the B-Learner \citep{oprescu2023b}. For \(\widehat{\phi}_{\widetilde{\mathrm{os}}}\), they estimate ATE sensitivity bounds with estimators such as QB \citep{dorn2022sharp} and DVDS \citep{dorn2021doubly}. All main experiments use significance level \(\alpha=0.05\).
+which serves as a proxy for how informative the hidden confounder is about the potential outcomes. Intuitively, sensitivity-analysis bounds are tight for a given \(\Gamma^{\star}\) when the confounding mechanism maximally biases the estimable ATE, for instance by assigning patients with smaller potential outcomes to control and those with larger potential outcomes to treatment. Such a scenario is only possible when \(U\) is informative about the potential outcomes. When \(U\) carries little information about the potential outcomes, the marginal sensitivity bounds can be conservative, leading to lower power and looser lower bounds. For \(\widehat{\phi}_{\mathrm{rct}}\), the experiments estimate CATE sensitivity bounds with the B-Learner \citep{oprescu2023b}. For \(\widehat{\phi}_{\widetilde{\mathrm{os}}}\), they estimate ATE sensitivity bounds with estimators such as QB \citep{dorn2022sharp} and DVDS \citep{dorn2021doubly}. When the bootstrap is used to estimate sampling variances, the bootstrap resamples are held fixed across \(\Gamma\). All main experiments use significance level \(\alpha=0.05\).
 
 \subsection{Do the Tests Control False Rejections?}
 
 \begin{figure}[!t]
   \centering
-  \includegraphics[width=0.76\textwidth]{papers/confounding_test/figures/legend.pdf}\\[0.5ex]
-  \begin{subfigure}[b]{0.24\textwidth}
+  \includegraphics[width=0.9\textwidth]{papers/confounding_test/figures/legend.pdf}\\[0.6ex]
+  \begin{subfigure}[b]{0.46\textwidth}
     \centering
     \includegraphics[width=\textwidth]{papers/confounding_test/figures/synthetic_small.pdf}
-    \caption{Synthetic, small}
+    \caption{Small sample (\(n_{\mathrm{rct}}=n_{\mathrm{os}}=2{,}000\))}
     \label{fig:confounding-synthetic-small}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[b]{0.24\textwidth}
+  \begin{subfigure}[b]{0.46\textwidth}
     \centering
     \includegraphics[width=\textwidth]{papers/confounding_test/figures/synthetic_large.pdf}
-    \caption{Synthetic, large}
+    \caption{Large sample (\(n_{\mathrm{rct}}=n_{\mathrm{os}}=20{,}000\))}
     \label{fig:confounding-synthetic-large}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.24\textwidth}
+  \end{subfigure}\\[0.8ex]
+  \begin{subfigure}[b]{0.46\textwidth}
     \centering
     \includegraphics[width=\textwidth]{papers/confounding_test/figures/synthetic_nobs.pdf}
-    \caption{Synthetic, \(n_{\mathrm{os}}\)}
+    \caption{Increasing \(n_{\mathrm{os}}\) (\(n_{\mathrm{rct}}=20{,}000\))}
     \label{fig:confounding-synthetic-nobs}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[b]{0.24\textwidth}
+  \begin{subfigure}[b]{0.46\textwidth}
     \centering
     \includegraphics[width=\textwidth]{papers/confounding_test/figures/synthetic_correlation.pdf}
-    \caption{Synthetic, \(\rho_{U,Y}\)}
+    \caption{Effect of \(\rho_{u,y}\) (\(n_{\mathrm{rct}}=n_{\mathrm{os}}=20{,}000\))}
     \label{fig:confounding-synthetic-correlation}
-  \end{subfigure}\\[0.8ex]
-  \begin{subfigure}[b]{0.24\textwidth}
+  \end{subfigure}
+  \caption{Finite-sample behavior of the tests and lower bounds on the synthetic benchmark with \(\Gamma^{\star}=5\) and \(\alpha=0.05\). In the legend, \(\phi^{\star}\) denotes the oracle test that rejects whenever \(\Gamma<\Gamma^{\star}\), while \(\widehat{\Gamma}_{\mathrm{LB}}^{\mathrm{rct}}\) and \(\widehat{\Gamma}_{\mathrm{LB}}^{\widetilde{\mathrm{os}}}\) denote the lower bounds obtained from \(\widehat{\phi}_{\mathrm{rct}}\) and \(\widehat{\phi}_{\widetilde{\mathrm{os}}}\). Panels~(a) and~(b) show rejection probabilities and average lower bounds in small- and large-sample regimes; panel~(c) shows lower bounds as \(n_{\mathrm{os}}\) grows; panel~(d) shows lower bounds across varying outcome-confounder correlation \(\rho_{u,y}\).}
+  \label{fig:confounding-synthetic-results}
+\end{figure}
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=0.9\textwidth]{papers/confounding_test/figures/legend.pdf}\\[0.6ex]
+  \begin{subfigure}[b]{0.46\textwidth}
     \centering
     \includegraphics[width=\textwidth]{papers/confounding_test/figures/hillstrom_small.pdf}
-    \caption{Hillstrom, small}
+    \caption{Small sample (\(n_{\mathrm{rct}}=2{,}300\), \(n_{\mathrm{os}}=6{,}150\))}
     \label{fig:confounding-hillstrom-small}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[b]{0.24\textwidth}
+  \begin{subfigure}[b]{0.46\textwidth}
     \centering
     \includegraphics[width=\textwidth]{papers/confounding_test/figures/hillstrom_large.pdf}
-    \caption{Hillstrom, large}
+    \caption{Large sample (\(n_{\mathrm{rct}}=7{,}680\), \(n_{\mathrm{os}}=20{,}500\))}
     \label{fig:confounding-hillstrom-large}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.24\textwidth}
+  \end{subfigure}\\[0.8ex]
+  \begin{subfigure}[b]{0.46\textwidth}
     \centering
     \includegraphics[width=\textwidth]{papers/confounding_test/figures/hillstrom_nobs.pdf}
-    \caption{Hillstrom, \(n_{\mathrm{os}}\)}
+    \caption{Increasing \(n_{\mathrm{os}}\) (\(n_{\mathrm{rct}}=7{,}680\))}
     \label{fig:confounding-hillstrom-nobs}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[b]{0.24\textwidth}
+  \begin{subfigure}[b]{0.46\textwidth}
     \centering
     \includegraphics[width=\textwidth]{papers/confounding_test/figures/hillstrom_correlation.pdf}
-    \caption{Hillstrom, \(\rho_{U,Y}\)}
+    \caption{Effect of \(\rho_{u,y}\) across confounders}
     \label{fig:confounding-hillstrom-correlation}
   \end{subfigure}
-  \caption{Finite-sample behavior of the tests and lower bounds on synthetic data and the semi-synthetic Hillstrom benchmark, with \(\Gamma^{\star}=5\) and \(\alpha=0.05\). The synthetic rejection-probability plots use \(n_{\mathrm{rct}}=n_{\mathrm{os}}=2{,}000\) in the small-sample setting and \(n_{\mathrm{rct}}=n_{\mathrm{os}}=20{,}000\) in the large-sample setting; the Hillstrom counterparts use \(n_{\mathrm{rct}}=2{,}300,n_{\mathrm{os}}=6{,}150\) and \(n_{\mathrm{rct}}=7{,}680,n_{\mathrm{os}}=20{,}500\). The remaining plots report lower bounds under increasing observational sample size and the effect of the outcome-confounder correlation.}
-  \label{fig:confounding-main-results}
+  \caption{Finite-sample behavior of the tests and lower bounds on the semi-synthetic Hillstrom benchmark with \(\Gamma^{\star}=5\) and \(\alpha=0.05\), using ``history'' as the hidden confounder in panels~(a)--(c). Legend symbols match Figure~\ref{fig:confounding-synthetic-results}. Panels~(a) and~(b) report rejection probabilities and average lower bounds in small- and large-sample regimes; panel~(c) shows lower bounds as \(n_{\mathrm{os}}\) grows; panel~(d) compares lower bounds across hidden covariates with different \(\rho_{u,y}\).}
+  \label{fig:confounding-hillstrom-results}
 \end{figure}
 
-Figure~\ref{fig:confounding-main-results} summarizes the synthetic and semi-synthetic findings. In both rows, the rejection-probability plots show that the tests are valid in these finite-sample settings: they do not reject at inflated rates for strengths larger than \(\Gamma^{\star}\).
+Figures~\ref{fig:confounding-synthetic-results} and~\ref{fig:confounding-hillstrom-results} summarize the synthetic and semi-synthetic findings. In the rejection-probability panels (Figures~\ref{fig:confounding-synthetic-small}, \ref{fig:confounding-synthetic-large}, \ref{fig:confounding-hillstrom-small}, and~\ref{fig:confounding-hillstrom-large}), both tests remain valid in these finite-sample settings: they do not reject at inflated rates for strengths larger than \(\Gamma^{\star}\).
 
 \subsection{How Does Sample Size Affect Power?}
 
-The same figure shows that statistical power substantially improves in the large-sample regime. In both the synthetic and Hillstrom settings, larger samples produce sharper transitions around \(\Gamma^{\star}\), leading to more informative lower bounds. The plots with increasing \(n_{\mathrm{os}}\) also show that the two tests respond differently to additional observational data. The restricted-observational test \(\widehat{\phi}_{\widetilde{\mathrm{os}}}\) benefits more from a larger observational study because its sensitivity interval is estimated on the restricted observational target population. This is relevant for post-marketing surveillance: increasing randomized-trial sample sizes is often constrained by the logistics of running additional experiments, whereas observational cohorts can grow through electronic health records, insurance claims, and newly exposed individuals.
+Comparing the small- and large-sample rejection curves (Figures~\ref{fig:confounding-synthetic-small}--\ref{fig:confounding-synthetic-large} and~\ref{fig:confounding-hillstrom-small}--\ref{fig:confounding-hillstrom-large}) shows that statistical power substantially improves in the large-sample regime. In both the synthetic and Hillstrom settings, larger samples produce sharper transitions around \(\Gamma^{\star}\), leading to more informative lower bounds. Figures~\ref{fig:confounding-synthetic-nobs} and~\ref{fig:confounding-hillstrom-nobs} also show that the two tests respond differently to additional observational data. The restricted-observational test \(\widehat{\phi}_{\widetilde{\mathrm{os}}}\) benefits more from a larger observational study because its sensitivity interval is estimated on the restricted observational target population. This is relevant for post-marketing surveillance: increasing randomized-trial sample sizes is often constrained by the logistics of running additional experiments, whereas observational cohorts can grow through electronic health records, insurance claims, and newly exposed individuals.
 
 \subsection{When Is the Lower Bound Informative?}
 
-The tests are somewhat conservative when \(\Gamma\) is close to \(\Gamma^{\star}\), which can lead to a loose lower bound estimate. This reflects a limitation of the marginal sensitivity model: without additional assumptions on how \(U\) affects \(Y\), a hidden confounder with the same odds-ratio strength can have very different implications for the ATE. In the experiments, higher \(\rho_{U,Y}\) correlates with tighter lower bounds for both tests. Conversely, when \(U\) carries little information about the potential outcomes, the lower bound may remain close to one even when \(\Gamma^{\star}\) is larger.
+The tests are somewhat conservative when \(\Gamma\) is close to \(\Gamma^{\star}\), which can lead to a loose lower bound estimate. This reflects a limitation of the marginal sensitivity model: without additional assumptions on how \(U\) affects \(Y\), a hidden confounder with the same odds-ratio strength can have very different implications for the ATE (see Appendix~\ref{app:confounding-msm-tightness}). To examine this effect directly, Figure~\ref{fig:confounding-synthetic-correlation} evaluates \(\widehat{\Gamma}_{\mathrm{LB}}^{\mathrm{rct}}\) and \(\widehat{\Gamma}_{\mathrm{LB}}^{\widetilde{\mathrm{os}}}\) across \(50\) random draws of the outcome noise variance in \([0,1]\) while holding \(\Gamma^{\star}=5\) fixed, and Figure~\ref{fig:confounding-hillstrom-correlation} varies the hidden covariate \(U\) in Hillstrom. In both benchmarks, higher \(\rho_{u,y}\) correlates with tighter lower bounds for both tests. Conversely, when \(U\) carries little information about the potential outcomes, the lower bound may remain close to one even when \(\Gamma^{\star}\) is larger.
 
 \FloatBarrier
 
 \subsection{Can the Lower Bound Guide Real-World Decisions?}
 \label{sec:confounding-real-world}
 
-The WHI experiment addresses this question in a real epidemiological setting. Linking back to the post-marketing pipeline, the goal is to show how the lower bound can differentiate between studies with significant confounding and those with negligible confounding. The Women's Health Initiative (WHI) included both a randomized trial and an observational study on hormone replacement therapy (HRT) and cardiovascular outcomes \citep{anderson2003implementation}. Historically, the observational study suggested that HRT had a protective effect, while the randomized trial indicated the opposite. This discrepancy was later linked to hidden confounding by time since the start of HRT \citep{vandenbroucke2009hrt}.
+The Women's Health Initiative (WHI) experiment addresses this question in a real epidemiological setting. Linking back to the post-marketing pipeline, the goal is to show how the lower bound can differentiate between studies with significant confounding and those with negligible confounding. The WHI study included both a randomized trial and an observational study on hormone replacement therapy (HRT) and cardiovascular outcomes \citep{anderson2003implementation}. Historically, the observational study suggested that HRT had a protective effect, while the randomized trial indicated the opposite. This discrepancy was later linked to hidden confounding by time since the start of HRT \citep{vandenbroucke2009hrt}.
 
 To turn the lower bound into a decision rule, we compare it with an observational critical value
 \[
@@ -648,17 +684,17 @@ To turn the lower bound into a decision rule, we compare it with an observationa
     ]
   \right\}.
 \]
-This critical value is the smallest confounding strength at which the sensitivity interval includes zero, and hence the smallest strength at which the observational treatment-effect conclusion is no longer robust. Similar critical values are commonly used to assess robustness of conclusions drawn from observational data \citep{vanderweele2017sensitivity,jin2023sensitivity}. The most appropriate critical value depends on the scientific context. Here we flag the study as practically confounded when
+This critical value is the smallest confounding strength at which the sensitivity interval includes zero, and hence the smallest strength at which the observational treatment-effect conclusion is no longer robust. Similar critical values are commonly used to assess robustness of conclusions drawn from observational data \citep{vanderweele2017sensitivity,jin2023sensitivity}. The most appropriate critical value depends on the scientific context. Since the WHI study satisfies the nested-trial-design criteria, we compute the lower bound using \(\widehat{\phi}_{\widetilde{\mathrm{os}}}\) and write \(\widehat{\Gamma}_{\mathrm{LB}}\) as shorthand for \(\widehat{\Gamma}_{\mathrm{LB}}^{\widetilde{\mathrm{os}}}\) in this subsection and Table~\ref{tab:confounding-whi}. Here we flag the study as practically confounded when
 \[
   \widehat{\Gamma}_{\mathrm{LB}}
   >
   \widehat{\Gamma}_{\mathrm{CT}}.
 \]
-For comparison, we also report the binary decision rule that flags a study whenever \(\widehat{\Gamma}_{\mathrm{LB}}>1\). In contrast to the lower-bound rule, the binary rule flags the observational study if any level of confounding is detected. Since the WHI study satisfies the nested-trial-design criteria, the reported lower bound is computed with \(\widehat{\phi}_{\widetilde{\mathrm{os}}}\).
+For comparison, we also report the binary decision rule that flags a study whenever \(\widehat{\Gamma}_{\mathrm{LB}}>1\). In contrast to the lower-bound rule, the binary rule flags the observational study if any level of confounding is detected. Experimental details for the WHI analysis are provided in Appendix~\ref{app:confounding-whi-details}.
 
 \begin{table}[!t]
 \centering
-\caption{WHI evaluation at significance level \(\alpha=0.05\). The setting \(t=0\) includes only patients who were not previous users of hormone replacement therapy, while \(t\leq 20\) includes patients with up to 20 years since treatment start. A decision value of \(1\) flags the observational study as confounded.}
+\caption{WHI evaluation at significance level \(\alpha=0.05\), using \(\widehat{\phi}_{\widetilde{\mathrm{os}}}\) (with \(\widehat{\Gamma}_{\mathrm{LB}}\) denoting \(\widehat{\Gamma}_{\mathrm{LB}}^{\widetilde{\mathrm{os}}}\)). The setting \(t=0\) includes only patients who were not previous users of hormone replacement therapy, while \(t\leq 20\) includes patients with up to 20 years since treatment start. A decision value of \(1\) flags the observational study as confounded.}
 \label{tab:confounding-whi}
 \begin{tabular}{lcccc}
 \toprule
@@ -679,7 +715,7 @@ Table~\ref{tab:confounding-whi} shows that the lower-bound rule recovers the exp
 
 For stroke, both rules flag the observational study even after restricting to \(t=0\). This aligns with epidemiological analyses suggesting that additional unobserved confounding factors for stroke may remain even after accounting for time since treatment start \citep{prentice2005combined}. The WHI example therefore illustrates the intended use of the lower bound: it can identify settings where hidden confounding appears practically important while avoiding false alarms in settings where detectable residual confounding is too small to overturn the relevant conclusion.
 
-% A simpler comparison of ATE estimates across the randomized and observational studies could reach similar conclusions in this example. The lower-bound approach is more directly tied to sensitivity analysis: it can compare critical values for arbitrarily fine-grained subgroups against the same lower bound, whereas repeated group-level ATE tests would require several tests and would introduce multiple-testing and sample-size concerns.
+An alternative way to reach similar conclusions in this example is to test the difference in ATE estimates between the randomized and observational studies. However, the lower-bound approach connects directly to sensitivity analysis: it allows comparing critical values for arbitrarily fine-grained subgroups, up to the individual level via CATE sensitivity bounds, against the same lower bound. In contrast, testing differences in group-level ATE estimates would require a separate test for each subgroup, raising multiple-testing and sample-size concerns.
 
 \FloatBarrier
 

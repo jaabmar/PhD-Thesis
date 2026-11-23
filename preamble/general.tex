@@ -7,7 +7,6 @@
   pdfspacing,
   eulerchapternumbers,
   floatperchapter,
-  pdfspacing,
   beramono=false,
   palatino=false,
   a5paper,
@@ -31,10 +30,6 @@
 \usepackage{mparhack}
 \usepackage{relsize}
 
-% Redefine cite command to include space before.
-\let\origcite\cite
-\def\cite#1{\unskip~\origcite{#1}}
-
 % Math
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -42,8 +37,6 @@
 \usepackage{mathtools}
 \usepackage{isomath}
 \usepackage{dsfont}
-\usepackage{thmtools}
-\usepackage{thm-restate}
 
 % Figures, tables, and captions
 \usepackage{tabularx}
@@ -102,7 +95,7 @@
 \usetikzlibrary{calc}
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{patterns,shadings}
-\graphicspath{{figures/}{papers/CP_Fuse/figures/}{papers/PrivPGD/figures/}}
+\graphicspath{{figures/}{papers/CP_Fuse/figures/}{papers/PrivPGD/figures/}{papers/confounding_test/figures/}}
 
 % Circled numbers
 \newcommand*\circled[1]{
@@ -146,8 +139,12 @@
 \usepackage{scrhack}
 \usepackage{classicthesis}
 
-% Hyperref colors
+% Hyperref metadata and colors
+% Note: For final ETH Research Collection upload (RSETHZ 340.311 Appendix 2),
+% confirm whether active hyperlinks should be disabled and export PDF/A.
 \hypersetup{
+    pdftitle={\myPlainTitle},
+    pdfauthor={\myPlainName},
     colorlinks=true,
     linkcolor=blue,
     urlcolor=blue,

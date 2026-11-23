@@ -1,12 +1,12 @@
 %*******************************************************
-% Titlepage
+% Titlepage (2022 ETH Zurich title_page_EN.pdf format)
 %*******************************************************
 \begin{titlepage}
 
     \begin{center}
         \large
         \begingroup
-            \spacedlowsmallcaps{Diss. No. \myDissNumber}
+            \spacedallcaps{DISS. ETH NO.\ \myDissNumber}
         \endgroup
 
         \hfill
@@ -14,8 +14,8 @@
         \vfill
 
         \begingroup
-            \spacedallcaps{\myTitle}\\
-            \vspace{5pt}\spacedallcaps{\footnotesize \mySubtitle}
+            \spacedallcaps{\myTitle}%
+            \ifx\mySubtitle\empty\else\\\vspace{5pt}\spacedallcaps{\footnotesize \mySubtitle}\fi
         \endgroup
 
         \vfill
@@ -23,7 +23,7 @@
         \begingroup
             A thesis submitted to attain the degree of\\
             \vspace{0.5em}
-            \spacedlowsmallcaps{\myDegreeName} \\
+            \spacedallcaps{\myDegreeName}\\
             (\myDegreeInstitution)
         \endgroup
 
@@ -32,10 +32,9 @@
         \begingroup
             presented by\\
             \vspace{0.5em}
-            \spacedallcaps{\normalsize \myName} \\
-            \myPriorDegree \\
+            \spacedallcaps{\normalsize \myName}\\
             \vspace{0.5em}
-            \myBirthInfo \\
+            \myBirthInfo
         \endgroup
 
         \vfill
@@ -48,7 +47,7 @@
 
         \vfill
 
-        \myTime
+        \myYear
 
         \vfill
     \end{center}

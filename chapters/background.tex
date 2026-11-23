@@ -1,2 +1,114 @@
 \chapter{Background}
 \label{chap:background}
+
+The three technical chapters of this thesis study outputs of statistical and machine learning methods that are used in practice and must satisfy a formal property. A causal conclusion drawn from observational data should not be explained away by hidden confounding, a released dataset should not expose the records of individuals, and a language model should not reproduce copyrighted text. Each section below describes one of these settings: the property that is sought, what existing approaches do, and what is still missing.
+
+\section{Causal Inference from Observational Data}
+\label{sec:bg-causal}
+
+\subsection{Treatment Effects and Confounding}
+
+After a treatment is approved, its performance is monitored in a process known as post-marketing surveillance \citep{vlahovic2011postmarketing}. Regulatory and clinical practice increasingly use observational data in this process to address the shortcomings of randomized evidence \citep{platt2018fda,klonoff2020new}.
+
+Chapter~\ref{chap:confounding-test} states causal questions in the potential-outcomes framework \citep{neyman1923application,rubin1978bayesian}. Each unit has covariates \(X\), a binary treatment \(T \in \{0, 1\}\), and two potential outcomes \(Y(0)\) and \(Y(1)\), the outcomes the unit would have without and with treatment. Only the outcome of the treatment actually received is observed, \(Y = Y(T)\). The conditional average treatment effect (CATE) and the average treatment effect (ATE) over a covariate distribution \(\mathbb{P}_X\) are
+\[
+  \mu(X) = \mathbb{E}\bigl[Y(1) - Y(0) \mid X\bigr],
+  \qquad
+  \mu(\mathbb{P}_X) = \mathbb{E}_{\mathbb{P}_X}\bigl[\mu(X)\bigr].
+\]
+
+In a randomized trial, treatment is assigned independently of all covariates, observed or not, so the treatment effect can be estimated without bias. In an observational study, the treatment effect is identified if treatment is independent of the potential outcomes given \(X\) and every unit has a positive probability of receiving either treatment. The probability \(e(X) = \mathbb{P}(T = 1 \mid X)\) is called the propensity score \citep{rosenbaum1983central}.
+
+These conditions fail when unobserved confounders \(U\) affect both the treatment and the outcome. In the Women's Health Initiative, for example, the observational study suggested that hormone replacement therapy had a protective effect on cardiovascular outcomes, while the randomized trial indicated the opposite \citep{anderson2003implementation}. The discrepancy was later linked to hidden confounding by the time since the start of therapy \citep{vandenbroucke2009hrt}.
+
+\subsection{Sensitivity Analysis}
+
+Because \(U\) is not observed, the strength of hidden confounding cannot be estimated from observational data without further assumptions. Sensitivity analysis, which goes back to \citet{cornfield59}, instead asks how a given strength of confounding would change the causal conclusion. Chapter~\ref{chap:confounding-test} measures this strength with the marginal sensitivity model of \citet{tan2006distributional}. For \(\Gamma \geq 1\), it bounds the odds ratio between the propensity score that also conditions on \(U\), \(e(X, U) = \mathbb{P}(T = 1 \mid X, U)\), and the observed propensity score \(e(X)\):
+\[
+  \frac{1}{\Gamma}
+  \leq
+  \frac{e(X, U) / \bigl(1 - e(X, U)\bigr)}{e(X) / \bigl(1 - e(X)\bigr)}
+  \leq
+  \Gamma
+  \qquad\text{almost surely.}
+\]
+At \(\Gamma = 1\), the treatment odds do not depend on \(U\) given \(X\), so there is no hidden confounding under this model. Larger values of \(\Gamma\) allow stronger hidden confounding.
+
+For each \(\Gamma\), the observational data are compatible with a whole interval of treatment effects, and this interval widens as \(\Gamma\) grows. Several estimators compute such intervals for the CATE and the ATE \citep{kallus2019interval,zhao2019sensitivity,jesson2021quantifying,dorn2021doubly,dorn2022sharp,oprescu2023b}. A common summary is the critical value, the smallest confounding strength that would explain away the estimated effect \citep{vanderweele2017sensitivity,jin2023sensitivity}. Critical values are computed from observational data alone. They state how much confounding would suffice to change a conclusion, but they can differ substantially from the true confounding strength, and practitioners often decide by judgment whether a study is flawed.
+
+\subsection{Randomized Trials as a Reference}
+
+When a randomized trial and an observational study of the same treatment are both available, the trial can serve as a reference. Eligibility criteria can make the trial population differ from the target population \citep{rothwell2005external,kennedy2015literature}, so a comparison requires that the trial findings generalize to the observational population. A standard assumption for this is that the CATE is the same in both populations \citep{o2014generalizing,colnet2020causal,degtiar2023review}.
+
+Several tests compare treatment-effect estimates from randomized and observational data to detect hidden confounding \citep{viele2014use,hussain2022falsification,yangelastic,hussain2023falsification}. Other tests use instrumental variables, negative controls, or multiple observational studies \citep{lipsitch2010negative,de2014testing,donald2014testing,karlsson2023detecting}. These tests answer a binary question, namely whether any hidden confounding can be detected. Some residual confounding may be expected, however, and need not invalidate the practical conclusion of a study. Chapter~\ref{chap:confounding-test} therefore uses randomized trials to test whether hidden confounding exceeds a given strength \(\Gamma\) and to obtain a lower bound on the true strength.
+
+\section{Differential Privacy and Private Data Release}
+\label{sec:bg-dp}
+
+\subsection{Differential Privacy}
+
+Sharing sensitive datasets supports decision-making and research in fields such as healthcare and government. At the same time, there are significant concerns about the use and disclosure of personal information, especially among vulnerable groups \citep{el2011case}. Differential privacy \citep{dp,dwork2014algorithmic} addresses these concerns and is used in practice by industry and government organizations \citep{johnson2018towards,abowd2018us,aktay2020google}.
+
+Differential privacy is a property of a randomized algorithm \(\mathcal{A}\) that takes a dataset as input. It guarantees that the output reveals little about any individual record, even to an adversary who knows all other records \citep{dp}. Write \(D \sim D'\) if two datasets of the same size differ in exactly one record. The algorithm \(\mathcal{A}\) is \((\epsilon, \delta)\)-differentially private if, for all \(D \sim D'\) and all measurable sets \(B\) of outputs,
+\[
+  \mathbb{P}\bigl[\mathcal{A}(D) \in B\bigr]
+  \leq
+  e^{\epsilon}\, \mathbb{P}\bigl[\mathcal{A}(D') \in B\bigr] + \delta.
+\]
+The parameter \(\epsilon > 0\) bounds how much a single record can change the probability of any output, and \(\delta\) is a small additive slack. Smaller values give stronger protection and require more noise.
+
+Two properties make differential privacy practical \citep{dwork2014algorithmic}. Under post-processing, any computation applied to the output of a differentially private algorithm, without further access to the data, keeps the same guarantee. Under composition, running several differentially private algorithms on the same data gives a guarantee whose parameters are the sums of the individual ones.
+
+\subsection{Private Synthetic Tabular Data}
+
+Differentially private data synthesis releases a synthetic copy of a sensitive tabular dataset. By post-processing, any analysis performed on the copy satisfies the same privacy guarantee. Many methods synthesize tabular data with privacy guarantees while preserving relevant statistics of the original data \citep{tao2021benchmarking,hu2023sok}. Marginal-based methods are among the preferred ones: they dominate the NIST challenges \citep{mst} and rank highly in benchmarks \citep{tao2021benchmarking}.
+
+Marginal-based methods first select a set of marginals, that is, the joint distributions of subsets of features \citep{cai2021data,mst,aim}. They then add noise to these marginals, for example with the Gaussian mechanism \citep{dwork2014algorithmic}, and finally generate a synthetic dataset from the noisy marginals. A common generation approach learns a probabilistic graphical model and samples from it \citep{mckenna2019graphical}. This approach can become sensitive to the number of selected marginals and is less suited to enforcing domain-specific constraints. Query-based methods instead construct a private dataset that answers a predefined set of queries, often with gradient-based updates \citep{gaboardi14,vietri2020new,aydore2021differentially,liu2021iterative,vietri2022private,pmlr-v202-liu23ag}.
+
+\subsection{Comparing Distributions with Optimal Transport}
+
+The generation step must make the marginals of the synthetic data close to the noisy marginals, which requires a way to compare distributions. Many features have a natural geometry, such as continuous features or ordered categories like age. A discrepancy that only compares cell counts, such as the total variation distance, treats a mismatch between neighboring cells in the same way as a mismatch between distant cells. Graphical-model methods are more naturally aligned with this kind of discrepancy.
+
+Optimal transport compares distributions while taking the geometry of the domain into account \citep{torres2021survey}. For probability measures \(\mu\) and \(\nu\) on \(\Omega \subset \RR^p\) and \(q \geq 1\), the \(q\)-Wasserstein distance is
+\[
+  W_q(\mu, \nu)
+  =
+  \left(
+    \inf_{\pi \in \Pi(\mu, \nu)}
+    \int_{\Omega \times \Omega} \|x - y\|_2^q \, d\pi(x, y)
+  \right)^{1/q},
+\]
+where \(\Pi(\mu, \nu)\) is the set of joint distributions with marginals \(\mu\) and \(\nu\). Its \(q\)-th power is the minimal expected cost of moving the mass of \(\mu\) to \(\nu\), where moving mass by a distance \(r\) costs \(r^q\).
+
+Computing the Wasserstein distance exactly has a cost that grows roughly cubically in the number of support points. The sliced Wasserstein distance reduces the problem to one-dimensional projections, where optimal transport amounts to sorting \citep{bonneel2015sliced,kolouri2018sliced,deshpande2018generative}. Chapter~\ref{chap:privpgd} uses it to generate synthetic data directly from privatized marginals with a geometry-aware objective that scales to large datasets and accepts domain-specific constraints.
+
+\section{Language Models, Memorization, and Copyright}
+\label{sec:bg-lm}
+
+\subsection{Autoregressive Language Models}
+
+Large language models such as GPT-4 \citep{achiam2023gpt} and Gemini \citep{team2023gemini} are widely used to generate text and code. An autoregressive language model \(\model\) maps a prompt \(x\) to a distribution over sequences of tokens \(y_{0:T}\) from a fixed vocabulary \(V\), where the last token \(y_T\) marks the end of the sequence. It factorizes this distribution into next-token distributions:
+\[
+  \model(y_{0:T} \mid x) = \prod_{t=0}^{T} \model(y_t \mid y_{<t}, x).
+\]
+Text is generated one token at a time, either by sampling from these next-token distributions or, in greedy decoding, by taking the most likely token.
+
+\subsection{Memorization and Copyright}
+
+Language models can memorize parts of their training data and reproduce them verbatim \citep{carlini2021extracting,carlini2023quantifying,nasr2023scalable,hartmann2023sok,mm_mem2024}. When the training data contain copyrighted material, this creates a risk of reproducing it \citep{sag66new,yu2023codeiipprompt,karamolegkou2023copyright}. Under the fair use doctrine (17 U.S.C.~107), transformative uses of protected works that do not harm their market value can limit liability for infringement \citep{henderson2023foundation}.
+
+Protection can be added at several stages \citep{lee2023talkin}. Before training, the data can be restricted to licensed content \citep{kocetkov2022stack,min2023silo,ippolito2023donottrain} or deduplicated, which reduces regurgitation \citep{lee2021deduplicating,kandpal2022deduplicating,carlini2023quantifying}; these steps are only partially effective \citep{lee2023talkin,ippolito2023preventing} and can degrade performance \citep{Meeus2023DidTN}. During training, differentially private methods limit the influence of individual training points \citep{dwork2014algorithmic,abadi2016deep}, but scaling them to large models is computationally demanding and degrades utility \citep{anil2022large}. It has also been argued that the goals of differential privacy differ from those of copyright protection \citep{elkin2023can}.
+
+Training-time heuristics such as the goldfish loss also reduce regurgitation in practice \citep{hans2024like}. At inference time, filters such as MemFree block exact matches with a list of protected texts \citep{ippolito2023preventing}, but they are less suited to near-verbatim copying and may cause hallucinations \citep{liu2024shield}.
+
+\subsection{A Formal Criterion for Copyright Protection}
+
+A formal criterion requires a way to measure how far one next-token distribution is from another. For distributions \(p\) and \(q\) on the vocabulary \(V\), the Kullback--Leibler (KL) divergence is
+\[
+  \KL(p \,\|\, q) = \sum_{y \in V} p(y) \log \frac{p(y)}{q(y)}.
+\]
+It is nonnegative, equals zero only when \(p = q\), and is large when \(p\) puts mass on tokens to which \(q\) assigns small probability.
+
+The Near Access Free (\(k\)-NAF) framework of \citet{vyas2023provable} uses such a divergence, and Chapter~\ref{chap:cpfuse} takes it to be the KL divergence. Suppose two models are trained on two possibly overlapping subsets of the training data, each tied to one of two disjoint sets of copyrighted works. For any protected passage, at least one of the two models should then assign it very small probability. A model that stays within divergence \(k\) of both base models therefore cannot place much probability on such a passage.
+
+\citet{vyas2023provable} also propose \(\cpdelta\), which combines the two base models. It is intractable on whole sequences, and its token-wise variant uses fixed weights. Chapter~\ref{chap:cpfuse} asks how to combine the models at decoding time so that the output stays close to both and avoids reproducing protected text.

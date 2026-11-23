@@ -4,23 +4,26 @@
 
 \chapterabstract{This chapter studies copyright protection for language generation. As large language models are increasingly deployed for text and code generation tasks, preventing the reproduction of protected training material has become a practical challenge. The chapter focuses on inference-time methods that aim to reduce such regurgitation. Within this setting, it introduces Copyright-Protecting Model Fusion (CP-Fuse), a strategy that combines models trained on disjoint sets of copyrighted material. By adaptively aggregating their outputs during decoding, CP-Fuse substantially reduces copyright-infringement metrics while preserving utility and remaining compatible with other protective measures.}
 
+% TODO: Expand with a specific author-contribution summary if required by the final D-INFK declaration.
 \chapterpublication
   {This chapter is based on work led by the author of this thesis and appeared as:}
-  {Javier Abad, Konstantin Donhauser, Francesco Pinto, and Fanny Yang (2025). ``Copyright-Protected Language Generation via Adaptive Model Fusion.'' In \emph{International Conference on Learning Representations}.}
+  {Javier Abad, Konstantin Donhauser, Francesco Pinto\textsuperscript{\dag}, and Fanny Yang\textsuperscript{\dag} (2025). ``Copyright-Protected Language Generation via Adaptive Model Fusion.'' In \emph{International Conference on Learning Representations}. {\footnotesize\textsuperscript{\dag}\,Equal supervision.} Source code is available at \url{https://github.com/jaabmar/cp_fuse}.}
 
 \vspace{-0.6\baselineskip}
 \section{Motivation and Scope}
+
+This chapter studies copyright-safe text and code generation with language models. When prompted, deployed autoregressive language models can reproduce copyright-protected passages memorized from their training corpora. Building on the introduction to language models, memorization, and copyright in Chapter~\ref{chap:background}, it asks how to prevent verbatim and quasi-verbatim regurgitation at inference time.
 
 Large Language Models (LLMs), such as GPT-4 \citep{achiam2023gpt} and Gemini \citep{team2023gemini}, have achieved undeniable success. However, they also present a significant challenge: the risk of reproducing copyrighted material from their training data \citep{sag66new,yu2023codeiipprompt,karamolegkou2023copyright}. With the widespread adoption of these models for generating new text and code, the risk of large-scale copyright violations has become a pressing issue, as highlighted by several multi-million dollar lawsuits \citep{henderson2023foundation}. Consequently, preventing copyright infringement in language models has become a critical focus for researchers and practitioners alike.
 
 The \emph{fair use} doctrine (17 U.S.C. 107) provides a framework to mitigate liability for copyright infringement, spurring interest in techniques that allow models to use protected works in transformative ways that do not harm their market value \citep{henderson2023foundation}. Since verbatim reproduction of copyrighted material often arises from the memorization of training data \citep{carlini2021extracting,Somepalli2022DiffusionAO,carlini2023quantifying,mm_mem2024}, a natural goal is to reduce memorization without destroying the usefulness of the model. The literature has therefore explored interventions at several stages of the model pipeline, from data curation and training-time regularization to inference-time protection.
 
-This chapter focuses on that inference-time setting. It introduces Copyright-Protecting Model Fusion (CP-Fuse), a simple strategy that combines outputs from multiple language models trained on disjoint sets of copyrighted material. At a high level, CP-Fuse uses these models jointly during decoding to reduce the likelihood of reproducing protected content while preserving the utility of the generated text and code.
+This chapter focuses on that inference-time setting. It introduces Copyright-Protecting Model Fusion (CP-Fuse), a simple strategy that combines outputs from multiple language models trained on disjoint sets of copyrighted material (Figure~\ref{fig:cpfuse-teaser}). At a high level, CP-Fuse uses these models jointly during decoding to reduce the likelihood of reproducing protected content while preserving the utility of the generated text and code.
 
 \begin{figure}[tbp]
   \centering
   \includegraphics[width=\textwidth,trim={0 140 0 170},clip]{papers/CP_Fuse/figures/cpfuse_teaser.png}
-  \caption{High-level picture of CP-Fuse. Two models are trained on disjoint copyright-sensitive corpora and combined only at inference time. The fused model preserves useful continuations when the bases agree, while suppressing continuations that are strongly favored by only one history-dominant model.}
+  \caption{High-level schematic of CP-Fuse. Top: two base models \(\modelone\) and \(\modeltwo\) are trained on two possibly overlapping datasets (labeled \(\mathcal{X}_1, \mathcal{X}_2\) in the diagram, corresponding to \(\dataset_1, \dataset_2\) in the text) that contain disjoint copyrighted subsets \(\domainconcepts_1\) and \(\domainconcepts_2\); inference-time fusion combines them via a minimax KL objective to obtain a protected distribution \(\model\) that places low probability on content unique to either base model. Bottom: on a toy fantasy prompt, \(\modelone\) and \(\modeltwo\) reproduce copyrighted passages, whereas the fused model \(\model\) generates an original continuation.}
   \label{fig:cpfuse-teaser}
 \end{figure}
 
@@ -30,9 +33,9 @@ The remainder of the chapter is organized accordingly. It first positions CP-Fus
 
 For positioning CP-Fuse, the most relevant distinction is between methods that intervene before deployment and methods that act at deployment time.
 
-The first group includes pre-processing strategies that curate licensed corpora or remove duplicate copyrighted samples before training \citep{kocetkov2022stack,min2023silo,ippolito2023donottrain,lee2021deduplicating,kandpal2022deduplicating,carlini2023quantifying}, as well as training-time interventions that modify optimization to reduce memorization, including differentially private training and related heuristics \citep{dwork2014algorithmic,abadi2016deep,anil2022large,zhang2023counterfactual,Somepalli2022DiffusionAO,mm_mem2024,hans2024like}. These approaches can be effective, but they typically require access to the training pipeline, may be computationally demanding, and can degrade utility or fail to align exactly with the legal objective of copyright protection \citep{ippolito2023preventing,Meeus2023DidTN,elkin2023can}. Related post hoc unlearning methods \citep{bourtoule2021machine,chen2023unlearn,eldan2023s,jang2023knowledge,zhang2024negative,liu2024rethinking} face similar limitations, since they are usually computationally impractical and often require access to model weights.
+The first group includes preprocessing strategies that curate licensed corpora or remove duplicate copyrighted samples before training \citep{kocetkov2022stack,min2023silo,ippolito2023donottrain,lee2021deduplicating,kandpal2022deduplicating,carlini2023quantifying}, as well as training-time interventions that modify optimization to reduce memorization, including differentially private training and related heuristics \citep{dwork2014algorithmic,abadi2016deep,anil2022large,zhang2023counterfactual,Somepalli2022DiffusionAO,mm_mem2024,hans2024like}. These approaches can be effective, but they typically require access to the training pipeline, may be computationally demanding, and can degrade utility or fail to align exactly with the legal objective of copyright protection \citep{ippolito2023preventing,Meeus2023DidTN,elkin2023can}. Related post-hoc unlearning methods \citep{bourtoule2021machine,chen2023unlearn,eldan2023s,jang2023knowledge,zhang2024negative,liu2024rethinking} face similar limitations, since they are usually computationally impractical and often require access to model weights.
 
-CP-Fuse belongs instead to the deployment-time line of work, where inference-time or post-processing methods act directly on model outputs \citep{wei2024evaluating}. Within this line, filtering approaches such as MemFree \citep{ippolito2023donottrain} can block exact verbatim matches from a curated blocklist, but they are less suited to quasi-verbatim copying and may produce hallucinations \citep{liu2024shield}. A more principled deployment-time perspective is provided by the Near-Access Free framework of \citet{vyas2023provable}, whose closest comparison here is the token-wise \(\cpdelta\) algorithm.
+CP-Fuse belongs instead to the deployment-time line of work, where inference-time or post-processing methods act directly on model outputs \citep{wei2024evaluating}. Within this line, filtering approaches such as MemFree \citep{ippolito2023preventing} can block exact verbatim matches from a curated blocklist, but they are less suited to quasi-verbatim copying and may produce hallucinations \citep{liu2024shield}. A more principled deployment-time perspective is provided by the Near-Access Free framework of \citet{vyas2023provable}, whose closest comparison here is the token-wise \(\cpdelta\) algorithm.
 
 CP-Fuse fills the gap between these two deployment-time directions. It keeps the token-wise computational structure needed for real-world language models, but goes beyond exact-match filtering and beyond fixed-weight fusion by making the fusion coefficients depend on the generated history. This history dependence is the key distinction that allows CP-Fuse to target regurgitation more effectively while remaining practical at inference time.
 
@@ -79,20 +82,23 @@ We now introduce \textbf{C}opyright-\textbf{P}rotecting Model \textbf{Fus}ion (C
 At each decoding step, CP-Fuse chooses the next-token distribution by solving a local minimax problem. The KL terms ask the protected conditional to remain close to both base models at the current step, while the history term keeps track of which model the generated prefix has already favored. The objective is therefore to minimize the worst-case adjusted KL divergence to the two base models. Formally, CP-Fuse iteratively defines
 \begin{equation}
 \label{eq:cpfuse-opt-problem}
-\begin{aligned}
-\model(y_t \mid y_{<t},x)
-&=
+\model(\cdot \mid y_{<t},x)
+=
 \argmin_{p^*}
-\max_i
+\max_{i \in \{1,2\}}
 \underset{y_t \sim p^*}{\mathbb{E}}
 \log\left(
 \frac{p^*(y_t)\,\model(y_{<t}\mid x)}
 {\modeli(y_{\leq t}\mid x)}
-\right) \\
-&=
-\argmin_{p^*,\,\tau}~ \tau \\
+\right),
+\end{equation}
+which can be written in epigraph form as the convex optimization problem
+\begin{equation}
+\label{eq:cpfuse-opt-epigraph}
+\begin{aligned}
+\min_{p^*,\,\tau}\quad & \tau \\
 \text{s.t.}\quad
-&\forall i:\ 
+&\forall i \in \{1,2\}:\ 
 \KL\bigl(p^* \,\|\, \modeli(\cdot \mid y_{<t},x)\bigr)
 \,+\,
 \log\left(
@@ -102,7 +108,7 @@ At each decoding step, CP-Fuse chooses the next-token distribution by solving a 
 \leq \tau,
 \end{aligned}
 \end{equation}
-which is a convex optimization problem.
+where \(p^*\) is optimized over probability distributions on \(V\) and \(\model(\cdot \mid y_{<t},x)\) is given by the optimal \(p^*\).
 
 \paragraph{History dependence.}
 Equation~\eqref{eq:cpfuse-opt-problem} makes explicit how the sequence history enters the decoding rule. The optimization is local in the next token, but it is history-aware through the prefix likelihoods \(\model(y_{<t}\mid x)\) and \(\modeli(y_{<t}\mid x)\). If the current prefix is much more likely under one base model, the next-step distribution is adjusted so that the imbalance is not further amplified.
@@ -111,7 +117,7 @@ Equation~\eqref{eq:cpfuse-opt-problem} makes explicit how the sequence history e
 
 \begin{lemma}
 \label{lem:cpfuse-kkt}
-The optimal solution \(p^* = \model(\cdot \mid y_{<t},x)\) of the optimization problem in \eqref{eq:cpfuse-opt-problem} satisfies\footnote{We set \(\log(0) = -\infty\).}
+Assuming that \(\modelone(\cdot \mid y_{<t},x)\) and \(\modeltwo(\cdot \mid y_{<t},x)\) have full support on \(V\), the optimal solution \(p^* = \model(\cdot \mid y_{<t},x)\) of the optimization problem in \eqref{eq:cpfuse-opt-problem} satisfies\footnote{We set \(\log(0) = -\infty\).}
 \begin{equation}
 \label{eq:cpfuse-opt}
 \log p^*(y_t)
@@ -128,10 +134,7 @@ for some \(\alpha_t,\beta_t \geq 0\) and \(\gamma_t \in \RR\).
 Proof details are deferred to Appendix~\ref{app:cpfuse-proofs}.
 
 \paragraph{Closed-form interpretation.}
-Although solving \eqref{eq:cpfuse-opt-problem} naively is still computationally intensive, \Cref{lem:cpfuse-kkt} reduces the update to a log-linear model-fusion form. This gives a more operational interpretation of the method: CP-Fuse stays within the familiar family of logit-fusion rules, but it chooses the coefficients \(\alpha_t\) and \(\beta_t\) from the optimization problem rather than fixing them in advance. The protected conditional is thus obtained by combining the logits of the two base models with history-dependent coefficients and then normalizing through \(\gamma_t\).
-
-% \paragraph{Algorithmic view.}
-% The method can therefore be summarized as follows. First, given the current prefix, evaluate the two base conditionals and keep track of the corresponding prefix likelihoods. Second, solve the small token-wise optimization problem by grid search over \(\alpha_t\) and \(\beta_t\), with \(\gamma_t\) chosen so that the fused conditional is normalized. Third, decode the next token from the resulting protected conditional and update the three prefix likelihoods. Repeating this loop until EOS yields the full protected sequence. The resulting procedure is summarized in Algorithm~\ref{alg:cpfuse-algorithm}.
+Although solving \eqref{eq:cpfuse-opt-problem} naively is still computationally intensive, \Cref{lem:cpfuse-kkt} reduces the update to a log-linear model-fusion form. For the exact convex program in \eqref{eq:cpfuse-opt-epigraph}, the KKT conditions further imply \(\alpha_t + \beta_t = 1\), whereas the practical implementation approximates this KKT form by a grid search over a finite set of values for \(\alpha_t\) and \(\beta_t\) (see Appendix~\ref{app:cpfuse-proofs}). This gives a more operational interpretation of the method: CP-Fuse stays within the familiar family of logit-fusion rules, but it chooses the coefficients \(\alpha_t\) and \(\beta_t\) from the optimization problem rather than fixing them in advance. The protected conditional is thus obtained by combining the logits of the two base models with history-dependent coefficients and then normalizing through \(\gamma_t\).
 
 \begin{algorithm}[t]
   \caption{Summary of CP-Fuse. At each decoding step, the method evaluates the two base models, chooses history-dependent coefficients, forms the protected conditional distribution, and updates the prefix likelihoods.}
@@ -141,7 +144,7 @@ Although solving \eqref{eq:cpfuse-opt-problem} naively is still computationally 
     \begin{minipage}{0.92\textwidth}
       \begin{enumerate}
         \item \textbf{Evaluation:} given a prompt \(x\) and current history \(y_{<t}\), evaluate the two base conditionals \(\modelone(\cdot \mid y_{<t},x)\) and \(\modeltwo(\cdot \mid y_{<t},x)\), together with the current prefix likelihoods.
-        \item \textbf{Coefficient selection:} solve the token-wise optimization problem in \eqref{eq:cpfuse-opt-problem}, implemented by a grid search over \(\alpha_t\) and \(\beta_t\).
+        \item \textbf{Coefficient selection:} solve the token-wise optimization problem in \eqref{eq:cpfuse-opt-problem}, implemented by a grid search over \(\alpha_t\) and \(\beta_t\), with \(\gamma_t\) chosen to normalize the resulting distribution.
         \item \textbf{Fusion:} form the protected conditional distribution using \eqref{eq:cpfuse-opt}.
         \item \textbf{Update:} select the next token \(y_t\), update the history to \(y_{\leq t}\) together with the prefix likelihoods \(\model(y_{\leq t}\mid x)\), \(\modelone(y_{\leq t}\mid x)\), and \(\modeltwo(y_{\leq t}\mid x)\), and repeat until the EOS token is produced.
       \end{enumerate}
@@ -150,9 +153,9 @@ Although solving \eqref{eq:cpfuse-opt-problem} naively is still computationally 
 \end{algorithm}
 
 \paragraph{Relation to existing fusion rules.}
-The closed-form rule also clarifies the relation between CP-Fuse and existing fusion methods. A large body of work combines multiple language models at inference time \citep{liu2021dexperts,jiang2023llm,gururangan2023scaling,mavromatis2024pack} or merges them after training \citep{wortsman2022model,jin2022dataless,hsu2024let,yadav2024ties}. In particular, \Cref{lem:cpfuse-kkt} places CP-Fuse within the family of inference-time logit-fusion rules. The difference is that the fusion coefficients here are chosen to control copyright risk rather than tuned for generic utility or style-transfer objectives.
+The closed-form rule also clarifies the relation between CP-Fuse and existing fusion methods. A large body of work combines multiple language models at inference time \citep{liu2021dexperts,jiang2023llm,gururangan2023scaling,hsu2024let,mavromatis2024pack} or merges them after training \citep{wortsman2022model,jin2022dataless,yadav2024ties}. In particular, \Cref{lem:cpfuse-kkt} places CP-Fuse within the family of inference-time logit-fusion rules. The difference is that the fusion coefficients here are chosen to control copyright risk rather than tuned for generic utility or style-transfer objectives.
 
-\citet{vyas2023provable} propose \(\cpdelta\) as a general strategy for combining two generative models aimed at achieving copyright protection. Applied directly to the full sequence distribution \(\model(\cdot \mid x)\), however, that objective is computationally intractable. Their token-wise variant corresponds to the special case of \eqref{eq:cpfuse-opt} with fixed coefficients \(\alpha_t = \beta_t = 1/2\). CP-Fuse keeps the same token-wise objective, but replaces these fixed weights with history-dependent coefficients chosen from the local minimax problem.
+\citet{vyas2023provable} propose \(\cpdelta\) as a general strategy for combining two generative models aimed at achieving copyright protection. Applied directly to the full sequence distribution \(\model(\cdot \mid x)\), however, that objective is computationally intractable. Their token-wise variant corresponds to the special case of \eqref{eq:cpfuse-opt} with fixed coefficients \(\alpha_t = \beta_t = 1/2\). CP-Fuse keeps the same token-wise log-linear form, but replaces these fixed weights with history-dependent coefficients chosen from the local minimax problem in \eqref{eq:cpfuse-opt-problem}.
 
 \subsection{Balancing During Decoding}
 \label{sec:cpfuse-balancing}
@@ -170,9 +173,9 @@ The key feature of CP-Fuse is that the fusion weights depend on the current pref
 \underset{y_t \sim \model(\cdot \mid y_{<t},x)}{\mathbb{E}}
 \log \modeltwo(y_{\leq t}\mid x), \\
 2.\quad
-\model(y_t \mid y_{<t},x)
+\model(\cdot \mid y_{<t},x)
 &=
-\modeltwo(y_t \mid y_{<t},x).
+\modeltwo(\cdot \mid y_{<t},x).
 \end{align*}
 \end{lemma}
 
@@ -182,13 +185,13 @@ Proof details are deferred to Appendix~\ref{app:cpfuse-proofs}.
 Suppose the current prefix \(y_{<t}\) is already much more likely under \(\modelone\) than under \(\modeltwo\). Then CP-Fuse does one of two things. Either it chooses the next-token distribution so that the expected log-likelihood of the extended sequence \(y_{\leq t}\) is the same under both models, or it collapses to the less dominant model \(\modeltwo\). In both cases, decoding avoids further reinforcing the model that already dominates the prefix. This is why a continuation that is strongly favored by only one base model is repeatedly downweighted during generation. Appendix~\ref{app:cpfuse-balancing} gives weight-evolution plots for \(\alpha_t\) and \(\beta_t\) that make this behavior clear.
 
 \paragraph{Illustration against \(\cpdelta\).}
-Figure~\ref{fig:cpfuse-cumulative} shows this effect on one representative generation from the \texttt{Python instructions} dataset. CP-Fuse keeps the cumulative log-likelihoods under \(\modelone\) and \(\modeltwo\) much closer than token-wise \(\cpdelta\), whose fixed weights allow a clearer preference for one model to build up over time.
+Figure~\ref{fig:cpfuse-cumulative} shows this effect on a random generation from StarCoder fine-tuned on the \texttt{Python instructions} dataset. CP-Fuse keeps the cumulative log-likelihoods under \(\modelone\) and \(\modeltwo\) much closer than token-wise \(\cpdelta\), whose fixed weights allow a clearer preference for \(\modeltwo\) to build up over time, suggesting that \(\modeltwo\) may have memorized protected training samples.
 
 \begin{figure}[tbp]
   \centering
   \includegraphics[width=0.68\textwidth]{papers/CP_Fuse/figures/cumulative_combined.pdf}
   \captionsetup{justification=raggedright,singlelinecheck=false}
-  \caption{Per-token cumulative log-likelihood of a representative sequence generated by CP-Fuse and \(\cpdelta\) under the two base models. On a random \texttt{Python instructions} generation, the cumulative log-likelihoods under the two base models remain much closer for CP-Fuse than for \(\cpdelta\).}
+  \caption{Per-token cumulative log-likelihood of a random sequence generated by CP-Fuse and \(\cpdelta\) under the two StarCoder base models fine-tuned on \texttt{Python instructions}. Curves \(p^{(i)}_{\text{CP-Fuse}}\) and \(p^{(i)}_{\text{CP-}\Delta}\) evaluate each method's generated sequence under base model \(\modeli\). The cumulative log-likelihoods under \(\modelone\) and \(\modeltwo\) remain much closer for CP-Fuse than for \(\cpdelta\).}
   \label{fig:cpfuse-cumulative}
 \end{figure}
 
@@ -208,19 +211,19 @@ Each dataset is partitioned into two non-overlapping subsets of \(3{,}000\) samp
 The evaluation covers four task settings. For abstract generation, LLaMA 2 7B \citep{touvron2023llama} is fine-tuned on \texttt{MathAbstracts} \citep{zhang2024autonomous}, using paper titles as prompts. For storytelling, LLaMA 2 is also fine-tuned on \texttt{WritingPrompts} \citep{fan2018hierarchical}, using story topics as prompts. For code generation, StarCoder 7B \citep{li2023starcoder} is fine-tuned on \texttt{Python instructions}, where prompts are natural-language task descriptions and responses are Python solutions. StarCoder is also fine-tuned on \texttt{APPS} \citep{hendrycksapps2021}; for this setting, code quality is additionally evaluated on \texttt{MBPP} \citep{austin2021program} and \texttt{HumanEval} \citep{chen2021evaluating}.
 
 \paragraph{Copyright-protection metrics.}
-We evaluate copyright infringement by promting the models with the initial part of samples from their fine-tuning splits, and comparing the generated outputs against the original samples. For every infringement metric, the reported quantity is the average value above the \(95\)th percentile. The motivation is that legal risk is often driven not by average behavior, but by a small number of long copied passages.
+We evaluate copyright infringement by prompting the models with the initial part of samples from their fine-tuning splits, and comparing the generated outputs against the original samples. For every infringement metric, the reported quantity is the average value above the \(95\)th percentile. The motivation is that legal risk is often driven not by average behavior, but by a small number of long copied passages.
 
-The main text reports two kinds of copyright metrics. For exact memorization, it uses average Exact Matching (EM) length and, for code, the JPlag plagiarism score \citep{prechelt2002finding}. For approximate memorization, it uses the BLEU score and normalized Levenshtein distance. The appendix complements these with Infringement Count at \(50\) and \(160\) characters, together with additional metrics such as Dolos \citep{maertens2022dolos} for \texttt{Python instructions}; see Appendix~\ref{app:cpfuse-benchmarks}.
+The main text reports three kinds of copyright metrics. For exact memorization, it uses average Exact Matching (EM) length. For approximate memorization, it uses the BLEU score and normalized Levenshtein distance. For code generation, it additionally reports the JPlag plagiarism score \citep{prechelt2002finding}, which captures structural similarity beyond byte-by-byte matching. The appendix complements these with Infringement Count at \(50\) and \(160\) characters, where the \(160\)-character threshold aligns with regulatory compliance guidelines \citep{mueller2024llms}, together with additional metrics such as Dolos \citep{maertens2022dolos} for \texttt{Python instructions}; see Appendix~\ref{app:cpfuse-benchmarks}.
 
 \paragraph{Utility metrics.}
-Utility is evaluated on held-out test data not seen during fine-tuning. For text-based tasks, fluency is measured with the Prometheus-v2 judge model \citep{kim2024prometheus} on generations from \texttt{WritingPrompts}. For code-based tasks, utility is measured by pass@1 \citep{chen2021evaluating} using the unit tests provided by \texttt{APPS}, \texttt{MBPP}, and \texttt{HumanEval}.
+Utility is evaluated on a separate held-out test set of \(500\) prompts per dataset not seen during fine-tuning. For text-based tasks, fluency is measured with the Prometheus-v2 judge model \citep{kim2024prometheus} on generations from \texttt{WritingPrompts}. For code-based tasks, utility is measured by pass@1 \citep{chen2021evaluating} using the unit tests provided by \texttt{APPS}, \texttt{MBPP}, and \texttt{HumanEval}.
 
 \paragraph{Baselines and decoding.}
 CP-Fuse is compared against three inference-time protection baselines: token-wise \(\cpdelta\) \citep{vyas2023provable}, the System Prompt self-reminder baseline \citep{xie2023defending}, and MemFree decoding \citep{ippolito2023preventing}. For CP-Fuse, the grid discretizes the interval \([0,2)\) into \(10\) steps and \([2,10]\) into \(9\) steps. Greedy decoding is used for the main benchmark tables, while Appendix~\ref{app:cpfuse-variants} reports temperature-sampling and grid-ablation variants.
 
 \begin{table}[tbp]
   \centering
-  \caption{Copyright-infringement metrics averaged at the \(95\)th percentile for the \texttt{Python instructions}, \texttt{MathAbstracts}, and \texttt{WritingPrompts} datasets across fine-tuning splits. Metrics include Exact Matching (EM), JPlag (JP), BLEU score (BLE), and normalized Levenshtein distance (LEV).}
+  \caption{Copyright-infringement metrics averaged at the \(95\)th percentile for the \texttt{Python instructions}, \texttt{MathAbstracts}, and \texttt{WritingPrompts} datasets across fine-tuning splits. Metrics include Exact Matching (EM), JPlag (JP), BLEU score (BLE), and normalized Levenshtein distance (LEV). Arrows indicate the preferred direction: \(\downarrow\) lower is better, \(\uparrow\) higher is better.}
   \label{tab:cpfuse-copyright}
   \resizebox{\textwidth}{!}{%
   \begin{tabular}{l l|c c|c c c|c c c}
@@ -260,11 +263,11 @@ CP-Fuse is compared against three inference-time protection baselines: token-wis
 \subsection{Main Results}
 \label{sec:cpfuse-main-results}
 
-We now address the first evaluation question: whether CP-Fuse reduces the reproduction of memorized copyrighted material relative to overfitted base models and the main inference-time baselines. Table~\ref{tab:cpfuse-copyright} shows a consistent pattern across both text and code tasks. CP-Fuse sharply suppresses the longest copied extracts, reducing exact matches by more than a factor of \(25\) relative to the overfitted models across fine-tuning splits.
+We now address the first evaluation question: whether CP-Fuse reduces the reproduction of memorized copyrighted material relative to overfitted base models and the main inference-time baselines. Table~\ref{tab:cpfuse-copyright} shows a consistent pattern across both text and code tasks. CP-Fuse sharply suppresses the longest copied extracts, reducing exact matches by more than a factor of \(20\) relative to the overfitted models on the three main datasets and both fine-tuning splits.
 
 The baselines help interpret this result. The System Prompt baseline leaves the core problem largely unresolved, suggesting that instruction-level reminders are too weak once fine-tuning has already induced strong memorization. MemFree reduces copying more noticeably, but it still allows substantially longer memorized spans than CP-Fuse. The approximate memorization metrics point in the same direction: CP-Fuse lowers quasi-verbatim similarity as well, and on code generation JPlag detects almost no copying for CP-Fuse while still indicating clear infringement for the baselines.
 
-The closest conceptual comparison is token-wise \(\cpdelta\), since both methods rely on model fusion at inference time. Here the difference is especially revealing: fixed-weight fusion is not sufficient, and \(\cpdelta\) still produces exact matches that are often \(4\) to \(7\) times longer than those of CP-Fuse. The more exhaustive appendix tables continue this pattern across additional approximate-memorization metrics and specialized code-plagiarism scores; see Appendix~\ref{app:cpfuse-benchmarks}. Appendix~\ref{app:cpfuse-variants} also reports smaller-backbone, temperature-sampling, early-stopped, grid-ablation, and three-model extensions, all of which support the same qualitative conclusion.
+The closest conceptual comparison is token-wise \(\cpdelta\), since both methods rely on model fusion at inference time. Here the difference is especially revealing: fixed-weight fusion is not sufficient, and \(\cpdelta\) still produces exact matches that are up to about \(6\) times longer than those of CP-Fuse. The more exhaustive appendix tables continue this pattern across additional approximate-memorization metrics and specialized code-plagiarism scores; see Appendix~\ref{app:cpfuse-benchmarks}. Appendix~\ref{app:cpfuse-variants} also reports smaller-backbone, temperature-sampling, early-stopped, grid-ablation, and three-model extensions, all of which support the same qualitative conclusion.
 
 
 \paragraph{Comparison between CP-Fuse and \(\cpdelta\).}
@@ -283,7 +286,7 @@ Figure~\ref{fig:cpfuse-hist} makes the difference to \(\cpdelta\) especially cle
     \includegraphics[width=\textwidth]{papers/CP_Fuse/figures/abstracts_llama2_cut.pdf}
     \caption{\texttt{MathAbstracts}}
   \end{subfigure}
-  \caption{Histogram of exactly matched substring lengths above \(40\) characters generated by \(\cpdelta\) and CP-Fuse for the \texttt{Python instructions} and \texttt{MathAbstracts} datasets. The distribution under \(\cpdelta\) is markedly heavier-tailed, indicating more persistent long-form regurgitation.}
+  \caption{Histogram of exactly matched substring lengths above \(40\) characters generated by \(\cpdelta\) and CP-Fuse for the \texttt{Python instructions} and \texttt{MathAbstracts} datasets. Each panel annotates the longest matched substring and one randomly sampled match above \(40\) characters. The distribution under \(\cpdelta\) is markedly heavier-tailed, indicating more persistent long-form regurgitation.}
   \label{fig:cpfuse-hist}
 \end{figure}
 
@@ -298,7 +301,7 @@ The baseline comparison helps clarify why. Filtering-based protection, most visi
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
-\caption{Utility metrics across datasets. Pass@1 is reported for \texttt{APPS}, \texttt{MBPP}, and \texttt{HumanEval}; fluency is reported for \texttt{WritingPrompts}.}
+\caption{Utility metrics across datasets. Pass@1 is reported for \texttt{APPS}, \texttt{MBPP}, and \texttt{HumanEval}; fluency is reported for \texttt{WritingPrompts}. Higher values (\(\uparrow\)) are better.}
 \label{tab:cpfuse-utility}
 \begin{tabular}{lcccc}
 \toprule
@@ -326,11 +329,11 @@ This result matters because it shows that CP-Fuse is not only a fallback for mod
 
 \begin{table}[!tbp]
 \centering
-\caption{Wrapper experiments with Goldfish-loss models on \texttt{WritingPrompts}.}
+\caption{Wrapper experiments with Goldfish-loss models on \texttt{WritingPrompts}. Lower values (\(\downarrow\)) indicate stronger copyright protection.}
 \label{tab:cpfuse-goldfish}
 \begin{tabular}{llcc}
 \toprule
-\textbf{Model} & \textbf{Split} & \textbf{EM} & \textbf{BLE} \\
+\textbf{Model} & \textbf{Split} & \textbf{EM}\(\downarrow\) & \textbf{BLE}\(\downarrow\) \\
 \midrule
 \multirow{2}{*}{GL Split 1}
 & Split 1 & 84.68 & 0.11 \\
@@ -352,14 +355,15 @@ This result matters because it shows that CP-Fuse is not only a fallback for mod
 
 We finally consider a prompt-side extraction setting on \texttt{WritingPrompts}. In this threat model, an adversary has black-box access to CP-Fuse, the prompts used during fine-tuning, and a prefix of the original story, and aims to steer the model toward regurgitating a memorized training sample.
 
-Figure~\ref{fig:cpfuse-prefix} shows that the protection remains largely intact. As the provided prefix becomes longer, exact matching stays relatively stable, and although the BLEU score rises slightly, it remains substantially below that of the overfitted models and baselines. Appendix~\ref{chap:appendix-cpfuse} records representative qualitative examples of these prefix attacks.
+Figure~\ref{fig:cpfuse-prefix} shows that the protection remains largely intact. As the provided prefix becomes longer, exact matching stays relatively stable, and although the BLEU score rises slightly, it remains substantially below that of the overfitted models and baselines. Appendix~\ref{app:cpfuse-prefix-examples} records a representative qualitative example of these prefix attacks.
 
-\begin{center}
+\begin{figure}[tbp]
+  \centering
   \captionsetup{justification=raggedright,singlelinecheck=false}
   \includegraphics[width=0.62\textwidth]{papers/CP_Fuse/figures/plot_attacks.pdf}
-  \captionof{figure}{Prefix-prompt extraction experiments on \texttt{WritingPrompts}. The figure reports how Exact Matching and BLEU change as the prefix length increases when CP-Fuse is applied to overfitted models from split 1.}
+  \caption{Prefix-prompt extraction experiments on \texttt{WritingPrompts}. The figure reports how Exact Matching and BLEU change as the prefix length (in characters) increases when CP-Fuse is applied to overfitted models from split 1.}
   \label{fig:cpfuse-prefix}
-\end{center}
+\end{figure}
 
 \section{Chapter Summary}
 

@@ -18,6 +18,5 @@ build/
 *.toc
 *.vrb
 *.ist
-thesis.pdf
 *.pdf.png
 .DS_Store
