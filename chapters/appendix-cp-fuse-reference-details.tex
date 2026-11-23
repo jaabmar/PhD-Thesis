@@ -3,31 +3,33 @@
 \label{app:cpfuse-reference-metrics-copy}
 
 \paragraph{Exact Matching (EM).}
-Exact Matching (EM) measures the length of the longest matching substring between the model's output and the ground truth text. This metric is useful for assessing how well the model captures continuous segments of the reference text.
+Exact Matching (EM) measures the length, in characters (after stripping whitespace), of the longest matching substring between the model's output and the ground truth text. This metric is useful for assessing how well the model captures continuous segments of the reference text.
 
 \paragraph{Infringement Count (\(\mathrm{IC}_k\)).}
 Infringement Count (\(\mathrm{IC}_k\)) captures the number of \(k\)-grams (substrings of length \(k\)) in the model's output that have an exact match in the ground truth text. This metric assesses content similarity and potential copyright infringement based on the number of matching \(k\)-grams.
 
 \paragraph{ROUGE-L (ROU).}
-ROUGE (Recall-Oriented Understudy for Gisting Evaluation) measures the overlap of \(n\)-grams, word sequences, and word pairs between the generated text and reference text. It focuses on recall, assessing how much of the reference text is captured by the generated text. The value of ROUGE ranges from \(0\) to \(1\), where \(1\) indicates perfect recall. The most common variant, ROUGE-L, is computed based on the longest common subsequence (LCS):
+ROUGE (Recall-Oriented Understudy for Gisting Evaluation) measures the overlap of \(n\)-grams, word sequences, and word pairs between the generated text and reference text. ROUGE-L is based on the longest common subsequence (LCS), with recall given by
 \[
-\text{ROUGE-L} = \frac{\text{LCS}}{\text{length of reference text}}.
+\text{ROUGE-L}_{\text{recall}} = \frac{\text{LCS}}{\text{length of reference text}},
 \]
-We implement ROUGE-L with the \texttt{rouge\_score} package.
+and precision defined analogously by dividing by the length of the generated text (with F1 combining the two); values range from \(0\) to \(1\). We implement ROUGE-L with the \texttt{rouge\_score} package.
 
 \paragraph{BLEU (BLE).}
-BLEU (Bilingual Evaluation Understudy) measures the overlap of \(n\)-grams between the generated text and reference text, with a penalty for shorter outputs. It is computed using a modified precision score that includes a brevity penalty to discourage overly short translations. The value of BLEU ranges from \(0\) to \(1\), where \(1\) indicates perfect precision. For this study, we use uniform weights for \(n\)-grams:
+BLEU (Bilingual Evaluation Understudy) measures the overlap of \(n\)-grams between the generated text and reference text, with a penalty for shorter outputs. It is computed using a modified precision score that includes a brevity penalty to discourage overly short translations. The value of BLEU ranges from \(0\) to \(1\), where \(1\) indicates perfect precision. For this study, we use BLEU-\(4\) with uniform weights \(1/4\) on \(1\)- through \(4\)-grams:
 \[
 \text{BLEU} = \text{BP} \times \exp\left( \sum_{n=1}^{N} \frac{1}{N} \log p_n \right),
 \]
-where \(\text{BP}\) is the brevity penalty, \(p_n\) is the precision for \(n\)-grams, and \(N\) is the highest order of \(n\)-grams considered. For our experiments, we average equally BLEU-1, BLEU-2, BLEU-3, and BLEU-4. We implement BLEU with the \texttt{nltk} package with default hyperparameters and using the smoothing function.
+where \(\text{BP}\) is the brevity penalty, \(p_n\) is the modified precision for \(n\)-grams, and \(N = 4\) is the highest order of \(n\)-grams considered. We implement BLEU with the \texttt{nltk} package with default uniform weights and smoothing.
 
 \paragraph{METEOR (MET).}
-METEOR (Metric for Evaluation of Translation with Explicit ORdering) evaluates the alignment between the generated text and reference text by considering synonyms, stemming, and exact matches. Unlike BLEU, which focuses on \(n\)-gram precision and typically measures performance at the corpus level, METEOR emphasizes unigram recall and aims to better align with human judgment at the sentence level. The value of METEOR ranges from \(0\) to \(1\), where \(1\) indicates perfect alignment. It combines precision, recall, and a fragmentation penalty to account for the alignment of chunks. It is computed as
+METEOR (Metric for Evaluation of Translation with Explicit ORdering) evaluates the alignment between the generated text and reference text by considering synonyms, stemming, and exact matches. Unlike BLEU, which focuses on \(n\)-gram precision and typically measures performance at the corpus level, METEOR emphasizes unigram recall and aims to better align with human judgment at the sentence level. The value of METEOR ranges from \(0\) to \(1\), where \(1\) indicates perfect alignment. It combines precision \(P_{\mathrm{unigram}}\), recall \(R_{\mathrm{unigram}}\), and a fragmentation penalty \(P_{\mathrm{frag}}\) to account for the alignment of chunks:
 \[
-\text{METEOR} = F_{\mathrm{mean}} \times (1 - P),
+\text{METEOR} = F_{\mathrm{mean}} \times (1 - P_{\mathrm{frag}}),
+\qquad
+F_{\mathrm{mean}} = \frac{10\, P_{\mathrm{unigram}} R_{\mathrm{unigram}}}{R_{\mathrm{unigram}} + 9\, P_{\mathrm{unigram}}},
 \]
-where \(F_{\mathrm{mean}}\) is the harmonic mean of precision and recall, and \(P\) is the fragmentation penalty. We implement METEOR with the \texttt{nltk} package with default hyperparameters.
+where \(F_{\mathrm{mean}}\) is a recall-weighted harmonic mean of unigram precision and recall. We implement METEOR with the \texttt{nltk} package with default hyperparameters.
 
 \paragraph{Jaccard Similarity (JAC).}
 Jaccard Similarity (JAC) measures the intersection over the union of the sets of words in the generated text and reference text. It provides a simple measure of similarity, indicating how many words are shared between the two texts relative to the total number of unique words. The value of Jaccard Similarity ranges from \(0\) to \(1\), where \(1\) indicates identical sets. It is computed as
@@ -37,10 +39,10 @@ Jaccard Similarity (JAC) measures the intersection over the union of the sets of
 where \(A\) and \(B\) are the sets of words in the generated text and reference text, respectively.
 
 \paragraph{Cosine Similarity (COS).}
-Cosine Similarity (COS) measures the cosine of the angle between the word vectors of the generated text and reference text. This metric assesses the similarity in the direction of the vectors, providing an indication of how similar the two texts are in terms of their overall content distribution. The value of Cosine Similarity ranges from \(0\) to \(1\), where \(1\) indicates perfect similarity.
+Cosine Similarity (COS) measures the cosine of the angle between the nonnegative word-frequency vectors of the generated text and reference text. For such nonnegative vectors, Cosine Similarity ranges from \(0\) to \(1\), where \(1\) indicates identical normalized word-frequency distributions.
 
 \paragraph{Semantic Similarity (SEM).}
-Semantic Similarity (SEM) evaluates the similarity between the generated text and reference text using a semantic model. This metric captures the meaning and context of the texts, providing a measure of how well the model understands and replicates the underlying semantics of the reference text. The value of Semantic Similarity ranges from \(0\) to \(1\), where \(1\) indicates perfect semantic alignment. We compute semantic similarity using the \texttt{spacy} package with the English pipeline optimized for CPU.
+Semantic Similarity (SEM) evaluates the cosine similarity between dense document representations of the generated text and reference text produced by a semantic model. In general, cosine similarity between dense embeddings ranges from \(-1\) to \(1\), where \(1\) indicates identical representations. We compute semantic similarity using the \texttt{spacy} package with the English pipeline optimized for CPU.
 
 \paragraph{Levenshtein Distance (LEV).}
 Levenshtein Distance (LEV) measures the minimum number of single-character edits (insertions, deletions, or substitutions) required to change the generated text into the reference text. A higher Levenshtein distance indicates greater dissimilarity, while a lower distance indicates greater similarity. The value of the normalized Levenshtein distance ranges from \(0\) to \(1\), where \(0\) indicates identical texts. We compute the normalized Levenshtein distance with a sliding window to handle cases where the lengths of the generated and reference texts differ significantly.

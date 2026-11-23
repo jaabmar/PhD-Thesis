@@ -154,7 +154,7 @@ Tables~\ref{tab:app-cpfuse-python-detailed}--\ref{tab:app-cpfuse-writing-detaile
 
 \begin{table}[!tbp]
 \centering
-\caption{Detailed copyright metrics for StarCoder on the \texttt{Python instructions} dataset. Metrics are averaged at the \(95\)th percentile across splits. Arrows indicate preferred direction: \(\downarrow\) lower is better, \(\uparrow\) higher is better.}
+\caption{Detailed copyright metrics for StarCoder on the \texttt{Python instructions} dataset. Metrics are averaged over the worst \(5\%\) infringing tail (above the \(95\)th percentile for \(\downarrow\) metrics; below the \(5\)th percentile for LEV) across splits. Arrows indicate preferred direction: \(\downarrow\) lower is better, \(\uparrow\) higher is better.}
 \label{tab:app-cpfuse-python-detailed}
 \scriptsize
 \resizebox{\textwidth}{!}{%
@@ -361,7 +361,7 @@ We also evaluate GPT-2 XL and Phi-2 \citep{javaheripi2023phi} on \texttt{MathAbs
 
 \begin{table}[!tbp]
 \centering
-\caption{Perplexity (PPL) and Exact Matching (EM) averaged at the \(95\)th percentile for GPT-2 XL and Phi-2 on \texttt{MathAbstracts}. Lower values (\(\downarrow\)) are better.}
+\caption{Perplexity (PPL) and Exact Matching (EM) averaged above the \(95\)th percentile for GPT-2 XL and Phi-2 on \texttt{MathAbstracts}. Lower values (\(\downarrow\)) are better.}
 \label{tab:app-cpfuse-gpt}
 \scriptsize
 \begin{tabular}{ll|cc|cc}
@@ -436,7 +436,7 @@ We also apply both token-wise \(\cpdelta\) and CP-Fuse on top of early-stopped m
 
 \begin{table}[!tbp]
 \centering
-\caption{Perplexity (PPL) and Exact Matching (EM) at the \(95\)th percentile for early-stopped models (stopped at \(3\) epochs) wrapped by \(\cpdelta\) and CP-Fuse: StarCoder on \texttt{Python instructions}, and Phi-2, GPT-2 XL, and LLaMA 2 on \texttt{MathAbstracts}. Lower values (\(\downarrow\)) are better.}
+\caption{Perplexity (PPL) and Exact Matching (EM) averaged above the \(95\)th percentile for early-stopped models (stopped at \(3\) epochs) wrapped by \(\cpdelta\) and CP-Fuse: StarCoder on \texttt{Python instructions}, and Phi-2, GPT-2 XL, and LLaMA 2 on \texttt{MathAbstracts}. Lower values (\(\downarrow\)) are better.}
 \label{tab:app-cpfuse-early-stopped}
 \scriptsize
 \begin{adjustbox}{max width=\textwidth}
@@ -475,7 +475,7 @@ The token-wise CP-Fuse update is implemented by grid search over the log-linear 
 
 \begin{table}[!tbp]
 \centering
-\caption{Ablation study for the grid size used by CP-Fuse: Perplexity (PPL) and Exact Matching (EM) at the \(95\)th percentile for StarCoder on \texttt{Python instructions}, and Phi-2 and LLaMA 2 on \texttt{MathAbstracts}. Lower values (\(\downarrow\)) are better.}
+\caption{Ablation study for the grid size used by CP-Fuse: Perplexity (PPL) and Exact Matching (EM) averaged above the \(95\)th percentile for StarCoder on \texttt{Python instructions}, and Phi-2 and LLaMA 2 on \texttt{MathAbstracts}. Lower values (\(\downarrow\)) are better.}
 \label{tab:app-cpfuse-grid-ablation}
 \scriptsize
 \begin{tabular}{ll|cc|cc|cc}
