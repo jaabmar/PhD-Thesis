@@ -1,7 +1,7 @@
 \chapter{Background}
 \label{chap:background}
 
-The three technical chapters of this thesis study outputs of statistical and machine learning methods that are used in practice and must satisfy a formal property. A causal conclusion drawn from observational data should not be explained away by hidden confounding, a synthetic dataset should not expose the private records of individuals, and a language model should not reproduce copyrighted text from its training data. Each section below introduces the mathematical setup for one of these settings and states the problem addressed in the corresponding chapter.
+This chapter introduces the mathematical background for the three technical chapters of the thesis: causal inference and sensitivity analysis (Section~\ref{sec:bg-causal}), differential privacy and optimal transport (Section~\ref{sec:bg-dp}), and autoregressive language models and copyright protection (Section~\ref{sec:bg-lm}).
 
 \section{Causal Inference from Observational Data}
 \label{sec:bg-causal}
@@ -24,11 +24,11 @@ In a randomized trial, treatment is assigned independently of all covariates, ob
 \end{align*}
 where \(e(X) = \mathbb{P}(T = 1 \mid X)\) is the \emph{propensity score}. Under consistency and strong ignorability, \(\mu(X) = \mathbb{E}[Y \mid X, T = 1] - \mathbb{E}[Y \mid X, T = 0]\).
 
-Unconfoundedness fails when unobserved confounders \(U\) affect both treatment \(T\) and the potential outcomes \((Y(0), Y(1))\). In that case, conditioning on \(X\) alone leaves a residual dependence between \(T\) and \((Y(0), Y(1))\), because treated and control units with the same \(X\) have different distributions of \(U\). As a result, \(\mathbb{E}[Y \mid X, T = 1] - \mathbb{E}[Y \mid X, T = 0] \neq \mu(X)\) in general [so what?? make a poitn on identifiabvility].
+Unconfoundedness fails when unobserved confounders \(U\) affect both treatment \(T\) and the potential outcomes \((Y(0), Y(1))\). Treated and control units with the same \(X\) then differ in their distribution of \(U\), so \(\mathbb{E}[Y \mid X, T = 1] - \mathbb{E}[Y \mid X, T = 0] \neq \mu(X)\) in general. Because \(U\) is unobserved, \(\mu(X)\) is no longer point-identified from the distribution of \((X, T, Y)\): different treatment effects can induce the same observational distribution, and no amount of observational data alone can recover \(\mu(X)\).
 
 \subsection{Sensitivity Analysis}
 
-When \(U\) is unobserved, the strength of hidden confounding cannot be estimated from observational data alone. Sensitivity analysis \citep{cornfield59} instead fixes a bound on confounding strength and asks which treatment effects remain compatible with the observed data. Chapter~\ref{chap:confounding-test} adopts the marginal sensitivity model of \citet{tan2006distributional}. For \(\Gamma \geq 1\), it bounds the odds ratio between the full propensity score \(e(X, U) = \mathbb{P}(T = 1 \mid X, U)\) and the observed propensity score \(e(X)\):
+When \(U\) is unobserved, the strength of hidden confounding cannot be estimated from observational data alone. Sensitivity analysis \citep{cornfield59} instead fixes a bound on confounding strength and asks which treatment effects remain compatible with the observed data. Chapter~\ref{chap:confounding-test} uses the marginal sensitivity model of \citet{tan2006distributional}. For \(\Gamma \geq 1\), it bounds the odds ratio between the full propensity score \(e(X, U) = \mathbb{P}(T = 1 \mid X, U)\) and the observed propensity score \(e(X)\):
 \[
   \frac{1}{\Gamma}
   \leq
@@ -37,36 +37,30 @@ When \(U\) is unobserved, the strength of hidden confounding cannot be estimated
   \Gamma
   \qquad\text{almost surely.}
 \]
-At \(\Gamma = 1\), the treatment odds do not depend on \(U\) given \(X\), recovering unconfoundedness. Larger values of \(\Gamma\) allow stronger confounding and widen the interval of treatment effects compatible with the observational distribution.
+At \(\Gamma = 1\), the treatment odds do not depend on \(U\) given \(X\), so there is no hidden confounding. Larger values of \(\Gamma\) allow stronger confounding and widen the interval of treatment effects compatible with the observational distribution.
 
 \subsection{Randomized Trials as a Reference}
 
-When both a randomized trial and an observational study of the same treatment are available, the trial can serve as an external reference. Because trial eligibility criteria often shift the covariate distribution \citep{rothwell2005external}, comparing the two sources requires \emph{CATE transportability} \citep{o2014generalizing,colnet2020causal,degtiar2023review}:
+When both a randomized trial and an observational study of the same treatment are available, the trial can be used as a reference. Because trial eligibility criteria often shift the covariate distribution \citep{rothwell2005external}, comparing the two sources requires \emph{CATE transportability} \citep{o2014generalizing,colnet2020causal,degtiar2023review}:
 \[
   \mathbb{E}_{\mathrm{os}}\bigl[Y(1) - Y(0) \mid X\bigr]
   =
   \mathbb{E}_{\mathrm{rct}}\bigl[Y(1) - Y(0) \mid X\bigr].
 \]
-Under this assumption (together with covariate support overlap), any discrepancy between the randomized trial and the observational sensitivity interval at a candidate value \(\Gamma\) is evidence that the true confounding strength exceeds \(\Gamma\). Rather than only testing for the presence of any confounding, Chapter~\ref{chap:confounding-test} tests whether hidden confounding exceeds a given \(\Gamma\) and inverts these tests to obtain a lower bound on the true strength.
+Under this assumption and covariate support overlap, any disagreement between the trial estimate and the observational sensitivity interval at a given \(\Gamma\) indicates that the true confounding strength exceeds \(\Gamma\). Chapter~\ref{chap:confounding-test} turns this into statistical tests for a given \(\Gamma\) and inverts them to obtain a lower bound on the true confounding strength.
 
 \section{Differential Privacy and Private Data Synthesis}
 \label{sec:bg-dp}
 
 \subsection{Differential Privacy}
 
-Differential privacy \citep{dp,dwork2014algorithmic} is a formal property of a randomized algorithm \(\mathcal{A}\) that bounds how much any single record in a dataset can influence its output. Write \(D \sim D'\) if two datasets of the same size differ in exactly one record. The algorithm \(\mathcal{A}\) is \((\epsilon, \delta)\)-differentially private if, for all \(D \sim D'\) and all measurable sets \(B\) of outputs,
+Differential privacy \citep{dp,dwork2014algorithmic} is a property of a randomized algorithm \(\mathcal{A}\) that bounds how much any single record in a dataset can influence its output. Write \(D \sim D'\) if two datasets of the same size differ in exactly one record. The algorithm \(\mathcal{A}\) is \((\epsilon, \delta)\)-differentially private if, for all \(D \sim D'\) and all measurable sets \(B\) of outputs,
 \[
   \mathbb{P}\bigl[\mathcal{A}(D) \in B\bigr]
   \leq
   e^{\epsilon}\, \mathbb{P}\bigl[\mathcal{A}(D') \in B\bigr] + \delta.
 \]
-Here \(\epsilon > 0\) limits the multiplicative change in output probabilities and \(\delta \geq 0\) is a small additive slack; smaller values give stronger protection.
-
-Two structural properties make differential privacy compositional in practice \citep{dwork2014algorithmic}: [make sure these are correct and notation makes sense otherwise remove if not confident or too verbose]
-\begin{itemize}
-  \item \emph{Post-processing:} for any (possibly randomized) mapping \(f\) that does not access \(D\), \(f \circ \mathcal{A}\) remains \((\epsilon, \delta)\)-differentially private.
-  \item \emph{Composition:} releasing the outputs of mechanisms \(\mathcal{A}_1, \dots, \mathcal{A}_k\) with parameters \((\epsilon_j, \delta_j)\) on \(D\) is \((\sum_{j=1}^k \epsilon_j, \sum_{j=1}^k \delta_j)\)-differentially private.
-\end{itemize}
+Here \(\epsilon > 0\) bounds the multiplicative change in output probabilities and \(\delta \geq 0\) is an additive slack; smaller values give stronger protection. A key property is post-processing \citep{dwork2014algorithmic}: for any (possibly randomized) mapping \(f\) that does not access \(D\), the composition \(f \circ \mathcal{A}\) remains \((\epsilon, \delta)\)-differentially private.
 
 \subsection{Private Synthetic Tabular Data}
 
@@ -76,11 +70,11 @@ Marginal-based methods \citep{mst,aim} summarize \(D\) through its empirical mar
 \[
   \nu_S[D] = \frac{1}{n} \sum_{i=1}^n \delta_{x_{i,S}},
 \]
-where \(x_{i,S}\) restricts \(x_i\) to the coordinates in \(S\). They perturb each \(\nu_S[D]\) with calibrated noise (for example, via the Gaussian mechanism \citep{dwork2014algorithmic}) to obtain noisy marginals \(\hat{\nu}_S\), and then generate \(D_{\mathrm{syn}}\) so that \(\nu_S[D_{\mathrm{syn}}] \approx \hat{\nu}_S\) for all \(S \in \mathcal{S}\). Existing generators typically fit a probabilistic graphical model \citep{mckenna2019graphical}, which becomes sensitive to the number of marginals and is not well suited to enforcing domain-specific constraints.
+where \(x_{i,S}\) restricts \(x_i\) to the coordinates in \(S\). They perturb each \(\nu_S[D]\) with calibrated noise (for example, via the Gaussian mechanism \citep{dwork2014algorithmic}) to obtain noisy marginals \(\hat{\nu}_S\), and then generate \(D_{\mathrm{syn}}\) so that \(\nu_S[D_{\mathrm{syn}}] \approx \hat{\nu}_S\) for all \(S \in \mathcal{S}\). Existing generators typically fit a probabilistic graphical model to \(\{\hat{\nu}_S\}_{S \in \mathcal{S}}\) and sample from it \citep{mckenna2019graphical}, whereas Chapter~\ref{chap:privpgd} optimizes synthetic particles directly.
 
-\subsection{Comparing Distributions with Optimal Transport} [no need to justify why we need OT sipmply an intro of the tools in the chapter]
+\subsection{Optimal Transport}
 
-For continuous or ordered features, cellwise discrepancies such as total variation distance ignore the geometry of the domain, treating mismatches between neighboring and distant cells identically. Optimal transport incorporates this geometry \citep{torres2021survey}: for probability measures \(\mu\) and \(\nu\) on \(\Omega \subset \RR^p\) and \(q \geq 1\), the \(q\)-Wasserstein distance is
+Optimal transport defines distances between probability distributions that account for the geometry of the underlying space \citep{torres2021survey}. For probability measures \(\mu\) and \(\nu\) on \(\Omega \subset \RR^p\) and \(q \geq 1\), the \(q\)-Wasserstein distance is
 \[
   W_q(\mu, \nu)
   =
@@ -91,7 +85,7 @@ For continuous or ordered features, cellwise discrepancies such as total variati
 \]
 where \(\Pi(\mu, \nu)\) is the set of couplings with marginals \(\mu\) and \(\nu\).
 
-Computing \(W_q\) exactly scales roughly cubically in the number of support points. The \emph{sliced Wasserstein distance} \citep{bonneel2015sliced,kolouri2018sliced} averages one-dimensional Wasserstein distances over directions on the unit sphere \(\mathbb{S}^{p-1}\):
+Computing \(W_q\) exactly scales roughly cubically in the number of support points. The \emph{sliced Wasserstein distance} \citep{bonneel2015sliced,kolouri2018sliced} instead averages one-dimensional Wasserstein distances over directions on the unit sphere \(\mathbb{S}^{p-1}\):
 \[
   \SW_q(\mu, \nu)
   =
@@ -100,7 +94,7 @@ Computing \(W_q\) exactly scales roughly cubically in the number of support poin
     W_q^q\bigl(g^\theta_{\#}\mu, g^\theta_{\#}\nu\bigr)\, d\sigma(\theta)
   \right)^{1/q},
 \]
-where \(g^\theta(x) = \langle x, \theta \rangle\) and \(\sigma\) is the uniform measure on \(\mathbb{S}^{p-1}\). Each one-dimensional transport problem reduces to sorting. Chapter~\ref{chap:privpgd} uses this objective to optimize synthetic particles directly from privatized marginals while supporting domain-specific constraints.
+where \(g^\theta_{\#}\mu\) is the pushforward of \(\mu\) under \(g^\theta(x) = \langle x, \theta \rangle\) and \(\sigma\) is the uniform measure on \(\mathbb{S}^{p-1}\). Each one-dimensional transport problem reduces to sorting, which makes \(\SW_q\) practical for the particle optimization in Chapter~\ref{chap:privpgd}.
 
 \section{Language Models, Memorization, and Copyright}
 \label{sec:bg-lm}
@@ -119,7 +113,7 @@ Language models can memorize passages from their training corpora and reproduce 
 
 \subsection{A Formal Criterion for Copyright Protection}
 
-A formal inference-time criterion requires a divergence between distributions. For distributions \(p\) and \(q\) on \(V\), the Kullback--Leibler (KL) divergence is
+To compare distributions \(p\) and \(q\) on \(V\), we use the Kullback--Leibler (KL) divergence,
 \[
   \KL(p \,\|\, q) = \sum_{y \in V} p(y) \log \frac{p(y)}{q(y)},
 \]
@@ -129,6 +123,4 @@ Under the Near Access Free (\(k\)-NAF) framework of \citet{vyas2023provable}, tw
 \[
   \max_{i \in \{1, 2\}} \Delta\bigl(\model(\cdot \mid x) \,\|\, \modeli(\cdot \mid x)\bigr) \leq k.
 \]
-Because at least one base model was not trained on any given protected work and thus assigns it low probability, staying within divergence \(k\) of both prevents \(\model\) from assigning high probability to that work. While \citet{vyas2023provable} propose \(\cpdelta\) to combine \(\modelone\) and \(\modeltwo\), its sequence-level form is intractable and its token-wise variant uses fixed weights. Chapter~\ref{chap:cpfuse} instantiates \(k\)-NAF with \(\Delta = \KL\) and combines the base models at decoding time using adaptive, history-dependent weights.
-
-[OK NOW IT GENERALLY LOOKS ALRIGHT - PLEASE MAKE A FULL PASS AND TRY TO REWRITE/REMOVE THE AREAS THAT SOUND THE MOST LLM GENBERATED OR ARE NOT USEFUL OR TOO VERBOSE]
+Because at least one base model was not trained on any given protected work and thus assigns it low probability, staying within divergence \(k\) of both prevents \(\model\) from assigning high probability to that work. \citet{vyas2023provable} also propose \(\cpdelta\) to combine \(\modelone\) and \(\modeltwo\), though its sequence-level form is intractable and its token-wise variant uses fixed weights. Chapter~\ref{chap:cpfuse} uses \(k\)-NAF with \(\Delta = \KL\) and combines the two models at decoding time with adaptive, history-dependent weights.
