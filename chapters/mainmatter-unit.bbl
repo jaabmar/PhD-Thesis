@@ -1,4 +1,4 @@
-\begin{thebibliography}{155}
+\begin{thebibliography}{152}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -413,13 +413,6 @@ Erin Hartman, Richard Grieve, Roland Ramsahai, and Jasjeet~S Sekhon.
 \newblock \emph{Journal of the Royal Statistical Society Series A: Statistics
   in Society}, 178\penalty0 (3):\penalty0 757--778, 2015.
 
-\bibitem[Hartmann et~al.(2023)Hartmann, Suri, Bindschaedler, Evans, Tople, and
-  West]{hartmann2023sok}
-Valentin Hartmann, Anshuman Suri, Vincent Bindschaedler, David Evans, Shruti
-  Tople, and Robert West.
-\newblock Sok: Memorization in general-purpose large language models.
-\newblock \emph{arXiv preprint arXiv:2310.18362}, 2023.
-
 \bibitem[He et~al.(2020)He, Tang, Yang, Guo, George, Charness, Quan~Hem, Hogan,
   and Bian]{he2020clinical}
 Zhe He, Xiang Tang, Xi~Yang, Yi~Guo, Thomas George, Neil Charness,
@@ -590,15 +583,6 @@ Katherine~A Keith, Sergey Feldman, David Jurgens, Jonathan Bragg, and Rohit
 \newblock {RCT} rejection sampling for causal estimation evaluation.
 \newblock \emph{Transactions on Machine Learning Research}, 2023.
 
-\bibitem[Kennedy-Martin et~al.(2015)Kennedy-Martin, Curtis, Faries, Robinson,
-  and Johnston]{kennedy2015literature}
-Tessa Kennedy-Martin, Sarah Curtis, Douglas Faries, Susan Robinson, and Joseph
-  Johnston.
-\newblock A literature review on the representativeness of randomized
-  controlled trial samples and implications for the external validity of trial
-  results.
-\newblock \emph{Trials}, 16:\penalty0 1--14, 2015.
-
 \bibitem[Kern et~al.(2016)Kern, Stuart, Hill, and Green]{kern2016assessing}
 Holger~L Kern, Elizabeth~A Stuart, Jennifer Hill, and Donald~P Green.
 \newblock Assessing methods for generalizing experimental impact estimates to
@@ -644,12 +628,6 @@ Katherine Lee, Daphne Ippolito, Andrew Nystrom, Chiyuan Zhang, Douglas Eck,
 \newblock In \emph{Proceedings of the 60th Annual Meeting of the Association
   for Computational Linguistics (Volume 1: Long Papers)}, pages 8424--8445,
   2022.
-
-\bibitem[Lee et~al.(2023)Lee, Cooper, and Grimmelmann]{lee2023talkin}
-Katherine Lee, A~Feder Cooper, and James Grimmelmann.
-\newblock Talkin''bout {AI} generation: Copyright and the generative-{AI}
-  supply chain.
-\newblock \emph{arXiv preprint arXiv:2309.08133}, 2023.
 
 \bibitem[Li et~al.(2021)Li, Zhang, and Wang]{li2021dpsyn}
 Ninghui Li, Zhikun Zhang, and Tianhao Wang.
