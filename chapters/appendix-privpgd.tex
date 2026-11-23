@@ -79,7 +79,7 @@ After optimization in the embedded space, each particle is mapped to the nearest
 The privacy guarantee of PrivPGD follows from basic composition and the post-processing property of differential privacy \citep{dwork2014algorithmic}.
 
 \begin{proof}[Proof of \Cref{lem:privpgd-privacy}]
-Let the privatized marginals be released by an \((\epsilon_1,\delta_1)\)-differentially private mechanism, and let an optional auxiliary regularization statistic be released by an \((\epsilon_2,\delta_2)\)-differentially private mechanism. By basic composition \citep{dwork2014algorithmic}, their joint release is \((\epsilon_1+\epsilon_2,\delta_1+\delta_2)\)-differentially private. PrivPGD then applies only post-processing to these released objects: embedding, projection, quantization, gradient-based optimization, and final discretization. By the post-processing property of differential privacy \citep{dwork2014algorithmic}, the final synthetic dataset inherits the same \((\epsilon_1+\epsilon_2,\delta_1+\delta_2)\)-differential privacy guarantee. In the unregularized setting, the second mechanism is absent.
+For a fixed (data-independent) workload \(\mathcal{S}\), let the privatized marginals \(\{\hat{\nu}_S\}_{S \in \mathcal{S}}\) be released by an \((\epsilon_1,\delta_1)\)-differentially private mechanism, and let the data-dependent parameters defining the optional regularization function \(\hat{\mathcal{R}}\) be released by an independent \((\epsilon_2,\delta_2)\)-differentially private mechanism. Under bounded differential privacy (\Cref{def:privpgd-dp}), the dataset size \(n\) is fixed and public, so normalizing noisy counts by \(n\) incurs no additional privacy loss. By basic composition \citep{dwork2014algorithmic}, the joint release of both mechanisms is \((\epsilon_1+\epsilon_2,\delta_1+\delta_2)\)-differentially private. PrivPGD then applies only post-processing to these released objects: embedding, projection, quantization, gradient-based optimization, and final discretization. By the post-processing property of differential privacy \citep{dwork2014algorithmic}, the final synthetic dataset inherits the same \((\epsilon_1+\epsilon_2,\delta_1+\delta_2)\)-differential privacy guarantee. In the unregularized setting, the second mechanism is absent.
 \end{proof}
 
 \clearpage
@@ -140,7 +140,7 @@ At \(\epsilon = 1.0\) (Figures~\ref{fig:app-privpgd-comp-1} and \ref{fig:app-pri
   \includegraphics[width=0.48\textwidth]{papers/PrivPGD/figures/plots_distances/eps_1.0/wdist_1_2Way_avg.pdf}
   \hfill
   \includegraphics[width=0.48\textwidth]{papers/PrivPGD/figures/plots_distances/eps_1.0/newl1_2Way_avg.pdf}
-  \caption{Average sliced Wasserstein distance (left) and average total variation distance (right) over all two-way marginals at \(\epsilon = 1.0\) and \(\delta = 10^{-5}\). Each point shows the five-run mean and standard deviation of the linear error ratio relative to PrivPGD (PrivPGD equals \(1.0\), lower is better), with values above \(4.0\) stacked in order above the dashed line. Only PrivPGD, PGM+AIM, PGM+MST, and Private GSD are plotted, and full results appear in Tables~\ref{tab:app-privpgd-e10-acs} and \ref{tab:app-privpgd-e10-rest}.}
+  \caption{Average sliced Wasserstein distance (left) and average \(\ell_1\) distance, equal to twice the total variation distance (right), over all two-way marginals at \(\epsilon = 1.0\) and \(\delta = 10^{-5}\). Each point shows the five-run mean and standard deviation of the linear error ratio relative to PrivPGD (PrivPGD equals \(1.0\), lower is better), with values above \(4.0\) stacked in order above the dashed line. Only PrivPGD, PGM+AIM, PGM+MST, and Private GSD are plotted, and full results appear in Tables~\ref{tab:app-privpgd-e10-acs} and \ref{tab:app-privpgd-e10-rest}.}
   \label{fig:app-privpgd-dist-1}
 \end{figure}
 
@@ -148,7 +148,7 @@ At \(\epsilon = 1.0\) (Figures~\ref{fig:app-privpgd-comp-1} and \ref{fig:app-pri
 
 \subsection{\texorpdfstring{$\epsilon = 0.2$}{epsilon = 0.2}}
 
-At \(\epsilon = 0.2\) (Figures~\ref{fig:app-privpgd-comp-02} and \ref{fig:app-privpgd-dist-02}), the same trend becomes more pronounced. PGM+AIM, PGM+MST, and Private GSD more frequently outperform PrivPGD on query- and covariance-based metrics, especially when the data are smaller or higher-dimensional. The method nevertheless remains viable on several datasets, and the geometry-aware comparison still shows the expected advantage in sliced Wasserstein distance relative to total variation.
+At \(\epsilon = 0.2\) (Figures~\ref{fig:app-privpgd-comp-02} and \ref{fig:app-privpgd-dist-02}), the same trend becomes more pronounced. PGM+AIM, PGM+MST, and Private GSD more frequently outperform PrivPGD on query- and covariance-based metrics, especially when the data are smaller or higher-dimensional. The method nevertheless remains viable on several datasets, and the geometry-aware comparison still shows the expected advantage in sliced Wasserstein distance relative to \(\ell_1\) distance.
 
 \begin{figure}[!tbp]
   \centering
@@ -165,7 +165,7 @@ At \(\epsilon = 0.2\) (Figures~\ref{fig:app-privpgd-comp-02} and \ref{fig:app-pr
   \includegraphics[width=0.48\textwidth]{papers/PrivPGD/figures/plots_distances/eps_0.2/wdist_1_2Way_avg.pdf}
   \hfill
   \includegraphics[width=0.48\textwidth]{papers/PrivPGD/figures/plots_distances/eps_0.2/newl1_2Way_avg.pdf}
-  \caption{Average sliced Wasserstein distance (left) and average total variation distance (right) over all two-way marginals at \(\epsilon = 0.2\) and \(\delta = 10^{-5}\). Each point shows the five-run mean and standard deviation of the linear error ratio relative to PrivPGD (PrivPGD equals \(1.0\), lower is better), with values above \(4.0\) stacked in order above the dashed line. Only PrivPGD, PGM+AIM, PGM+MST, and Private GSD are plotted, and full results appear in Tables~\ref{tab:app-privpgd-e02-acs} and \ref{tab:app-privpgd-e02-rest}.}
+  \caption{Average sliced Wasserstein distance (left) and average \(\ell_1\) distance, equal to twice the total variation distance (right), over all two-way marginals at \(\epsilon = 0.2\) and \(\delta = 10^{-5}\). Each point shows the five-run mean and standard deviation of the linear error ratio relative to PrivPGD (PrivPGD equals \(1.0\), lower is better), with values above \(4.0\) stacked in order above the dashed line. Only PrivPGD, PGM+AIM, PGM+MST, and Private GSD are plotted, and full results appear in Tables~\ref{tab:app-privpgd-e02-acs} and \ref{tab:app-privpgd-e02-rest}.}
   \label{fig:app-privpgd-dist-02}
 \end{figure}
 
@@ -175,7 +175,7 @@ At \(\epsilon = 0.2\) (Figures~\ref{fig:app-privpgd-comp-02} and \ref{fig:app-pr
 \section{Detailed Benchmark Results}
 \label{app:privpgd-tables}
 
-The following tables report mean values over five runs, with the lowest error for each dataset and metric highlighted in bold. In the downstream column, the first number is the test error (0-1 error for classification and mean squared error for regression) of the model trained on the synthetic data, while the second number is the corresponding test error when the same model is trained on the original sensitive dataset. GEM and RAP are omitted on Emp. because they exceed the \(20\) GB memory budget.
+The following tables report mean values over five runs, with the lowest error for each dataset and metric highlighted in bold. In the downstream column, the first number is the test error (0-1 error for classification and mean squared error for regression) of the model trained on the synthetic data, while the second number is the corresponding test error when the same model is trained on the original sensitive dataset. The final column reports the average \(\ell_1\) distance (\(= 2\,\TV \in [0,2]\)) over all two-way marginals. GEM and RAP are omitted on Emp. because they exceed the \(20\) GB memory budget.
 
 \subsection{Primary Privacy Setting (\texorpdfstring{$\epsilon = 2.5$}{epsilon = 2.5})}
 
@@ -187,7 +187,7 @@ Tables~\ref{tab:app-privpgd-e25-acs} and \ref{tab:app-privpgd-e25-rest} collect 
   \resizebox{\textwidth}{!}{
   \begin{tabular}{llrrrrrr}
     \toprule
-    Dataset & Method & Downstream & Covariance & Counting Query & Threshold Query & \(\SW_1\) & \(\TV\) \\
+    Dataset & Method & Downstream & Covariance & Counting Query & Threshold Query & \(\SW_1\) & \(\ell_1\) \\
     \midrule
     Emp. & PrivPGD & \textbf{0.19}/0.19 & 0.02 & \textbf{0.00087} & \textbf{0.00043} & \textbf{0.00054} & 0.021 \\
     Emp. & PGM+AIM & \textbf{0.19}/0.19 & 0.04 & 0.0025 & 0.0026 & 0.0019 & 0.026 \\
@@ -233,7 +233,7 @@ Tables~\ref{tab:app-privpgd-e25-acs} and \ref{tab:app-privpgd-e25-rest} collect 
   \resizebox{\textwidth}{!}{
   \begin{tabular}{llrrrrrr}
     \toprule
-    Dataset & Method & Downstream & Covariance & Counting Query & Threshold Query & \(\SW_1\) & \(\TV\) \\
+    Dataset & Method & Downstream & Covariance & Counting Query & Threshold Query & \(\SW_1\) & \(\ell_1\) \\
     \midrule
     Taxi & PrivPGD & \textbf{2.3}/2.2 & \textbf{0.00048} & \textbf{0.00051} & \textbf{0.00011} & \textbf{0.00027} & 0.020 \\
     Taxi & PGM+AIM & \textbf{2.3}/2.2 & 0.0013 & 0.00066 & \textbf{0.00011} & 0.00050 & \textbf{0.016} \\
@@ -279,7 +279,7 @@ Tables~\ref{tab:app-privpgd-e10-acs} and \ref{tab:app-privpgd-e10-rest} report t
   \resizebox{\textwidth}{!}{
   \begin{tabular}{llrrrrrr}
     \toprule
-    Dataset & Method & Downstream & Covariance & Counting Query & Threshold Query & \(\SW_1\) & \(\TV\) \\
+    Dataset & Method & Downstream & Covariance & Counting Query & Threshold Query & \(\SW_1\) & \(\ell_1\) \\
     \midrule
     Emp. & PrivPGD & \textbf{0.19}/0.19 & \textbf{0.0056} & \textbf{0.00077} & \textbf{0.00038} & 0.00060 & 0.027 \\
     Emp. & PGM+AIM & 0.20/0.19 & 0.063 & 0.0036 & 0.0040 & 0.0042 & 0.057 \\
@@ -325,7 +325,7 @@ Tables~\ref{tab:app-privpgd-e10-acs} and \ref{tab:app-privpgd-e10-rest} report t
   \resizebox{\textwidth}{!}{
   \begin{tabular}{llrrrrrr}
     \toprule
-    Dataset & Method & Downstream & Covariance & Counting Query & Threshold Query & \(\SW_1\) & \(\TV\) \\
+    Dataset & Method & Downstream & Covariance & Counting Query & Threshold Query & \(\SW_1\) & \(\ell_1\) \\
     \midrule
     Taxi & PrivPGD & \textbf{2.3}/2.2 & \textbf{0.0013} & 0.00077 & 0.00018 & 0.00062 & 0.033 \\
     Taxi & PGM+AIM & \textbf{2.3}/2.2 & 0.0014 & \textbf{0.00057} & \textbf{0.00011} & \textbf{0.00046} & \textbf{0.018} \\
@@ -371,7 +371,7 @@ Tables~\ref{tab:app-privpgd-e02-acs} and \ref{tab:app-privpgd-e02-rest} summariz
   \resizebox{\textwidth}{!}{
   \begin{tabular}{llrrrrrr}
     \toprule
-    Dataset & Method & Downstream & Covariance & Counting Query & Threshold Query & \(\SW_1\) & \(\TV\) \\
+    Dataset & Method & Downstream & Covariance & Counting Query & Threshold Query & \(\SW_1\) & \(\ell_1\) \\
     \midrule
     Emp. & PrivPGD & \textbf{0.19}/0.19 & 0.015 & 0.0022 & \textbf{0.00078} & 0.0023 & 0.11 \\
     Emp. & PGM+AIM & \textbf{0.19}/0.19 & 0.049 & 0.0027 & 0.0031 & 0.0024 & 0.035 \\
@@ -417,7 +417,7 @@ Tables~\ref{tab:app-privpgd-e02-acs} and \ref{tab:app-privpgd-e02-rest} summariz
   \resizebox{\textwidth}{!}{
   \begin{tabular}{llrrrrrr}
     \toprule
-    Dataset & Method & Downstream & Covariance & Counting Query & Threshold Query & \(\SW_1\) & \(\TV\) \\
+    Dataset & Method & Downstream & Covariance & Counting Query & Threshold Query & \(\SW_1\) & \(\ell_1\) \\
     \midrule
     Taxi & PrivPGD & 2.4/2.2 & 0.0055 & 0.0025 & 0.00072 & 0.0026 & 0.11 \\
     Taxi & PGM+AIM & \textbf{2.3}/2.2 & 0.0032 & \textbf{0.0011} & 0.00022 & 0.0013 & \textbf{0.037} \\
