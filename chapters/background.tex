@@ -66,7 +66,7 @@ Here \(\epsilon > 0\) bounds the multiplicative change in output probabilities a
 
 Given a sensitive discretized dataset \(D = (x_1, \dots, x_n) \in \mathcal{X}^n\) with \(\mathcal{X} = \mathcal{X}_1 \times \cdots \times \mathcal{X}_d\), differentially private data synthesis releases a synthetic dataset \(D_{\mathrm{syn}} = \mathcal{A}(D) \in \mathcal{X}^m\). By post-processing, any downstream analysis on \(D_{\mathrm{syn}}\) satisfies the same \((\epsilon, \delta)\)-privacy guarantee.
 
-Marginal-based methods \citep{mst,aim} summarize \(D\) through its empirical marginals on a selected collection \(\mathcal{S}\) of feature subsets \(S \subseteq [d]\):
+[PLEASE REVIEW MATH HERE AND NOTATION] Marginal-based methods \citep{mst,aim} summarize \(D\) through its empirical marginals on a selected collection \(\mathcal{S}\) of feature subsets \(S \subseteq [d]\):
 \[
   \nu_S[D] = \frac{1}{n} \sum_{i=1}^n \delta_{x_{i,S}},
 \]
@@ -94,7 +94,7 @@ Computing \(W_q\) exactly scales roughly cubically in the number of support poin
     W_q^q\bigl(g^\theta_{\#}\mu, g^\theta_{\#}\nu\bigr)\, d\sigma(\theta)
   \right)^{1/q},
 \]
-where \(g^\theta_{\#}\mu\) is the pushforward of \(\mu\) under \(g^\theta(x) = \langle x, \theta \rangle\) and \(\sigma\) is the uniform measure on \(\mathbb{S}^{p-1}\). Each one-dimensional transport problem reduces to sorting, which makes \(\SW_q\) practical for the particle optimization in Chapter~\ref{chap:privpgd}.
+where \(g^\theta_{\#}\mu\) is the pushforward of \(\mu\) under \(g^\theta(x) = \langle x, \theta \rangle\) and \(\sigma\) is the uniform measure on \(\mathbb{S}^{p-1}\). [MAKE SURE IF YOU SAY THIS IS A CORRECT AND GENERAL STATEMENT IE THE SORTING POINT] Each one-dimensional transport problem reduces to sorting, which makes \(\SW_q\) practical for the particle optimization in Chapter~\ref{chap:privpgd}.
 
 \section{Language Models, Memorization, and Copyright}
 \label{sec:bg-lm}
@@ -123,4 +123,4 @@ Under the Near Access Free (\(k\)-NAF) framework of \citet{vyas2023provable}, tw
 \[
   \max_{i \in \{1, 2\}} \Delta\bigl(\model(\cdot \mid x) \,\|\, \modeli(\cdot \mid x)\bigr) \leq k.
 \]
-Because at least one base model was not trained on any given protected work and thus assigns it low probability, staying within divergence \(k\) of both prevents \(\model\) from assigning high probability to that work. \citet{vyas2023provable} also propose \(\cpdelta\) to combine \(\modelone\) and \(\modeltwo\), though its sequence-level form is intractable and its token-wise variant uses fixed weights. Chapter~\ref{chap:cpfuse} uses \(k\)-NAF with \(\Delta = \KL\) and combines the two models at decoding time with adaptive, history-dependent weights.
+[NO NEED TO METNION VYAS METHOD NOT THIS WEIGTHTING OPTIMZIATION] Because at least one base model was not trained on any given protected work and thus assigns it low probability, staying within divergence \(k\) of both prevents \(\model\) from assigning high probability to that work. \citet{vyas2023provable} also propose \(\cpdelta\) to combine \(\modelone\) and \(\modeltwo\), though its sequence-level form is intractable and its token-wise variant uses fixed weights. Chapter~\ref{chap:cpfuse} uses \(k\)-NAF with \(\Delta = \KL\) and combines the two models at decoding time with adaptive, history-dependent weights.
