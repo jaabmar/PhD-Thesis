@@ -35,7 +35,7 @@ This subsection records the proof of Lemma~\ref{lem:confounding-testing-observat
   \leq
   \mu^+_{\Gamma}(x).
 \]
-Let \(\mathbb{P}_X\) have support contained in \(\supp(\mathbb{P}^{\mathrm{os}}_X)\). If \(\mu(X,\mathbb{P}_{\mathrm{full}})=\mu(X,\mathbb{P}^{\mathrm{os}}_{\mathrm{full}})\) on this support, then the same inequalities hold with \(\mu(X,\mathbb{P}_{\mathrm{full}})\) in the middle. Integrating with respect to \(\mathbb{P}_X\) gives
+Let \(\mathbb{P}_X\) satisfy \(\mathbb{P}_X \ll \mathbb{P}^{\mathrm{os}}_X\). Then the above inequalities hold \(\mathbb{P}_X\)-almost surely, and if \(\mu(X,\mathbb{P}_{\mathrm{full}})=\mu(X,\mathbb{P}^{\mathrm{os}}_{\mathrm{full}})\) \(\mathbb{P}_X\)-almost surely, then the same inequalities hold with \(\mu(X,\mathbb{P}_{\mathrm{full}})\) in the middle. Integrating with respect to \(\mathbb{P}_X\) gives
 \[
   \mu^-_{\Gamma}(\mathbb{P}_X)
   \leq
@@ -92,7 +92,7 @@ For the restricted-observational target, transportability of the CATE gives
   \right].
 \end{aligned}
 \]
-Since \(\mathbb{P}^{\widetilde{\mathrm{os}}}_X\ll\mathbb{P}^{\mathrm{rct}}_X\), with
+Under the assumption \(\mathbb{P}^{\widetilde{\mathrm{os}}}_X\ll\mathbb{P}^{\mathrm{rct}}_X\), with
 \[
   w_{\widetilde{\mathrm{os}}}(X)
   =
@@ -214,7 +214,7 @@ It remains to replace the oracle average of \(\mu^+_{\Gamma}(X_i)\) by \(\wideha
     -\widehat{\mu}^+_{\Gamma,\mathrm{rct}}
   \right).
 \]
-If \(d_n(x)=\mu^+_{\Gamma}(x)-\widehat{\mu}^+_{\Gamma}(x)\), then conditional on the observational sample used to train \(\widehat{\mu}^+_{\Gamma}(\cdot)\),
+If \(d_n(x)=\mu^+_{\Gamma}(x)-\widehat{\mu}^+_{\Gamma}(x)\), then by independence of \(D_{\mathrm{rct}}\) and \(D_{\mathrm{os}}\), conditional on the observational sample used to train \(\widehat{\mu}^+_{\Gamma}(\cdot)\),
 \[
   |\mathbb{E}[R_n\mid D_{\mathrm{os}}]|
   \leq
@@ -272,36 +272,38 @@ By Cauchy--Schwarz,
   \leq
   \sigma^+_{\Gamma,\mathrm{rct}}\sigma_{\mathrm{rct}},
 \]
-so \(V^+_{\Gamma,\mathrm{rct}} = (\sigma^+_{\Gamma,\mathrm{rct}})^2 + \sigma_{\mathrm{rct}}^2 - 2\xi_{\Gamma,\mathrm{rct}} \leq (\sigma^+_{\Gamma,\mathrm{rct}})^2 + \sigma_{\mathrm{rct}}^2 + 2\sigma^+_{\Gamma,\mathrm{rct}}\sigma_{\mathrm{rct}}\). Because \(z_{\alpha/2}<0\) for all \(\alpha\in(0,1)\), the larger denominator yields a conservative test. Under \(H_0(\Gamma)\), \(\Delta^+_{\Gamma,\mathrm{rct}} = \mu^+_{\Gamma}(\mathbb{P}^{\mathrm{rct}}_X) - \mu(\mathbb{P}^{\mathrm{rct}}_X,\mathbb{P}^{\mathrm{rct}}_{\mathrm{full}}) \geq 0\) by Lemma~\ref{lem:confounding-testing-observation}. Applying Slutsky's theorem together with the asymptotic normality above gives
+so \(V^+_{\Gamma,\mathrm{rct}} = (\sigma^+_{\Gamma,\mathrm{rct}})^2 + \sigma_{\mathrm{rct}}^2 - 2\xi_{\Gamma,\mathrm{rct}} \leq (\sigma^+_{\Gamma,\mathrm{rct}} + \sigma_{\mathrm{rct}})^2 =: D^2\), with \(D > 0\) by assumption. Under \(H_0(\Gamma)\), \(\Delta^+_{\Gamma,\mathrm{rct}} = \mu^+_{\Gamma}(\mathbb{P}^{\mathrm{rct}}_X) - \mu(\mathbb{P}^{\mathrm{rct}}_X,\mathbb{P}^{\mathrm{rct}}_{\mathrm{full}}) \geq 0\) by Lemma~\ref{lem:confounding-testing-observation}, so
+\[
+  \widehat{T}^+_{\Gamma,\mathrm{rct}}
+  =
+  \frac{
+    \sqrt{n_{\mathrm{rct}}}\bigl(\widehat{\mu}^+_{\Gamma,\mathrm{rct}} - \widehat{\mu}_{\mathrm{rct}}\bigr)
+  }{
+    \sqrt{n_{\mathrm{rct}}}\,\widehat{s}^+_{\Gamma,\mathrm{rct}}
+  }
+  \geq
+  \frac{
+    \sqrt{n_{\mathrm{rct}}}\bigl(\widehat{\mu}^+_{\Gamma,\mathrm{rct}} - \widehat{\mu}_{\mathrm{rct}} - \Delta^+_{\Gamma,\mathrm{rct}}\bigr)
+  }{
+    \sqrt{n_{\mathrm{rct}}}\,\widehat{s}^+_{\Gamma,\mathrm{rct}}
+  }.
+\]
+By Slutsky's theorem and the asymptotic normality above, the right-hand side converges in distribution to \(\mathcal{N}\bigl(0, V^+_{\Gamma,\mathrm{rct}}/D^2\bigr)\) (or in probability to \(0\) when \(V^+_{\Gamma,\mathrm{rct}}=0\)). Since \(z_{\alpha/2}<0\) for \(\alpha\in(0,1)\) and \(D \geq \sqrt{V^+_{\Gamma,\mathrm{rct}}}\),
 \[
 \begin{aligned}
-  &\limsup_{n_{\mathrm{rct}},n_{\mathrm{os}}\to\infty}
+  \limsup_{n_{\mathrm{rct}},n_{\mathrm{os}}\to\infty}
   \mathbb{P}_{H_0(\Gamma)}
   \left(
     \widehat{T}^+_{\Gamma,\mathrm{rct}}
     \leq
     z_{\alpha/2}
-  \right) \\
-  &\quad\leq
-  \limsup_{n_{\mathrm{rct}},n_{\mathrm{os}}\to\infty}
-  \mathbb{P}_{H_0(\Gamma)}
-  \left(
-    \frac{
-      \sqrt{n_{\mathrm{rct}}}
-      \bigl(
-        \widehat{\mu}^+_{\Gamma,\mathrm{rct}}
-        -
-        \widehat{\mu}_{\mathrm{rct}}
-        -
-        \Delta^+_{\Gamma,\mathrm{rct}}
-      \bigr)
-    }{
-      \sqrt{V^+_{\Gamma,\mathrm{rct}}}
-    }
-    \leq
-    z_{\alpha/2}
-  \right) \\
-  &\quad=
+  \right)
+  &\leq
+  \begin{cases}
+    \Phi\!\left(\dfrac{D}{\sqrt{V^+_{\Gamma,\mathrm{rct}}}}\,z_{\alpha/2}\right), & V^+_{\Gamma,\mathrm{rct}} > 0, \\
+    0, & V^+_{\Gamma,\mathrm{rct}} = 0,
+  \end{cases} \\
+  &\leq
   \Phi(z_{\alpha/2})
   =
   \alpha/2.
@@ -432,33 +434,25 @@ The same argument applies to the lower endpoint. The union bound over the two on
 \subsection{Validity of the Lower Bound}
 \label{app:confounding-proof-lower-bound}
 
-By definition of the true confounding strength (assuming \(\Gamma^\star < \infty\)),
+If \(\Gamma^\star = \infty\), the inequality \(\widehat{\Gamma}_{\mathrm{LB}}^{\star} \leq \Gamma^\star\) holds trivially. Otherwise (\(\Gamma^\star < \infty\)), by definition of the true confounding strength,
 \[
   \mathbb{P}^{\mathrm{os}}_{\mathrm{full}}
   \in
   \mathcal{E}(\mathbb{P}^{\mathrm{os}},\Gamma^\star),
 \]
-so \(H_0(\Gamma^\star)\) is true. By definition of \(\widehat{\Gamma}_{\mathrm{LB}}^{\star}\), if \(\widehat{\Gamma}_{\mathrm{LB}}^{\star} > \Gamma^\star\), then \(\widehat{\phi}_{\star}(\Gamma,\alpha)=1\) for every \(\Gamma\in[1,\Gamma^\star]\). Hence
+so \(H_0(\Gamma^\star)\) is true. By definition of \(\widehat{\Gamma}_{\mathrm{LB}}^{\star}\) as an infimum, \(\widehat{\phi}_{\star}(\Gamma^\star,\alpha)=0\) implies \(\widehat{\Gamma}_{\mathrm{LB}}^{\star}\leq\Gamma^\star\), so
 \[
-\begin{aligned}
   \mathbb{P}
   \left(
     \widehat{\Gamma}_{\mathrm{LB}}^{\star}>\Gamma^\star
   \right)
-  &\leq
-  \mathbb{P}
-  \left(
-    \bigcap_{1\leq\Gamma\leq\Gamma^\star}
-    \{\widehat{\phi}_{\star}(\Gamma,\alpha)=1\}
-  \right) \\
-  &\leq
+  \leq
   \mathbb{P}
   \left(
     \widehat{\phi}_{\star}(\Gamma^\star,\alpha)=1
   \right)
   \leq
   \alpha+o(1),
-\end{aligned}
 \]
 where the last inequality follows from the asymptotic validity of the test (Proposition~\ref{prop:confounding-test-validity}). Equivalently,
 \[
@@ -641,7 +635,7 @@ The synthetic experiments estimate the observed propensity score with logistic r
 
 The semi-synthetic experiments start from randomized trials and hide one observed covariate \(U\) at a time. Different choices of \(U\) change the outcome-confounder correlation \(\rho_{u,y}\), while the target confounding strength \(\Gamma^\star\) is held fixed. A subset of the original trial is retained as \(D_{\mathrm{rct}}\). The remaining units are subsampled to create an observational study whose treatment propensities depend on the hidden \(U\), while the released observational data omit \(U\). This construction keeps the true treatment effect identifiable in the original complete data while creating controlled hidden confounding in the observed data.
 
-The rejection-sampling step follows \citet{keith2023rct}. Given a desired full propensity \(\mathbb{P}^{\mathrm{os}}_{\mathrm{cnf}}(T=1\mid U)\), the algorithm iteratively scans the nontrial pool and retains a unit \((X_i,U_i,Y_i,T_i)\) with probability
+The rejection-sampling step follows \citet{keith2023rct}. Given a desired full propensity \(\mathbb{P}^{\mathrm{os}}_{\mathrm{cnf}}(T=1\mid U)\), the algorithm makes a single pass over the nontrial pool and retains each unit \((X_i,U_i,Y_i,T_i)\) independently with probability
 \[
   \frac{
     \mathbb{P}^{\mathrm{os}}_{\mathrm{cnf}}(T=T_i\mid U_i)
@@ -659,7 +653,7 @@ where
     \min_i \widehat{\mathbb{P}}(T=T_i)
   }.
 \]
-After no more units are discarded, \(U\) is removed from the observational dataset. The normalizing constant \(M\) is chosen as in \citet{keith2023rct} so that the causal effect remains identifiable in the subsampled observational data.
+After subsampling, \(U\) is removed from the observational dataset. The normalizing constant \(M\) is chosen as in \citet{keith2023rct} so that the causal effect remains identifiable in the subsampled observational data.
 
 For a continuous hidden confounder, let \(\widehat{\pi}=\widehat{\mathbb{P}}(T=1)\) be estimated before subsampling and define
 \[
@@ -696,7 +690,7 @@ so the marginal treatment probability before and after subsampling remains \(\wi
   =
   \frac{u-\widehat{\pi}}{u-\ell},
 \]
-and assign \(\ell\) to \(U=1\) and \(u\) to \(U=0\) in the positively correlated case. For a negatively correlated binary confounder, the target frequency is \((\widehat{\pi}-\ell)/(u-\ell)\), and the assignments are swapped.
+and assign \(\ell\) to \(U=1\) and \(u\) to \(U=0\) in the positively correlated case. For a negatively correlated binary confounder, the target frequency is \((\widehat{\pi}-\ell)/(u-\ell)\), and the assignments are swapped. Because \(\mathbb{P}^{\mathrm{os}}_{\mathrm{cnf}}(T=1\mid U)\) depends only on \(U\) and is calibrated to the marginal treatment rate \(\widehat{\pi}\), it matches the conditional marginal sensitivity model with strength \(\Gamma^\star\) exactly when \(U\) is independent of \(X\), and serves as a nominal odds-ratio parameter when \(U\) and \(X\) are correlated.
 
 The semi-synthetic datasets are as follows.
 \begin{itemize}
