@@ -1,81 +1,71 @@
 \chapter{Introduction}
 \label{chap:introduction}
 
-When statistical and machine learning models inform decisions in medicine, public policy, or software engineering, predictive accuracy alone does not make them reliable or safe to deploy. Causal estimates drawn from observational health records can be distorted by unmeasured confounders, released tabular datasets can expose sensitive information about individuals, and language models can regurgitate copyrighted text or code from their training corpora \citep{henderson2023foundation}.
+When statistical and machine learning models inform decisions in medicine, public policy, or software engineering, predictive accuracy alone does not make them reliable or safe to deploy. Causal estimates drawn from observational health records can be biased by unmeasured confounders, released tabular datasets can expose sensitive information about individuals, and language models can reproduce copyrighted text or code from their training data \citep{henderson2023foundation}.
 
-Formal frameworks exist for each of these problems, including unconfoundedness and sensitivity analysis in causal inference, differential privacy \citep{dp}, and formal copyright-protection criteria \citep{vyas2023provable}. Yet applying these definitions directly in practice often runs into a sharp tradeoff between rigor and utility. Binary validity checks reject even minor violations that would not alter a downstream conclusion, while strict protective mechanisms can scale poorly or degrade the quality of the released data or generated outputs. This thesis develops statistical tests and algorithms that make such requirements actionable in practice while preserving the usefulness of the underlying analysis, dataset, or model.
+Formal frameworks exist for each of these problems, including unconfoundedness and sensitivity analysis in causal inference, differential privacy \citep{dp}, and formal copyright-protection criteria \citep{vyas2023provable}. Applying these definitions directly in practice, however, often creates a sharp tension with utility. Binary validity tests reject even minor violations that would not change a conclusion, while strict protective mechanisms can scale poorly or degrade the quality of the released data or generated outputs. This thesis develops statistical tests and algorithms that put these requirements into practice without giving up the usefulness of the analysis, dataset, or model.
 
 \section{Research Questions}
 \label{sec:intro-settings}
 
-The three technical chapters address three concrete questions across causal inference, private data release, and language generation.
+Post-marketing studies often evaluate treatments using observational data such as health records \citep{platt2018fda}, at a stage when a randomized trial of the same treatment already exists. Standard sensitivity analysis only asks how strong hidden confounding would have to be to overturn an observational finding, while tests that compare observational and trial data only check whether \emph{any} confounding is present and reject studies even when the bias is small. Chapter~\ref{chap:confounding-test} asks:
 
 \begin{tcolorbox}[
-  colback=gray!5,
-  colframe=chaptercolor,
-  boxrule=0.6pt,
-  arc=2pt,
-  left=8pt,
-  right=8pt,
+  colback=gray!4,
+  colframe=black!35,
+  boxrule=0.5pt,
+  arc=1.5pt,
+  left=10pt,
+  right=10pt,
   top=5pt,
   bottom=5pt,
-  title={Chapter~\ref{chap:confounding-test}: Quantifying Hidden Confounding},
-  colbacktitle=chaptercolor!10,
-  coltitle=black,
-  fonttitle=\bfseries\small
+  before skip=6pt,
+  after skip=8pt
 ]
-\small
-\emph{Given a randomized trial and an observational study of the same treatment, how strong is the hidden confounding in the observational study at least?}\par\smallskip
-Standard sensitivity analysis asks how strong confounding would need to be to overturn a finding without measuring how much is actually present, whereas binary falsification tests flag even negligible bias. Chapter~\ref{chap:confounding-test} combines randomized trial evidence with sensitivity analysis to construct a quantitative lower bound on unobserved confounding strength.
+\centering\emph{Given a randomized trial, how can we lower-bound the strength of unobserved confounding in an observational study?}
 \end{tcolorbox}
 
-\begin{tcolorbox}[
-  colback=gray!5,
-  colframe=chaptercolor,
-  boxrule=0.6pt,
-  arc=2pt,
-  left=8pt,
-  right=8pt,
-  top=5pt,
-  bottom=5pt,
-  title={Chapter~\ref{chap:privpgd}: Private Tabular Data Synthesis},
-  colbacktitle=chaptercolor!10,
-  coltitle=black,
-  fonttitle=\bfseries\small
-]
-\small
-\emph{How can we generate synthetic tabular datasets from differentially private marginals while scaling to large workloads and preserving feature geometry?}\par\smallskip
-Existing marginal-based generators fit discrete cell counts in graphical models, treating small and large value discrepancies alike and struggling as the number of marginals grows. Chapter~\ref{chap:privpgd} formulates private synthesis directly in particle space via optimal transport and gradient descent, naturally accommodating differentiable domain constraints.
-\end{tcolorbox}
+Releasing tabular data in healthcare or public policy requires formal privacy guarantees such as differential privacy. Most top-performing methods add noise to low-dimensional marginals and fit a graphical model to sample synthetic rows. This approach scales poorly when many marginals are used, ignores the ordering of numerical values, and makes domain constraints hard to include. Chapter~\ref{chap:privpgd} asks:
 
 \begin{tcolorbox}[
-  colback=gray!5,
-  colframe=chaptercolor,
-  boxrule=0.6pt,
-  arc=2pt,
-  left=8pt,
-  right=8pt,
+  colback=gray!4,
+  colframe=black!35,
+  boxrule=0.5pt,
+  arc=1.5pt,
+  left=10pt,
+  right=10pt,
   top=5pt,
   bottom=5pt,
-  title={Chapter~\ref{chap:cpfuse}: Copyright-Safe Language Generation},
-  colbacktitle=chaptercolor!10,
-  coltitle=black,
-  fonttitle=\bfseries\small
+  before skip=6pt,
+  after skip=8pt
 ]
-\small
-\emph{How can we prevent a language model from reproducing memorized copyrighted passages at inference time without degrading text fluency or code correctness?}\par\smallskip
-Hard token filters can disrupt syntax and coherence, while fixed-weight model ensembles still allow a single model's memorized continuation to dominate generation. Chapter~\ref{chap:cpfuse} introduces an adaptive decoding-time fusion rule that dynamically balances models trained on disjoint protected corpora.
+\centering\emph{How can we generate synthetic tabular data at scale from noisy marginals while preserving feature geometry and domain-specific constraints?}
+\end{tcolorbox}
+
+Language models can memorize training examples and reproduce long passages of copyrighted text or code verbatim. Training-time defenses such as differential privacy are costly at scale, while simple decoding filters often break code syntax or hurt fluency. Chapter~\ref{chap:cpfuse} asks:
+
+\begin{tcolorbox}[
+  colback=gray!4,
+  colframe=black!35,
+  boxrule=0.5pt,
+  arc=1.5pt,
+  left=10pt,
+  right=10pt,
+  top=5pt,
+  bottom=5pt,
+  before skip=6pt,
+  after skip=8pt
+]
+\centering\emph{How can we combine language models at inference time to prevent the reproduction of copyrighted training data without losing generation quality?}
 \end{tcolorbox}
 
 \section{Thesis Organization}
 \label{sec:intro-org}
 
-The remainder of the thesis is organized as follows:
-
-\begin{description}[leftmargin=0pt, itemsep=0.45em, topsep=0.4em]
-  \item[Chapter~\ref{chap:background}.] \emph{Background} reviews the mathematical foundations used throughout the thesis: potential outcomes and marginal sensitivity analysis (Section~\ref{sec:bg-causal}), differential privacy and Wasserstein optimal transport (Section~\ref{sec:bg-dp}), and autoregressive language modeling with divergence-based decoding (Section~\ref{sec:bg-lm}).
-  \item[Chapter~\ref{chap:confounding-test}.] \emph{Quantifying Hidden Confounding}, adapted from \citet{de2023hidden}, develops hypothesis tests for whether hidden confounding exceeds a threshold \(\Gamma \ge 1\), inverts them into an asymptotically valid lower bound on confounding strength, and evaluates the framework on synthetic benchmarks, semi-synthetic trials, and hormone therapy cohorts from the Women's Health Initiative. Proofs and experimental details appear in Appendix~\ref{chap:appendix-confounding-test}.
-  \item[Chapter~\ref{chap:privpgd}.] \emph{Private Tabular Data Synthesis}, adapted from \citet{donhauser2024privacy}, introduces Private Particle Gradient Descent (PrivPGD), combining sliced Wasserstein marginal projection with GPU-parallel particle gradient descent and private penalty terms for population-level constraints across nine tabular benchmarks. Implementation details, stricter privacy budgets, and full numerical tables are provided in Appendix~\ref{chap:appendix-privpgd}.
-  \item[Chapter~\ref{chap:cpfuse}.] \emph{Copyright-Safe Language Generation}, adapted from \citet{abad2025copyright}, presents Copyright-Protecting Model Fusion (CP-Fuse), derives its closed-form token-level logit-fusion rule and likelihood-balancing property, and evaluates copyright protection, code pass@1, text fluency, training-time safeguard wrappers, and prefix-extraction robustness. Proofs, ablations, and qualitative comparisons are collected in Appendix~\ref{chap:appendix-cpfuse}.
-  \item[Chapter~\ref{chap:conclusion}.] \emph{Conclusion} summarizes the main contributions, examines the structural assumptions and limitations of each method, and outlines directions for future research. Full bibliographic records and author contribution statements appear in the Publications section in the front matter.
-\end{description}
+\begin{itemize}[leftmargin=*, itemsep=0.35em, topsep=0.3em]
+  \item \textbf{Chapter~\ref{chap:background}} covers the background on potential outcomes and sensitivity analysis, differential privacy and optimal transport, and autoregressive language modeling.
+  \item \textbf{Chapter~\ref{chap:confounding-test}} (based on \citet{de2023hidden}; Appendix~\ref{chap:appendix-confounding-test}) develops statistical tests and an asymptotically valid lower bound on hidden confounding strength using randomized trials.
+  \item \textbf{Chapter~\ref{chap:privpgd}} (based on \citet{donhauser2024privacy}; Appendix~\ref{chap:appendix-privpgd}) introduces PrivPGD for differentially private tabular data synthesis via optimal transport and particle gradient descent.
+  \item \textbf{Chapter~\ref{chap:cpfuse}} (based on \citet{abad2025copyright}; Appendix~\ref{chap:appendix-cpfuse}) presents CP-Fuse for inference-time copyright protection in text and code generation.
+  \item \textbf{Chapter~\ref{chap:conclusion}} summarizes the results, discusses limitations, and outlines future work. Full publication details and author contributions are listed in the front matter.
+\end{itemize}
