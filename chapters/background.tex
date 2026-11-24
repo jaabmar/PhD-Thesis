@@ -1,21 +1,21 @@
 \chapter{Background}
 \label{chap:background}
 
-This chapter introduces the mathematical background for the three technical chapters of the thesis: causal inference and sensitivity analysis (Section~\ref{sec:bg-causal}), differential privacy and optimal transport (Section~\ref{sec:bg-dp}), and autoregressive language models and copyright protection (Section~\ref{sec:bg-lm}).
+In this chapter, we review the mathematical background for the three technical chapters of the thesis: causal inference and sensitivity analysis (Section~\ref{sec:bg-causal}), differential privacy and optimal transport (Section~\ref{sec:bg-dp}), and autoregressive language models and copyright protection (Section~\ref{sec:bg-lm}).
 
 \section{Causal Inference from Observational Data}
 \label{sec:bg-causal}
 
 \subsection{Treatment Effects and Confounding}
 
-Chapter~\ref{chap:confounding-test} frames causal questions using the potential-outcomes framework \citep{neyman1923application,rubin1978bayesian}. Each unit has covariates \(X\), a binary treatment \(T \in \{0, 1\}\), and two potential outcomes \(Y(0)\) and \(Y(1)\), the outcomes the unit would have without and with treatment. Only the outcome of the treatment actually received is observed, i.e., \(Y = Y(T)\), an assumption known as \emph{consistency}. We define the conditional average treatment effect (CATE) and the average treatment effect (ATE) over a covariate distribution \(\mathbb{P}_X\) as
+In Chapter~\ref{chap:confounding-test}, we frame causal questions using the potential-outcomes framework \citep{neyman1923application,rubin1978bayesian}. Each unit has covariates \(X\), a binary treatment \(T \in \{0, 1\}\), and two potential outcomes \(Y(0)\) and \(Y(1)\), the outcomes the unit would have without and with treatment. We observe only the outcome of the treatment actually received, i.e., \(Y = Y(T)\), an assumption known as \emph{consistency}. We define the conditional average treatment effect (CATE) and the average treatment effect (ATE) over a covariate distribution \(\mathbb{P}_X\) as
 \[
   \mu(X) = \mathbb{E}\bigl[Y(1) - Y(0) \mid X\bigr],
   \qquad
   \mu(\mathbb{P}_X) = \mathbb{E}_{\mathbb{P}_X}\bigl[\mu(X)\bigr].
 \]
 
-In a randomized trial, treatment is assigned independently of all covariates, observed or not, so \(\mu(X)\) can be estimated without bias. In an observational study, \(\mu(X)\) is identified from \((X, T, Y)\) under \emph{strong ignorability} \citep{rosenbaum1983central}, which combines two assumptions:
+In a randomized trial, treatment is assigned independently of all covariates, observed or not, so we can estimate \(\mu(X)\) without bias. In an observational study, we can identify \(\mu(X)\) from \((X, T, Y)\) under \emph{strong ignorability} \citep{rosenbaum1983central}, which combines two assumptions:
 \begin{align*}
   \bigl(Y(0), Y(1)\bigr) \perp T \mid X
   &\qquad\text{(unconfoundedness)}, \\
@@ -28,7 +28,7 @@ Unconfoundedness fails when unobserved confounders \(U\) affect both treatment \
 
 \subsection{Sensitivity Analysis}
 
-When \(U\) is unobserved, the strength of hidden confounding cannot be estimated from observational data alone. Sensitivity analysis \citep{cornfield59} instead fixes a bound on confounding strength and asks which treatment effects remain compatible with the observed data. Chapter~\ref{chap:confounding-test} uses the marginal sensitivity model of \citet{tan2006distributional}. For \(\Gamma \geq 1\), it bounds the odds ratio between the full propensity score \(e(X, U) = \mathbb{P}(T = 1 \mid X, U)\) and the observed propensity score \(e(X)\):
+When \(U\) is unobserved, we cannot estimate the strength of hidden confounding from observational data alone. Sensitivity analysis \citep{cornfield59} instead fixes a bound on confounding strength and asks which treatment effects remain compatible with the observed data. In Chapter~\ref{chap:confounding-test}, we adopt the marginal sensitivity model of \citet{tan2006distributional}. For \(\Gamma \geq 1\), it bounds the odds ratio between the full propensity score \(e(X, U) = \mathbb{P}(T = 1 \mid X, U)\) and the observed propensity score \(e(X)\):
 \[
   \frac{1}{\Gamma}
   \leq
@@ -41,20 +41,20 @@ At \(\Gamma = 1\), the treatment odds do not depend on \(U\) given \(X\), so the
 
 \subsection{Randomized Trials as a Reference}
 
-When both a randomized trial and an observational study of the same treatment are available, the trial can be used as a reference. Because trial eligibility criteria often shift the covariate distribution \citep{rothwell2005external}, comparing the two sources requires \emph{CATE transportability} \citep{o2014generalizing,colnet2020causal,degtiar2023review}:
+When both a randomized trial and an observational study of the same treatment are available, we can use the trial as a reference. Because trial eligibility criteria often shift the covariate distribution \citep{rothwell2005external}, comparing the two sources requires \emph{CATE transportability} \citep{o2014generalizing,colnet2020causal,degtiar2023review}:
 \[
   \mathbb{E}_{\mathrm{os}}\bigl[Y(1) - Y(0) \mid X\bigr]
   =
   \mathbb{E}_{\mathrm{rct}}\bigl[Y(1) - Y(0) \mid X\bigr].
 \]
-Under this assumption and covariate support overlap, any disagreement between the trial estimate and the observational sensitivity interval at a given \(\Gamma\) indicates that the true confounding strength exceeds \(\Gamma\). Chapter~\ref{chap:confounding-test} turns this into statistical tests for a given \(\Gamma\) and inverts them to obtain a lower bound on the true confounding strength.
+Under this assumption and covariate support overlap, any disagreement between the trial estimate and the observational sensitivity interval at a given \(\Gamma\) indicates that the true confounding strength exceeds \(\Gamma\). In Chapter~\ref{chap:confounding-test}, we turn this into statistical tests for a given \(\Gamma\) and invert them to obtain a lower bound on the true confounding strength.
 
 \section{Differential Privacy and Private Data Synthesis}
 \label{sec:bg-dp}
 
 \subsection{Differential Privacy}
 
-Differential privacy \citep{dp,dwork2014algorithmic} is a property of a randomized algorithm \(\mathcal{A}\) that bounds how much any single record in a dataset can influence its output. Write \(D \sim D'\) if two datasets of the same size differ in exactly one record. The algorithm \(\mathcal{A}\) is \((\epsilon, \delta)\)-differentially private if, for all \(D \sim D'\) and all measurable sets \(B\) of outputs,
+Differential privacy \citep{dp,dwork2014algorithmic} is a property of a randomized algorithm \(\mathcal{A}\) that bounds how much any single record in a dataset can influence its output. We write \(D \sim D'\) if two datasets of the same size differ in exactly one record. The algorithm \(\mathcal{A}\) is \((\epsilon, \delta)\)-differentially private if, for all \(D \sim D'\) and all measurable sets \(B\) of outputs,
 \[
   \mathbb{P}\bigl[\mathcal{A}(D) \in B\bigr]
   \leq
@@ -64,13 +64,13 @@ Here \(\epsilon > 0\) bounds the multiplicative change in output probabilities a
 
 \subsection{Private Synthetic Tabular Data}
 
-Given a sensitive discretized dataset \(D = (x_1, \dots, x_n) \in \mathcal{X}^n\) over a finite product domain \(\mathcal{X} = \mathcal{X}_1 \times \cdots \times \mathcal{X}_d\), differentially private data synthesis releases a synthetic dataset \(D_{\mathrm{syn}} = \mathcal{A}(D) \in \mathcal{X}^m\) of size \(m\). By post-processing, any downstream analysis on \(D_{\mathrm{syn}}\) satisfies the same \((\epsilon, \delta)\)-privacy guarantee.
+Given a sensitive discretized dataset \(D = (x_1, \dots, x_n) \in \mathcal{X}^n\) over a finite product domain \(\mathcal{X} = \mathcal{X}_1 \times \cdots \times \mathcal{X}_d\), in differentially private data synthesis we release a synthetic dataset \(D_{\mathrm{syn}} = \mathcal{A}(D) \in \mathcal{X}^m\) of size \(m\). By post-processing, any downstream analysis on \(D_{\mathrm{syn}}\) satisfies the same \((\epsilon, \delta)\)-privacy guarantee.
 
 Marginal-based methods \citep{mst,aim} summarize \(D\) through its empirical marginals on a selected collection \(\mathcal{S}\) of feature subsets \(S \subseteq [d]\), where \([d] = \{1, \dots, d\}\):
 \[
   \nu_S[D] = \frac{1}{n} \sum_{i=1}^n \delta_{x_{i,S}},
 \]
-where \(\delta_{x_{i,S}}\) is the Dirac point mass at \(x_{i,S} \in \mathcal{X}_S = \prod_{j \in S} \mathcal{X}_j\), the restriction of \(x_i\) to the coordinates in \(S\). These methods perturb each \(\nu_S[D]\) cellwise with calibrated noise (for example, via the Gaussian mechanism \citep{dwork2014algorithmic}) to obtain privatized marginals \(\hat{\nu}_S\), and then generate \(D_{\mathrm{syn}}\) so that \(\nu_S[D_{\mathrm{syn}}] \approx \hat{\nu}_S\) for all \(S \in \mathcal{S}\). Existing generators typically fit a probabilistic graphical model to \(\{\hat{\nu}_S\}_{S \in \mathcal{S}}\) and sample from it \citep{mckenna2019graphical}, whereas Chapter~\ref{chap:privpgd} optimizes synthetic particles directly.
+where \(\delta_{x_{i,S}}\) is the Dirac point mass at \(x_{i,S} \in \mathcal{X}_S = \prod_{j \in S} \mathcal{X}_j\), the restriction of \(x_i\) to the coordinates in \(S\). These methods perturb each \(\nu_S[D]\) cellwise with calibrated noise (for example, via the Gaussian mechanism \citep{dwork2014algorithmic}) to obtain privatized marginals \(\hat{\nu}_S\), and then generate \(D_{\mathrm{syn}}\) so that \(\nu_S[D_{\mathrm{syn}}] \approx \hat{\nu}_S\) for all \(S \in \mathcal{S}\). Existing generators typically fit a probabilistic graphical model to \(\{\hat{\nu}_S\}_{S \in \mathcal{S}}\) and sample from it \citep{mckenna2019graphical}, whereas in Chapter~\ref{chap:privpgd} we optimize synthetic particles directly.
 
 \subsection{Optimal Transport}
 
@@ -94,7 +94,7 @@ Computing \(W_q\) exactly scales roughly cubically in the number of support poin
     W_q^q\bigl(g^\theta_{\#}\mu, g^\theta_{\#}\nu\bigr)\, d\sigma(\theta)
   \right)^{1/q},
 \]
-where \(g^\theta_{\#}\mu\) is the pushforward of \(\mu\) under \(g^\theta(x) = \langle x, \theta \rangle\) and \(\sigma\) is the uniform measure on \(\mathbb{S}^{p-1}\). In one dimension, \(W_q\) admits a closed-form expression in terms of the quantile functions of the two projected measures; for discrete measures, computing it reduces to sorting the projected points, which makes \(\SW_q\) practical for the particle optimization in Chapter~\ref{chap:privpgd}.
+where \(g^\theta_{\#}\mu\) is the pushforward of \(\mu\) under \(g^\theta(x) = \langle x, \theta \rangle\) and \(\sigma\) is the uniform measure on \(\mathbb{S}^{p-1}\). In one dimension, \(W_q\) admits a closed-form expression in terms of the quantile functions of the two projected measures; for discrete measures, computing it reduces to sorting the projected points, which makes \(\SW_q\) practical when we optimize particles in Chapter~\ref{chap:privpgd}.
 
 \section{Language Models, Memorization, and Copyright}
 \label{sec:bg-lm}
@@ -105,11 +105,11 @@ An autoregressive language model \(\model\) maps a prompt \(x\) to a distributio
 \[
   \model(y_{0:T} \mid x) = \prod_{t=0}^{T} \model(y_t \mid y_{<t}, x).
 \]
-Text is generated sequentially, either by sampling from \(\model(\cdot \mid y_{<t}, x)\) or by taking the highest-probability token at each step (greedy decoding).
+At inference time, we generate text sequentially, either by sampling from \(\model(\cdot \mid y_{<t}, x)\) or by taking the highest-probability token at each step (greedy decoding).
 
 \subsection{Memorization and Copyright}
 
-Language models can memorize passages from their training corpora and reproduce them verbatim or near-verbatim \citep{carlini2021extracting,carlini2023quantifying,nasr2023scalable}. When training corpora include copyrighted works, this creates a risk of infringement \citep{sag66new,henderson2023foundation}. Mitigations act before training (data filtering and deduplication \citep{lee2021deduplicating,min2023silo}), during training (differentially private optimization \citep{abadi2016deep} or loss modifications \citep{hans2024like}), or at inference time (exact-match output filters \citep{ippolito2023preventing}).
+Language models can memorize passages from their training corpora and reproduce them verbatim or near-verbatim \citep{carlini2021extracting,carlini2023quantifying,nasr2023scalable}. When training corpora include copyrighted works, this creates a risk of infringement \citep{sag66new,henderson2023foundation}. Existing defenses intervene before training (data filtering and deduplication \citep{lee2021deduplicating,min2023silo}), during training (differentially private optimization \citep{abadi2016deep} or loss modifications \citep{hans2024like}), or at inference time (exact-match output filters \citep{ippolito2023preventing}).
 
 \subsection{A Formal Criterion for Copyright Protection}
 
@@ -123,4 +123,4 @@ Under the Near Access Free (\(k\)-NAF) framework of \citet{vyas2023provable}, tw
 \[
   \max_{i \in \{1, 2\}} \Delta\bigl(\model(\cdot \mid x) \,\|\, \modeli(\cdot \mid x)\bigr) \leq k.
 \]
-Because at least one base model was not trained on any given protected work and thus assigns it low probability, staying within divergence \(k\) of both prevents \(\model\) from assigning high probability to that work. Chapter~\ref{chap:cpfuse} uses this framework with \(\Delta = \KL\) for copyright-protected decoding.
+Because at least one base model was not trained on any given protected work and thus assigns it low probability, staying within divergence \(k\) of both prevents \(\model\) from assigning high probability to that work. In Chapter~\ref{chap:cpfuse}, we build on this framework with \(\Delta = \KL\) for copyright-protected decoding.
