@@ -324,7 +324,7 @@ where \(\|\nu_S[D] - \nu_S[D_{\mathrm{syn}}]\|_1 = 2\,\TV\!\left(\nu_S[D],\nu_S[
   \includegraphics[width=\textwidth]{papers/PrivPGD/figures/exp12legend_plot.pdf}\\[0.8ex]
   \includegraphics[width=\textwidth]{papers/PrivPGD/figures/plots_datasets/eps_2.5/1.pdf}\\[0.8ex]
   \includegraphics[width=\textwidth]{papers/PrivPGD/figures/plots_datasets/eps_2.5/2.pdf}
-  \caption{Comparison of PrivPGD with state-of-the-art methods using all two-way marginals across nine tabular datasets at \(\epsilon = 2.5\) and \(\delta = 10^{-5}\). For each dataset, the x-axis labels denote 1) downstream error, 2) covariance error, 3) threshold query error, and 4) counting query error. Each point shows the mean and standard deviation over five runs of the linear error ratio relative to PrivPGD (PrivPGD error in the denominator, so PrivPGD equals \(1.0\) and lower is better). Values exceeding \(4.0\) are stacked in order above the dashed line. GEM is omitted from the plots and reported in Appendix~\ref{app:privpgd-tables}.}
+  \caption{Comparison of PrivPGD with state-of-the-art methods using all two-way marginals across nine tabular datasets at \(\epsilon = 2.5\) and \(\delta = 10^{-5}\). For each dataset, the x-axis labels denote 1) downstream error, 2) covariance error, 3) threshold query error, and 4) counting query error. Each point shows the method's mean and standard deviation over five runs divided by PrivPGD's mean error (so PrivPGD's mean equals \(1.0\), with error bars reflecting its own standard deviation; lower is better). Values exceeding \(4.0\) are stacked in order above the dashed line. GEM is omitted from the plots and reported in Appendix~\ref{app:privpgd-tables}; RAP is also omitted on Emp.\ due to the \(20\) GB memory limit.}
   \label{fig:comp}
 \end{figure}
 
@@ -357,7 +357,7 @@ PrivPGD is also the preferred method in most scenarios when compared to query-ba
     \centering
     \includegraphics[width=\textwidth]{papers/PrivPGD/figures/plots_distances/eps_2.5/newl1_2Way_avg.pdf}
   \end{minipage}
-  \caption{Comparison of average sliced Wasserstein distance (left) and average \(\ell_1\) distance, equal to twice the total variation distance (right), over all two-way marginals across nine tabular datasets at \(\epsilon = 2.5\) and \(\delta = 10^{-5}\). As in Figure~\ref{fig:comp}, each point shows the mean and standard deviation over five runs of the linear error ratio relative to PrivPGD (PrivPGD equals \(1.0\), lower is better), with values above \(4.0\) stacked in order above the dashed line. Only PrivPGD, PGM+AIM, PGM+MST, and Private GSD are plotted, and full results including GEM and RAP appear in Appendix~\ref{app:privpgd-tables}.}
+  \caption{Comparison of average sliced Wasserstein distance (left) and average \(\ell_1\) distance, equal to twice the total variation distance (right), over all two-way marginals across nine tabular datasets at \(\epsilon = 2.5\) and \(\delta = 10^{-5}\). As in Figure~\ref{fig:comp}, each point shows the method's mean and standard deviation over five runs divided by PrivPGD's mean error (so PrivPGD's mean equals \(1.0\), lower is better), with values above \(4.0\) stacked in order above the dashed line. Only PrivPGD, PGM+AIM, PGM+MST, and Private GSD are plotted, and full results including GEM and RAP appear in Appendix~\ref{app:privpgd-tables}.}
   \label{fig:comp-sw-tv}
 \end{figure}
 
@@ -370,7 +370,7 @@ The final experiment shows that PrivPGD can protect population-level statistics 
 
 As an example, we consider maximizing the distance of a single linear non-sparse thresholding query defined directly in the embedding space. This query is approximated by a differentiable sigmoid surrogate, and the resulting differentially private regularization term is added to the objective. The exact construction is given in Appendix~\ref{app:privpgd-constraints}.
 
-Figure~\ref{fig:constraints-main} shows that the targeted query is well approximated when no, or only little, regularization is used, and that increasing the regularization strength increasingly protects these statistics, as the domain-specific query on the synthetic dataset deviates strongly from the same query on the original data. At the same time, the downstream error and the errors on unrelated random counting and threshold queries remain comparable to the unregularized case even for relatively large regularization strengths.
+Figure~\ref{fig:constraints-main} shows that the targeted query is well approximated when little regularization is used (\(\log\lambda = -2\)), and diverges strongly as \(\lambda\) grows (reaching about \(0.26\) on ACS Income and \(0.29\) on ACS Employment at \(\log\lambda = 2\)). Errors on unrelated random counting and threshold queries remain close to zero across all values of \(\lambda\) (at most \(0.01\)). Downstream classification error increases modestly on ACS Employment (from about \(0.19\) to \(0.24\)), whereas on ACS Income it stays near the unregularized baseline at small \(\lambda\) and rises more noticeably under stronger regularization (from about \(0.19\) at \(\log\lambda = -2\) to \(0.34\) at \(\log\lambda = 2\)).
 
 \begin{figure}[!t]
   \centering

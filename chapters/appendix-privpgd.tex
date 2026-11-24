@@ -130,7 +130,7 @@ At \(\epsilon = 1.0\) (Figures~\ref{fig:app-privpgd-comp-1} and \ref{fig:app-pri
   \includegraphics[width=0.9\textwidth]{papers/PrivPGD/figures/exp12legend_plot.pdf}\\[1ex]
   \includegraphics[width=0.9\textwidth]{papers/PrivPGD/figures/plots_datasets/eps_1.0/1.pdf}\\[1ex]
   \includegraphics[width=0.9\textwidth]{papers/PrivPGD/figures/plots_datasets/eps_1.0/2.pdf}
-  \caption{Extended benchmark comparison at \(\epsilon = 1.0\) and \(\delta = 10^{-5}\). Following Figure~\ref{fig:comp}, x-axis labels denote 1) downstream error, 2) covariance error, 3) threshold query error, and 4) counting query error, and each point reports the five-run mean and standard deviation of the linear error ratio relative to PrivPGD (PrivPGD equals \(1.0\), lower is better), with values above \(4.0\) stacked in order above the dashed line. GEM is omitted from the plots and reported in Tables~\ref{tab:app-privpgd-e10-acs} and \ref{tab:app-privpgd-e10-rest}.}
+  \caption{Extended benchmark comparison at \(\epsilon = 1.0\) and \(\delta = 10^{-5}\). Following Figure~\ref{fig:comp}, x-axis labels denote 1) downstream error, 2) covariance error, 3) threshold query error, and 4) counting query error, and each point reports the method's five-run mean and standard deviation divided by PrivPGD's mean error (PrivPGD's mean equals \(1.0\), lower is better), with values above \(4.0\) stacked in order above the dashed line. GEM is omitted from the plots and reported in Tables~\ref{tab:app-privpgd-e10-acs} and \ref{tab:app-privpgd-e10-rest}; RAP is also omitted on Emp.\ due to the \(20\) GB memory limit.}
   \label{fig:app-privpgd-comp-1}
 \end{figure}
 
@@ -140,7 +140,7 @@ At \(\epsilon = 1.0\) (Figures~\ref{fig:app-privpgd-comp-1} and \ref{fig:app-pri
   \includegraphics[width=0.48\textwidth]{papers/PrivPGD/figures/plots_distances/eps_1.0/wdist_1_2Way_avg.pdf}
   \hfill
   \includegraphics[width=0.48\textwidth]{papers/PrivPGD/figures/plots_distances/eps_1.0/newl1_2Way_avg.pdf}
-  \caption{Average sliced Wasserstein distance (left) and average \(\ell_1\) distance, equal to twice the total variation distance (right), over all two-way marginals at \(\epsilon = 1.0\) and \(\delta = 10^{-5}\). Each point shows the five-run mean and standard deviation of the linear error ratio relative to PrivPGD (PrivPGD equals \(1.0\), lower is better), with values above \(4.0\) stacked in order above the dashed line. Only PrivPGD, PGM+AIM, PGM+MST, and Private GSD are plotted, and full results appear in Tables~\ref{tab:app-privpgd-e10-acs} and \ref{tab:app-privpgd-e10-rest}.}
+  \caption{Average sliced Wasserstein distance (left) and average \(\ell_1\) distance, equal to twice the total variation distance (right), over all two-way marginals at \(\epsilon = 1.0\) and \(\delta = 10^{-5}\). Each point shows the method's five-run mean and standard deviation divided by PrivPGD's mean error (PrivPGD's mean equals \(1.0\), lower is better), with values above \(4.0\) stacked in order above the dashed line. Only PrivPGD, PGM+AIM, PGM+MST, and Private GSD are plotted, and full results appear in Tables~\ref{tab:app-privpgd-e10-acs} and \ref{tab:app-privpgd-e10-rest}.}
   \label{fig:app-privpgd-dist-1}
 \end{figure}
 
@@ -155,7 +155,7 @@ At \(\epsilon = 0.2\) (Figures~\ref{fig:app-privpgd-comp-02} and \ref{fig:app-pr
   \includegraphics[width=0.9\textwidth]{papers/PrivPGD/figures/exp12legend_plot.pdf}\\[1ex]
   \includegraphics[width=0.9\textwidth]{papers/PrivPGD/figures/plots_datasets/eps_0.2/1.pdf}\\[1ex]
   \includegraphics[width=0.9\textwidth]{papers/PrivPGD/figures/plots_datasets/eps_0.2/2.pdf}
-  \caption{Extended benchmark comparison at \(\epsilon = 0.2\) and \(\delta = 10^{-5}\). Following Figure~\ref{fig:comp}, x-axis labels denote 1) downstream error, 2) covariance error, 3) threshold query error, and 4) counting query error, and each point reports the five-run mean and standard deviation of the linear error ratio relative to PrivPGD (PrivPGD equals \(1.0\), lower is better), with values above \(4.0\) stacked in order above the dashed line. GEM is omitted from the plots and reported in Tables~\ref{tab:app-privpgd-e02-acs} and \ref{tab:app-privpgd-e02-rest}.}
+  \caption{Extended benchmark comparison at \(\epsilon = 0.2\) and \(\delta = 10^{-5}\). Following Figure~\ref{fig:comp}, x-axis labels denote 1) downstream error, 2) covariance error, 3) threshold query error, and 4) counting query error, and each point reports the method's five-run mean and standard deviation divided by PrivPGD's mean error (PrivPGD's mean equals \(1.0\), lower is better), with values above \(4.0\) stacked in order above the dashed line. GEM is omitted from the plots and reported in Tables~\ref{tab:app-privpgd-e02-acs} and \ref{tab:app-privpgd-e02-rest}; RAP is also omitted on Emp.\ due to the \(20\) GB memory limit.}
   \label{fig:app-privpgd-comp-02}
 \end{figure}
 
@@ -165,7 +165,7 @@ At \(\epsilon = 0.2\) (Figures~\ref{fig:app-privpgd-comp-02} and \ref{fig:app-pr
   \includegraphics[width=0.48\textwidth]{papers/PrivPGD/figures/plots_distances/eps_0.2/wdist_1_2Way_avg.pdf}
   \hfill
   \includegraphics[width=0.48\textwidth]{papers/PrivPGD/figures/plots_distances/eps_0.2/newl1_2Way_avg.pdf}
-  \caption{Average sliced Wasserstein distance (left) and average \(\ell_1\) distance, equal to twice the total variation distance (right), over all two-way marginals at \(\epsilon = 0.2\) and \(\delta = 10^{-5}\). Each point shows the five-run mean and standard deviation of the linear error ratio relative to PrivPGD (PrivPGD equals \(1.0\), lower is better), with values above \(4.0\) stacked in order above the dashed line. Only PrivPGD, PGM+AIM, PGM+MST, and Private GSD are plotted, and full results appear in Tables~\ref{tab:app-privpgd-e02-acs} and \ref{tab:app-privpgd-e02-rest}.}
+  \caption{Average sliced Wasserstein distance (left) and average \(\ell_1\) distance, equal to twice the total variation distance (right), over all two-way marginals at \(\epsilon = 0.2\) and \(\delta = 10^{-5}\). Each point shows the method's five-run mean and standard deviation divided by PrivPGD's mean error (PrivPGD's mean equals \(1.0\), lower is better), with values above \(4.0\) stacked in order above the dashed line. Only PrivPGD, PGM+AIM, PGM+MST, and Private GSD are plotted, and full results appear in Tables~\ref{tab:app-privpgd-e02-acs} and \ref{tab:app-privpgd-e02-rest}.}
   \label{fig:app-privpgd-dist-02}
 \end{figure}
 

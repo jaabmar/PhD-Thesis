@@ -600,7 +600,7 @@ For text generation, CP-Fuse and \(\cpdelta\) both produce coherent outputs, but
 
 The qualitative comparison with MemFree illustrates a complementary tradeoff. MemFree avoids exact matches through local token perturbations rather than genuinely new generations, which in the broader evaluation can introduce spelling errors, inconsistent variable names, grammatical mistakes, or topic drift. In code generation, the retained \texttt{APPS} example illustrates superficial parameter and formatting edits, while across the broader \texttt{APPS} evaluation such perturbations also cause syntax and logic errors that lower pass@1. In story generation, the retained \texttt{WritingPrompts} example shows filtering causing sharp topic drift. CP-Fuse avoids those issues because each generated token remains consistent with at least one of the two fine-tuned models.
 
-Finally, the prefix-prompt extraction example shows that even with a long character prefix, CP-Fuse continues the text in a way that diverges from the original story. This qualitative pattern complements the quantitative robustness trend in Figure~\ref{fig:cpfuse-prefix}.
+Finally, the prefix-prompt extraction example in Figure~\ref{fig:app-cpfuse-prefix-example} shows that even with a long character prefix, CP-Fuse continues the text in a way that diverges from the original story. This qualitative pattern complements the quantitative robustness trend in Figure~\ref{fig:cpfuse-prefix}.
 
 \input{chapters/appendix-cp-fuse-qualitative-examples}
 
