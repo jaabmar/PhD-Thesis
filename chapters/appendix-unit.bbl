@@ -90,19 +90,19 @@ Issa~J Dahabreh, Sebastien JP~A Haneuse, James~M Robins, Sarah~E Robertson,
 Irina Degtiar, Tim Layton, Jacob Wallace, and Sherri Rose.
 \newblock Conditional cross-design synthesis estimators for generalizability in
   {M}edicaid.
-\newblock \emph{Biometrics}, 00:\penalty0 1 -- 14, 2023.
+\newblock \emph{Biometrics}, 79\penalty0 (4):\penalty0 3859--3872, 2023.
 
 \bibitem[Ding et~al.(2021)Ding, Hardt, Miller, and Schmidt]{ding2021retiring}
 Frances Ding, Moritz Hardt, John Miller, and Ludwig Schmidt.
 \newblock Retiring {A}dult: New datasets for fair machine learning.
 \newblock \emph{Advances in Neural Information Processing Systems}, 34, 2021.
 
-\bibitem[Dorn and Guo(2022)]{dorn2022sharp}
+\bibitem[Dorn and Guo(2023)]{dorn2022sharp}
 Jacob Dorn and Kevin Guo.
 \newblock Sharp sensitivity analysis for inverse propensity weighting via
   quantile balancing.
-\newblock \emph{Journal of the American Statistical Association}, pages 1--13,
-  2022.
+\newblock \emph{Journal of the American Statistical Association}, 118\penalty0
+  (544):\penalty0 2645--2657, 2023.
 
 \bibitem[Dorn et~al.(2025)Dorn, Guo, and Kallus]{dorn2021doubly}
 Jacob Dorn, Kevin Guo, and Nathan Kallus.
@@ -123,10 +123,12 @@ Angela Fan, Mike Lewis, and Yann Dauphin.
 \newblock In \emph{Proceedings of the 56th Annual Meeting of the Association
   for Computational Linguistics (Volume 1: Long Papers)}, pages 889--898, 2018.
 
-\bibitem[Fu et~al.(2023)Fu, Ng, Jiang, and Liu]{fu2023gptscore}
+\bibitem[Fu et~al.(2024)Fu, Ng, Jiang, and Liu]{fu2023gptscore}
 Jinlan Fu, See-Kiong Ng, Zhengbao Jiang, and Pengfei Liu.
-\newblock {GPTscore}: Evaluate as you desire.
-\newblock \emph{arXiv preprint arXiv:2302.04166}, 2023.
+\newblock {GPTScore}: Evaluate as you desire.
+\newblock In \emph{Proceedings of the 2024 Conference of the North American
+  Chapter of the Association for Computational Linguistics: Human Language
+  Technologies (Volume 1: Long Papers)}, pages 6556--6576, 2024.
 
 \bibitem[Gerber et~al.(2008)Gerber, Green, and Larimer]{gerber2008social}
 Alan~S Gerber, Donald~P Green, and Christopher~W Larimer.
@@ -148,7 +150,7 @@ L{\'e}o Grinsztajn, Edouard Oyallon, and Ga{\"e}l Varoquaux.
 Abhimanyu Hans, Yuxin Wen, Neel Jain, John Kirchenbauer, Hamid Kazemi, Prajwal
   Singhania, Siddharth Singh, Gowthami Somepalli, Jonas Geiping, Abhinav
   Bhatele, et~al.
-\newblock Be like a goldfish, don't memorize! mitigating memorization in
+\newblock Be like a {Goldfish}, don't memorize! {Mitigating} memorization in
   generative {LLMs}.
 \newblock In \emph{Advances in Neural Information Processing Systems},
   volume~37, pages 24022--24045, 2024.
@@ -158,7 +160,7 @@ Abhimanyu Hans, Yuxin Wen, Neel Jain, John Kirchenbauer, Hamid Kazemi, Prajwal
 Dan Hendrycks, Steven Basart, Saurav Kadavath, Mantas Mazeika, Akul Arora,
   Ethan Guo, Collin Burns, Samir Puranik, Horace He, Dawn Song, and Jacob
   Steinhardt.
-\newblock Measuring coding challenge competence with apps.
+\newblock Measuring coding challenge competence with {APPS}.
 \newblock \emph{NeurIPS}, 2021.
 
 \bibitem[Hillstrom(2008)]{hillstrom2008}
@@ -238,8 +240,9 @@ Terrance Liu, Jingwu Tang, Giuseppe Vietri, and Steven Wu.
 \bibitem[Liu et~al.(2023{\natexlab{b}})Liu, Iter, Xu, Wang, Xu, and
   Zhu]{liu2023g}
 Yang Liu, Dan Iter, Yichong Xu, Shuohang Wang, Ruochen Xu, and Chenguang Zhu.
-\newblock {G-eval}: {NLG} evaluation using {GPT}-4 with better human alignment.
-\newblock \emph{arXiv preprint arXiv:2303.16634}, 2023{\natexlab{b}}.
+\newblock {G-Eval}: {NLG} evaluation using {GPT}-4 with better human alignment.
+\newblock In \emph{Proceedings of the 2023 Conference on Empirical Methods in
+  Natural Language Processing}, pages 2511--2522, 2023{\natexlab{b}}.
 
 \bibitem[Maertens et~al.(2022)Maertens, Van~Petegem, Strijbol, Baeyens, Jacobs,
   Dawyndt, and Mesuere]{maertens2022dolos}
@@ -258,9 +261,10 @@ Nicolai Meinshausen.
   Berg-Kirkpatrick]{mireshghallah2022memorization}
 Fatemehsadat Mireshghallah, Archit Uniyal, Tianhao Wang, David Evans, and
   Taylor Berg-Kirkpatrick.
-\newblock Memorization in {NLP} fine-tuning methods.
-\newblock In \emph{First Workshop on Pre-training: Perspectives, Pitfalls, and
-  Paths Forward at ICML}, 2022.
+\newblock An empirical analysis of memorization in fine-tuned autoregressive
+  language models.
+\newblock In \emph{Proceedings of the 2022 Conference on Empirical Methods in
+  Natural Language Processing}, pages 1816--1826, 2022.
 
 \bibitem[Mueller et~al.(2024)Mueller, G{\"o}rge, Bernzen, Pirk, and
   Poretschkin]{mueller2024llms}
@@ -268,7 +272,8 @@ Felix~B Mueller, Rebekka G{\"o}rge, Anna~K Bernzen, Janna~C Pirk, and
   Maximilian Poretschkin.
 \newblock {LLMs} and memorization: On quality and specificity of copyright
   compliance.
-\newblock \emph{arXiv preprint arXiv:2405.18492}, 2024.
+\newblock \emph{Proceedings of the AAAI/ACM Conference on AI, Ethics, and
+  Society}, 7\penalty0 (1):\penalty0 984--996, 2024.
 
 \bibitem[Oprescu et~al.(2023)Oprescu, Dorn, Ghoummaid, Jesson, Kallus, and
   Shalit]{oprescu2023b}
@@ -301,7 +306,7 @@ Ross Prentice, Robert Langer, Marcia Stefanick, Barbara Howard, Mary Pettinger,
   Garnet Anderson, David Barad, David Curb, Jane Kotchen, Lewis Kuller, et~al.
 \newblock Combined postmenopausal hormone therapy and cardiovascular disease:
   toward resolving the discrepancy between observational studies and the
-  \text{Women's Health Initiative} clinical trial.
+  {Women's Health Initiative} clinical trial.
 \newblock \emph{American Journal of Epidemiology}, 162\penalty0 (5):\penalty0
   404--414, 2005.
 
@@ -310,7 +315,8 @@ Ross Prentice, Robert Langer, Marcia Stefanick, Barbara Howard, Mary Pettinger,
 Andrea Sottana, Bin Liang, Kai Zou, and Zheng Yuan.
 \newblock Evaluation metrics in the era of {GPT}-4: reliably evaluating large
   language models on sequence to sequence tasks.
-\newblock \emph{arXiv preprint arXiv:2310.13800}, 2023.
+\newblock In \emph{Proceedings of the 2023 Conference on Empirical Methods in
+  Natural Language Processing}, pages 8776--8788, 2023.
 
 \bibitem[Strack et~al.(2014)Strack, DeShazo, Gennings, Olmo, Ventura, Cios,
   Clore, et~al.]{strack2014impact}
@@ -350,18 +356,19 @@ Yueqi Xie, Jingwei Yi, Jiawei Shao, Justin Curl, Lingjuan Lyu, Qifeng Chen,
 \newblock \emph{Nature Machine Intelligence}, 5\penalty0 (12):\penalty0
   1486--1496, 2023.
 
-\bibitem[Zhang et~al.(2024)Zhang, Luo, Yuan, and Yao]{zhang2024autonomous}
+\bibitem[Zhang et~al.(2025)Zhang, Luo, Yuan, and Yao]{zhang2024autonomous}
 Yifan Zhang, Yifan Luo, Yang Yuan, and Andrew~C Yao.
-\newblock Autonomous data selection with language models for mathematical
-  texts.
-\newblock In \emph{ICLR 2024 Workshop on Navigating and Addressing Data
-  Problems for Foundation Models}, 2024.
+\newblock Autonomous data selection with zero-shot generative classifiers for
+  mathematical texts.
+\newblock In \emph{Findings of the Association for Computational Linguistics:
+  ACL 2025}, pages 4168--4189, 2025.
 
-\bibitem[Zheng et~al.(2024)Zheng, Chiang, Sheng, Zhuang, Wu, Zhuang, Lin, Li,
+\bibitem[Zheng et~al.(2023)Zheng, Chiang, Sheng, Zhuang, Wu, Zhuang, Lin, Li,
   Li, Xing, et~al.]{zheng2024judging}
 Lianmin Zheng, Wei-Lin Chiang, Ying Sheng, Siyuan Zhuang, Zhanghao Wu, Yonghao
   Zhuang, Zi~Lin, Zhuohan Li, Dacheng Li, Eric Xing, et~al.
 \newblock Judging {LLM}-as-a-judge with {MT-Bench} and {Chatbot Arena}.
-\newblock \emph{Advances in Neural Information Processing Systems}, 36, 2024.
+\newblock \emph{Advances in Neural Information Processing Systems},
+  36:\penalty0 46595--46623, 2023.
 
 \end{thebibliography}

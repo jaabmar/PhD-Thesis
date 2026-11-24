@@ -39,7 +39,7 @@ This section collects the operational details needed to interpret the supplement
 
 \subsection{Training and Decoding Setup}
 
-We fine-tune models using a setup based on \emph{finetuning-harness} (MIT License)\footnote{\href{https://github.com/cassanof/finetuning-harness/}{https://github.com/cassanof/finetuning-harness/}}. The models are trained with sequence length \(2048\), batch size \(1\), learning rate \(5 \times 10^{-5}\), AdamW (8-bit), warmup of \(50\) steps, and NEFTune noise \citep{jain2023neftune} with \(\alpha=5.0\) (Table~\ref{tab:app-cpfuse-training}). No low-rank adaptation is used. StarCoder, LLaMA 2, and Phi-2 models are fine-tuned for \(50\) epochs in the overfitted experiments, while GPT-2 XL is fine-tuned for \(20\) epochs in the supplementary model-variant experiments.
+We fine-tune models using a setup based on \emph{finetuning-harness} (MIT License). The models are trained with sequence length \(2048\), batch size \(1\), learning rate \(5 \times 10^{-5}\), AdamW (8-bit), warmup of \(50\) steps, and NEFTune noise \citep{jain2023neftune} with \(\alpha=5.0\) (Table~\ref{tab:app-cpfuse-training}). No low-rank adaptation is used. StarCoder, LLaMA 2, and Phi-2 models are fine-tuned for \(50\) epochs in the overfitted experiments, while GPT-2 XL is fine-tuned for \(20\) epochs in the supplementary model-variant experiments.
 
 \begin{table}[!tbp]
 \centering

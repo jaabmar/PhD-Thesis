@@ -8,7 +8,8 @@
 \bibitem[Abad et~al.(2025)Abad, Donhauser, Pinto, and Yang]{abad2025copyright}
 Javier Abad, Konstantin Donhauser, Francesco Pinto, and Fanny Yang.
 \newblock Copyright-protected language generation via adaptive model fusion.
-\newblock \emph{International Conference on Learning Representations}, 2025.
+\newblock In \emph{Proceedings of the 13th International Conference on Learning
+  Representations}, pages 361--405, 2025.
 
 \bibitem[Abadi et~al.(2016)Abadi, Chu, Goodfellow, McMahan, Mironov, Talwar,
   and Zhang]{abadi2016deep}
@@ -76,11 +77,12 @@ Sergul Aydore, William Brown, Michael Kearns, Krishnaram Kenthapadi, Luca
 \newblock In \emph{Proceedings of the International Conference on Machine
   Learning}, pages 457--467, 2021.
 
-\bibitem[Boedihardjo et~al.(2022)Boedihardjo, Strohmer, and
+\bibitem[Boedihardjo et~al.(2024)Boedihardjo, Strohmer, and
   Vershynin]{boedihardjo2022private}
 March Boedihardjo, Thomas Strohmer, and Roman Vershynin.
 \newblock Private measures, random walks, and synthetic data.
-\newblock \emph{arXiv preprint arXiv:2204.09167}, 2022.
+\newblock \emph{Probability Theory and Related Fields}, 189\penalty0
+  (1--2):\penalty0 569--611, 2024.
 
 \bibitem[Bonneel et~al.(2015)Bonneel, Rabin, Peyr{\'e}, and
   Pfister]{bonneel2015sliced}
@@ -211,8 +213,9 @@ Jerome Cornfield, William Haenszel, E.~Cuyler Hammond, Abraham~M. Lilienfeld,
 Piersilvio De~Bartolomeis, Javier Abad, Konstantin Donhauser, and Fanny Yang.
 \newblock Hidden yet quantifiable: A lower bound for confounding strength using
   randomized trials.
-\newblock \emph{International Conference on Artificial Intelligence and
-  Statistics}, 2024{\natexlab{a}}.
+\newblock In \emph{Proceedings of the 27th International Conference on
+  Artificial Intelligence and Statistics}, volume 238 of \emph{Proceedings of
+  Machine Learning Research}, pages 1045--1053. PMLR, 2024{\natexlab{a}}.
 
 \bibitem[De~Bartolomeis et~al.(2024{\natexlab{b}})De~Bartolomeis, Abad,
   Donhauser, and Yang]{debartolomeis2024detecting}
@@ -266,27 +269,30 @@ Stephen Donald, Yu-Chin Hsu, and Robert Lieli.
 \newblock \emph{Journal of Business \& Economic Statistics}, 32\penalty0
   (3):\penalty0 395--415, 2014.
 
-\bibitem[Donhauser et~al.(2023)Donhauser, Lokna, Sanyal, Boedihardjo,
-  H{\"o}nig, and Yang]{donhauser2023certified}
-Konstantin Donhauser, Johan Lokna, Amartya Sanyal, March Boedihardjo, Robert
-  H{\"o}nig, and Fanny Yang.
-\newblock Certified private data release for sparse {L}ipschitz functions.
-\newblock arXiv preprint arXiv:2302.09680, 2023.
-
-\bibitem[Donhauser et~al.(2024)Donhauser, Abad, Hulkund, and
+\bibitem[Donhauser et~al.(2024{\natexlab{a}})Donhauser, Abad, Hulkund, and
   Yang]{donhauser2024privacy}
 Konstantin Donhauser, Javier Abad, Neha Hulkund, and Fanny Yang.
 \newblock Privacy-preserving data release leveraging optimal transport and
   particle gradient descent.
 \newblock In \emph{Proceedings of the 41st International Conference on Machine
-  Learning}, pages 11453--11473, 2024.
+  Learning}, volume 235 of \emph{Proceedings of Machine Learning Research},
+  pages 11453--11473. PMLR, 2024{\natexlab{a}}.
 
-\bibitem[Dorn and Guo(2022)]{dorn2022sharp}
+\bibitem[Donhauser et~al.(2024{\natexlab{b}})Donhauser, Lokna, Sanyal,
+  Boedihardjo, H{\"o}nig, and Yang]{donhauser2023certified}
+Konstantin Donhauser, Johan Lokna, Amartya Sanyal, March Boedihardjo, Robert
+  H{\"o}nig, and Fanny Yang.
+\newblock Certified private data release for sparse {L}ipschitz functions.
+\newblock In \emph{Proceedings of the 27th International Conference on
+  Artificial Intelligence and Statistics}, volume 238 of \emph{Proceedings of
+  Machine Learning Research}, pages 1396--1404. PMLR, 2024{\natexlab{b}}.
+
+\bibitem[Dorn and Guo(2023)]{dorn2022sharp}
 Jacob Dorn and Kevin Guo.
 \newblock Sharp sensitivity analysis for inverse propensity weighting via
   quantile balancing.
-\newblock \emph{Journal of the American Statistical Association}, pages 1--13,
-  2022.
+\newblock \emph{Journal of the American Statistical Association}, 118\penalty0
+  (544):\penalty0 2645--2657, 2023.
 
 \bibitem[Dorn et~al.(2025)Dorn, Guo, and Kallus]{dorn2021doubly}
 Jacob Dorn, Kevin Guo, and Nathan Kallus.
@@ -321,21 +327,24 @@ Cynthia Dwork and Aaron Roth.
 \newblock \emph{Foundations and Trends in Theoretical Computer Science},
   9\penalty0 (3--4):\penalty0 211--407, 2014.
 
-\bibitem[El~Emam(2011)]{el2011case}
-Khaled El~Emam.
+\bibitem[El~Emam et~al.(2011)El~Emam, Jonker, and Fineberg]{el2011case}
+Khaled El~Emam, Elizabeth Jonker, and Anita Fineberg.
 \newblock The case for de-identifying personal health information.
 \newblock \emph{SSRN Electronic Journal}, 2011.
 
 \bibitem[Eldan and Russinovich(2023)]{eldan2023s}
 Ronen Eldan and Mark Russinovich.
-\newblock Who's {Harry Potter? approximate unlearning in LLMs}.
+\newblock Who's {Harry Potter}? {Approximate} unlearning in {LLMs}.
 \newblock \emph{arXiv preprint arXiv:2310.02238}, 2023.
 
-\bibitem[Elkin-Koren et~al.(2023)Elkin-Koren, Hacohen, Livni, and
+\bibitem[Elkin-Koren et~al.(2024)Elkin-Koren, Hacohen, Livni, and
   Moran]{elkin2023can}
 Niva Elkin-Koren, Uri Hacohen, Roi Livni, and Shay Moran.
 \newblock Can copyright be reduced to privacy?
-\newblock \emph{arXiv preprint arXiv:2305.14822}, 2023.
+\newblock In \emph{5th Symposium on Foundations of Responsible Computing (FORC
+  2024)}, volume 295 of \emph{Leibniz International Proceedings in Informatics
+  (LIPIcs)}, pages 3:1--3:18. Schloss Dagstuhl -- Leibniz-Zentrum f{\"u}r
+  Informatik, 2024.
 
 \bibitem[Fan et~al.(2018)Fan, Lewis, and Dauphin]{fan2018hierarchical}
 Angela Fan, Mike Lewis, and Yann Dauphin.
@@ -407,7 +416,7 @@ Suchin Gururangan, Margaret Li, Mike Lewis, Weijia Shi, Tim Althoff, Noah~A
 Abhimanyu Hans, Yuxin Wen, Neel Jain, John Kirchenbauer, Hamid Kazemi, Prajwal
   Singhania, Siddharth Singh, Gowthami Somepalli, Jonas Geiping, Abhinav
   Bhatele, et~al.
-\newblock Be like a goldfish, don't memorize! mitigating memorization in
+\newblock Be like a {Goldfish}, don't memorize! {Mitigating} memorization in
   generative {LLMs}.
 \newblock In \emph{Advances in Neural Information Processing Systems},
   volume~37, pages 24022--24045, 2024.
@@ -443,7 +452,7 @@ Peter Henderson, Xuechen Li, Dan Jurafsky, Tatsunori Hashimoto, Mark~A Lemley,
 Dan Hendrycks, Steven Basart, Saurav Kadavath, Mantas Mazeika, Akul Arora,
   Ethan Guo, Collin Burns, Samir Puranik, Horace He, Dawn Song, and Jacob
   Steinhardt.
-\newblock Measuring coding challenge competence with apps.
+\newblock Measuring coding challenge competence with {APPS}.
 \newblock \emph{NeurIPS}, 2021.
 
 \bibitem[Hillstrom(2008)]{hillstrom2008}
@@ -457,12 +466,13 @@ V~Joseph Hotz, Guido~W Imbens, and Julie~H Mortimer.
 \newblock \emph{Journal of econometrics}, 125\penalty0 (1-2):\penalty0
   241--270, 2005.
 
-\bibitem[Hsu et~al.(2024)Hsu, Chen, Liao, Ho, Wang, Hsu, and Shiu]{hsu2024let}
+\bibitem[Hsu et~al.(2025)Hsu, Chen, Liao, Ho, Wang, Hsu, and Shiu]{hsu2024let}
 Chan-Jan Hsu, Yi-Chang Chen, Feng-Ting Liao, Pei-Chen Ho, Yu-Hsiang Wang,
   Po-Chun Hsu, and Da-shan Shiu.
 \newblock Let's fuse step by step: A generative fusion decoding algorithm with
-  {LLMs} for multi-modal text recognition.
-\newblock \emph{arXiv preprint arXiv:2405.14259}, 2024.
+  {LLMs} for robust and instruction-aware {ASR} and {OCR}.
+\newblock In \emph{Findings of the Association for Computational Linguistics:
+  ACL 2025}, pages 24959--24973, 2025.
 
 \bibitem[Hsu and Small(2013)]{hsu2013calibrating}
 Jesse~Y Hsu and Dylan~S Small.
@@ -614,13 +624,13 @@ David Klonoff.
 \newblock \emph{Journal of Diabetes Science and Technology}, 14\penalty0
   (2):\penalty0 345--349, 2020.
 
-\bibitem[Kocetkov et~al.(2022)Kocetkov, Li, Allal, Li, Mou, Ferrandis, Jernite,
+\bibitem[Kocetkov et~al.(2023)Kocetkov, Li, Allal, Li, Mou, Ferrandis, Jernite,
   Mitchell, Hughes, Wolf, et~al.]{kocetkov2022stack}
 Denis Kocetkov, Raymond Li, Loubna~Ben Allal, Jia Li, Chenghao Mou,
   Carlos~Mu{\~n}oz Ferrandis, Yacine Jernite, Margaret Mitchell, Sean Hughes,
   Thomas Wolf, et~al.
 \newblock The stack: 3 {TB} of permissively licensed source code.
-\newblock \emph{arXiv preprint arXiv:2211.15533}, 2022.
+\newblock \emph{Transactions on Machine Learning Research}, 2023.
 
 \bibitem[Kolouri et~al.(2018)Kolouri, Rohde, and Hoffmann]{kolouri2018sliced}
 Soheil Kolouri, Gustavo~K Rohde, and Heiko Hoffmann.
@@ -648,19 +658,19 @@ Ninghui Li, Zhikun Zhang, and Tianhao Wang.
 Raymond Li, Loubna~Ben Allal, Yangtian Zi, Niklas Muennighoff, Denis Kocetkov,
   Chenghao Mou, Marc Marone, Christopher Akiki, Jia Li, Jenny Chim, et~al.
 \newblock {StarCoder}: may the source be with you!
-\newblock \emph{arXiv preprint arXiv:2305.06161}, 2023.
+\newblock \emph{Transactions on Machine Learning Research}, 2023.
 
 \bibitem[Li et~al.(2024)Li, Liu, Pang, Du, Guo, Liu, and Lin]{li2024purifying}
 Tianlin Li, Qian Liu, Tianyu Pang, Chao Du, Qing Guo, Yang Liu, and Min Lin.
 \newblock Purifying large language models by ensembling a small language model.
 \newblock \emph{arXiv preprint arXiv:2402.14845}, 2024.
 
-\bibitem[Lipsitch et~al.(2010)Lipsitch, Tchetgen, and
+\bibitem[Lipsitch et~al.(2010)Lipsitch, Tchetgen~Tchetgen, and
   Cohen]{lipsitch2010negative}
-Marc Lipsitch, Eric~Tchetgen Tchetgen, and Ted Cohen.
+Marc Lipsitch, Eric Tchetgen~Tchetgen, and Ted Cohen.
 \newblock Negative controls: a tool for detecting confounding and bias in
   observational studies.
-\newblock \emph{Epidemiology}, 21\penalty0 (3):\penalty0 383, 2010.
+\newblock \emph{Epidemiology}, 21\penalty0 (3):\penalty0 383--388, 2010.
 
 \bibitem[Liu et~al.(2021{\natexlab{a}})Liu, Sap, Lu, Swayamdipta, Bhagavatula,
   Smith, and Choi]{liu2021dexperts}
@@ -672,12 +682,14 @@ Alisa Liu, Maarten Sap, Ximing Lu, Swabha Swayamdipta, Chandra Bhagavatula,
   for Computational Linguistics and the 11th International Joint Conference on
   Natural Language Processing (Volume 1: Long Papers)}, 2021{\natexlab{a}}.
 
-\bibitem[Liu et~al.(2024{\natexlab{a}})Liu, Yao, Jia, Casper, Baracaldo, Hase,
-  Xu, Yao, Li, Varshney, et~al.]{liu2024rethinking}
+\bibitem[Liu et~al.(2025)Liu, Yao, Jia, Casper, Baracaldo, Hase, Yao, Liu, Xu,
+  Li, Varshney, Bansal, Koyejo, and Liu]{liu2024rethinking}
 Sijia Liu, Yuanshun Yao, Jinghan Jia, Stephen Casper, Nathalie Baracaldo, Peter
-  Hase, Xiaojun Xu, Yuguang Yao, Hang Li, Kush~R Varshney, et~al.
+  Hase, Yuguang Yao, Chris~Yuhao Liu, Xiaojun Xu, Hang Li, Kush~R. Varshney,
+  Mohit Bansal, Sanmi Koyejo, and Yang Liu.
 \newblock Rethinking machine unlearning for large language models.
-\newblock \emph{arXiv preprint arXiv:2402.08787}, 2024{\natexlab{a}}.
+\newblock \emph{Nature Machine Intelligence}, 7\penalty0 (2):\penalty0
+  181--194, 2025.
 
 \bibitem[Liu et~al.(2021{\natexlab{b}})Liu, Vietri, and Wu]{liu2021iterative}
 Terrance Liu, Giuseppe Vietri, and Steven~Z Wu.
@@ -693,14 +705,13 @@ Terrance Liu, Jingwu Tang, Giuseppe Vietri, and Steven Wu.
   Learning}, volume 202 of \emph{Proceedings of Machine Learning Research},
   pages 22009--22027, 23--29 Jul 2023.
 
-\bibitem[Liu et~al.(2024{\natexlab{b}})Liu, Sun, Xu, Wu, Wang, Wang, and
-  Gao]{liu2024shield}
+\bibitem[Liu et~al.(2024)Liu, Sun, Xu, Wu, Wang, Wang, and Gao]{liu2024shield}
 Xiaoze Liu, Ting Sun, Tianyang Xu, Feijie Wu, Cunxiang Wang, Xiaoqian Wang, and
   Jing Gao.
 \newblock {SHIELD}: Evaluation and defense strategies for copyright compliance
   in {LLM} text generation.
 \newblock In \emph{Proceedings of the 2024 Conference on Empirical Methods in
-  Natural Language Processing}, pages 1640--1670, 2024{\natexlab{b}}.
+  Natural Language Processing}, pages 1640--1670, 2024.
 
 \bibitem[Maertens et~al.(2022)Maertens, Van~Petegem, Strijbol, Baeyens, Jacobs,
   Dawyndt, and Mesuere]{maertens2022dolos}
@@ -715,7 +726,7 @@ Rien Maertens, Charlotte Van~Petegem, Niko Strijbol, Toon Baeyens, Arne~Carla
 Costas Mavromatis, Petros Karypis, and George Karypis.
 \newblock Pack of {LLMs}: Model fusion at test-time via perplexity
   optimization.
-\newblock \emph{arXiv preprint arXiv:2404.11531}, 2024.
+\newblock In \emph{First Conference on Language Modeling}, 2024.
 
 \bibitem[McKenna et~al.(2019)McKenna, Sheldon, and
   Miklau]{mckenna2019graphical}
@@ -740,20 +751,21 @@ Ryan McKenna, Brett Mullins, Daniel Sheldon, and Gerome Miklau.
 \newblock ISSN 2150-8097.
 \newblock \doi{10.14778/3551793.3551817}.
 
-\bibitem[Meeus et~al.(2023)Meeus, Jain, Rei, and de~Montjoye]{Meeus2023DidTN}
+\bibitem[Meeus et~al.(2024)Meeus, Jain, Rei, and de~Montjoye]{Meeus2023DidTN}
 Matthieu Meeus, Shubham Jain, Marek Rei, and Yves-Alexandre de~Montjoye.
-\newblock Did the neurons read your book? document-level membership inference
+\newblock Did the neurons read your book? {Document}-level membership inference
   for large language models.
-\newblock \emph{ArXiv}, abs/2310.15007, 2023.
+\newblock In \emph{33rd {USENIX} Security Symposium ({USENIX} Security 24)},
+  pages 2369--2385. USENIX Association, 2024.
 
-\bibitem[Min et~al.(2023)Min, Gururangan, Wallace, Shi, Hajishirzi, Smith, and
+\bibitem[Min et~al.(2024)Min, Gururangan, Wallace, Shi, Hajishirzi, Smith, and
   Zettlemoyer]{min2023silo}
 Sewon Min, Suchin Gururangan, Eric Wallace, Weijia Shi, Hannaneh Hajishirzi,
   Noah~A Smith, and Luke Zettlemoyer.
-\newblock Silo language models: Isolating legal risk in a nonparametric
+\newblock {SILO} language models: Isolating legal risk in a nonparametric
   datastore.
 \newblock In \emph{The Twelfth International Conference on Learning
-  Representations}, 2023.
+  Representations}, pages 25132--25159, 2024.
 
 \bibitem[Mueller et~al.(2024)Mueller, G{\"o}rge, Bernzen, Pirk, and
   Poretschkin]{mueller2024llms}
@@ -761,7 +773,8 @@ Felix~B Mueller, Rebekka G{\"o}rge, Anna~K Bernzen, Janna~C Pirk, and
   Maximilian Poretschkin.
 \newblock {LLMs} and memorization: On quality and specificity of copyright
   compliance.
-\newblock \emph{arXiv preprint arXiv:2405.18492}, 2024.
+\newblock \emph{Proceedings of the AAAI/ACM Conference on AI, Ethics, and
+  Society}, 7\penalty0 (1):\penalty0 984--996, 2024.
 
 \bibitem[Nasr et~al.(2023)Nasr, Carlini, Hayase, Jagielski, Cooper, Ippolito,
   Choquette-Choo, Wallace, Tram{\`e}r, and Lee]{nasr2023scalable}
@@ -853,7 +866,7 @@ Ross Prentice, Robert Langer, Marcia Stefanick, Barbara Howard, Mary Pettinger,
   Garnet Anderson, David Barad, David Curb, Jane Kotchen, Lewis Kuller, et~al.
 \newblock Combined postmenopausal hormone therapy and cardiovascular disease:
   toward resolving the discrepancy between observational studies and the
-  \text{Women's Health Initiative} clinical trial.
+  {Women's Health Initiative} clinical trial.
 \newblock \emph{American Journal of Epidemiology}, 162\penalty0 (5):\penalty0
   404--414, 2005.
 
@@ -885,14 +898,14 @@ Beth Schurman.
 \newblock The framework for {FDA}'s real-world evidence program.
 \newblock \emph{Applied Clinical Trials}, 28\penalty0 (4), 2019.
 
-\bibitem[Somepalli et~al.(2022)Somepalli, Singla, Goldblum, Geiping, and
+\bibitem[Somepalli et~al.(2023)Somepalli, Singla, Goldblum, Geiping, and
   Goldstein]{Somepalli2022DiffusionAO}
 Gowthami Somepalli, Vasu Singla, Micah Goldblum, Jonas Geiping, and Tom
   Goldstein.
-\newblock Diffusion art or digital forgery? investigating data replication in
+\newblock Diffusion art or digital forgery? {Investigating} data replication in
   diffusion models.
-\newblock \emph{2023 IEEE/CVF Conference on Computer Vision and Pattern
-  Recognition (CVPR)}, pages 6048--6058, 2022.
+\newblock In \emph{2023 {IEEE/CVF} Conference on Computer Vision and Pattern
+  Recognition ({CVPR})}, pages 6048--6058, 2023.
 
 \bibitem[Stuart et~al.(2011)Stuart, Cole, Bradshaw, and Leaf]{stuart2011use}
 Elizabeth Stuart, Stephen Cole, Catherine Bradshaw, and Philip Leaf.
@@ -967,11 +980,13 @@ Victor Veitch and Anisha Zaveri.
   to unobserved confounding.
 \newblock \emph{Advances in Neural Information Processing Systems}, 2020.
 
-\bibitem[Vero et~al.(2023)Vero, Balunovi{\'c}, and
+\bibitem[Vero et~al.(2024)Vero, Balunovi{\'c}, and
   Vechev]{vero2023programmable}
 Mark Vero, Mislav Balunovi{\'c}, and Martin Vechev.
-\newblock Programmable synthetic tabular data generation.
-\newblock \emph{arXiv preprint arXiv:2307.03577}, 2023.
+\newblock {CuTS}: Customizable tabular synthetic data generation.
+\newblock In \emph{Proceedings of the 41st International Conference on Machine
+  Learning}, volume 235 of \emph{Proceedings of Machine Learning Research},
+  pages 49408--49433. PMLR, 2024.
 
 \bibitem[Viele et~al.(2014)Viele, Berry, Neuenschwander, Amzal, Chen, Enas,
   Hobbs, Ibrahim, Kinnersley, Lindborg, et~al.]{viele2014use}
@@ -1013,7 +1028,8 @@ Nikhil Vyas, Sham~M Kakade, and Boaz Barak.
 Boyi Wei, Weijia Shi, Yangsibo Huang, Noah~A Smith, Chiyuan Zhang, Luke
   Zettlemoyer, Kai Li, and Peter Henderson.
 \newblock Evaluating copyright takedown methods for language models.
-\newblock \emph{arXiv preprint arXiv:2406.18664}, 2024.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~37, pages 139114--139150, 2024.
 
 \bibitem[Word et~al.(1990)Word, Johnston, Bain, Fulton, Zaharias, Achilles,
   Lintz, Folger, and Breda]{word1990state}
@@ -1049,11 +1065,12 @@ Yueqi Xie, Jingwei Yi, Jiawei Shao, Justin Curl, Lingjuan Lyu, Qifeng Chen,
 \newblock \emph{Nature Machine Intelligence}, 5\penalty0 (12):\penalty0
   1486--1496, 2023.
 
-\bibitem[Yadav et~al.(2024)Yadav, Tam, Choshen, Raffel, and
+\bibitem[Yadav et~al.(2023)Yadav, Tam, Choshen, Raffel, and
   Bansal]{yadav2024ties}
 Prateek Yadav, Derek Tam, Leshem Choshen, Colin~A Raffel, and Mohit Bansal.
-\newblock Ties-merging: Resolving interference when merging models.
-\newblock \emph{Advances in Neural Information Processing Systems}, 36, 2024.
+\newblock {TIES}-merging: Resolving interference when merging models.
+\newblock \emph{Advances in Neural Information Processing Systems},
+  36:\penalty0 7093--7115, 2023.
 
 \bibitem[Yadlowsky et~al.(2022)Yadlowsky, Namkoong, Basu, Duchi, and
   Tian]{yadlowsky2022bounds}
@@ -1103,20 +1120,18 @@ Jun Zhang, Graham Cormode, Cecilia~M Procopiuc, Divesh Srivastava, and Xiaokui
 \newblock \emph{ACM Transactions on Database Systems (TODS)}, 42\penalty0
   (4):\penalty0 1--41, 2017.
 
-\bibitem[Zhang et~al.(2024{\natexlab{a}})Zhang, Lin, Bai, and
-  Mei]{zhang2024negative}
+\bibitem[Zhang et~al.(2024)Zhang, Lin, Bai, and Mei]{zhang2024negative}
 Ruiqi Zhang, Licong Lin, Yu~Bai, and Song Mei.
 \newblock Negative preference optimization: From catastrophic collapse to
   effective unlearning.
-\newblock In \emph{First Conference on Language Modeling}, 2024{\natexlab{a}}.
+\newblock In \emph{First Conference on Language Modeling}, 2024.
 
-\bibitem[Zhang et~al.(2024{\natexlab{b}})Zhang, Luo, Yuan, and
-  Yao]{zhang2024autonomous}
+\bibitem[Zhang et~al.(2025)Zhang, Luo, Yuan, and Yao]{zhang2024autonomous}
 Yifan Zhang, Yifan Luo, Yang Yuan, and Andrew~C Yao.
-\newblock Autonomous data selection with language models for mathematical
-  texts.
-\newblock In \emph{ICLR 2024 Workshop on Navigating and Addressing Data
-  Problems for Foundation Models}, 2024{\natexlab{b}}.
+\newblock Autonomous data selection with zero-shot generative classifiers for
+  mathematical texts.
+\newblock In \emph{Findings of the Association for Computational Linguistics:
+  ACL 2025}, pages 4168--4189, 2025.
 
 \bibitem[Zhang et~al.(2021)Zhang, Wang, Li, Honorio, Backes, He, Chen, and
   Zhang]{zhang2021privsyn}
