@@ -35,6 +35,10 @@
 }
 \newcommand{\insertchapterseparator}{\insertblankpage}
 
+% Set \includeCVfalse for the public Research Collection PDF if desired.
+\newif\ifincludeCV
+\includeCVtrue
+
 \begin{document}
 
 \frenchspacing
@@ -82,5 +86,10 @@
 \part*{Appendix}
 \appendix
 \include{chapters/appendix-unit}
+
+\ifincludeCV
+  \cleardoublepage
+  \input{frontbackmatter/cv}
+\fi
 
 \end{document}
