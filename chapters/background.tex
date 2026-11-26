@@ -15,7 +15,7 @@ In Chapter~\ref{chap:confounding-test}, we frame causal questions using the pote
   \mu(\mathbb{P}_X) = \mathbb{E}_{\mathbb{P}_X}\bigl[\mu(X)\bigr].
 \]
 
-In a randomized trial, treatment is assigned independently of all covariates, observed or not, so we can estimate \(\mu(X)\) without bias. In an observational study, we can identify \(\mu(X)\) from \((X, T, Y)\) under \emph{strong ignorability} \citep{rosenbaum1983central}, which combines two assumptions:
+In a randomized trial, treatment is assigned independently of all covariates, observed or not, so we can estimate \(\mu(X)\) without bias. In an observational study, we can identify \(\mu(X)\) from \((X, T, Y)\) under \emph{strong ignorability} \citep{rosenbaum1983central}, which combines two additional assumptions:
 \begin{align*}
   \bigl(Y(0), Y(1)\bigr) \perp T \mid X
   &\qquad\text{(unconfoundedness)}, \\
@@ -101,14 +101,14 @@ where \(g^\theta_{\#}\mu\) is the pushforward of \(\mu\) under \(g^\theta(x) = \
 
 \subsection{Autoregressive Language Models}
 
-An autoregressive language model \(\model\) maps a prompt \(x\) to a distribution over token sequences \(y_{0:T}\) from a finite vocabulary \(V\), where \(y_T\) marks the end of the sequence. It factorizes this distribution into next-token conditionals:
+An autoregressive language model \(\model\) maps a prompt \(x\) to a distribution over token sequences \(y_{0:T}\) from a finite vocabulary \(V\), where \(y_T\) marks the end of the sequence. It factorizes this distribution as:
 \[
   \model(y_{0:T} \mid x) = \prod_{t=0}^{T} \model(y_t \mid y_{<t}, x).
 \]
-At inference time, we generate text sequentially, either by sampling from \(\model(\cdot \mid y_{<t}, x)\) or by taking the highest-probability token at each step (greedy decoding).
+At inference time, we generate text sequentially, either by sampling from \(\model(\cdot \mid y_{<t}, x)\) or by taking the highest-probability token at each step.
 
 \subsection{Memorization and Copyright}
-
+[PLEASE AVOID SO MANY PARAGRAPHS, ALSO IN PREVIOUS SECTIONS]
 Language models can memorize passages from their training corpora and reproduce them verbatim or near-verbatim \citep{carlini2021extracting,carlini2023quantifying,nasr2023scalable}. When training corpora include copyrighted works, this creates a risk of infringement \citep{sag66new,henderson2023foundation}. Existing defenses intervene before training (data filtering and deduplication \citep{lee2021deduplicating,min2023silo}), during training (differentially private optimization \citep{abadi2016deep} or loss modifications \citep{hans2024like}), or at inference time (exact-match output filters \citep{ippolito2023preventing}).
 
 \subsection{A Formal Criterion for Copyright Protection}
