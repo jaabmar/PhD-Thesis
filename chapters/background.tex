@@ -60,7 +60,7 @@ Differential privacy \citep{dp,dwork2014algorithmic} is a property of a randomiz
   \leq
   e^{\epsilon}\, \mathbb{P}\bigl[\mathcal{A}(D') \in B\bigr] + \delta.
 \]
-Here \(\epsilon > 0\) bounds the multiplicative change in output probabilities and \(\delta \geq 0\) is an additive slack; smaller values give stronger protection. A key property is post-processing \citep{dwork2014algorithmic}: for any (possibly randomized) mapping \(f\) that does not access \(D\), the composition \(f \circ \mathcal{A}\) remains \((\epsilon, \delta)\)-differentially private.
+Here \(\epsilon > 0\) bounds the multiplicative change in output probabilities and \(\delta \geq 0\) is an additive slack; smaller values give stronger protection. A key property is post-processing \citep{dwork2014algorithmic}: for any deterministic or randomized mapping \(f\) that does not access \(D\), the composition \(f \circ \mathcal{A}\) remains \((\epsilon, \delta)\)-differentially private.
 
 \subsection{Private Synthetic Tabular Data}
 
@@ -70,7 +70,7 @@ Marginal-based methods \citep{mst,aim} summarize \(D\) through its empirical mar
 \[
   \nu_S[D] = \frac{1}{n} \sum_{i=1}^n \delta_{x_{i,S}},
 \]
-where \(\delta_{x_{i,S}}\) is the Dirac point mass at \(x_{i,S} \in \mathcal{X}_S = \prod_{j \in S} \mathcal{X}_j\), the restriction of \(x_i\) to the coordinates in \(S\). These methods perturb each \(\nu_S[D]\) cellwise with calibrated noise (for example, via the Gaussian mechanism \citep{dwork2014algorithmic}) to obtain privatized marginals \(\hat{\nu}_S\), and then generate \(D_{\mathrm{syn}}\) so that \(\nu_S[D_{\mathrm{syn}}] \approx \hat{\nu}_S\) for all \(S \in \mathcal{S}\). Existing generators typically fit a probabilistic graphical model to \(\{\hat{\nu}_S\}_{S \in \mathcal{S}}\) and sample from it \citep{mckenna2019graphical}, whereas in Chapter~\ref{chap:privpgd} we optimize synthetic particles directly.
+where \(\delta_{x_{i,S}}\) is the Dirac point mass at \(x_{i,S} \in \mathcal{X}_S = \prod_{j \in S} \mathcal{X}_j\), the restriction of \(x_i\) to the coordinates in \(S\). These methods perturb each \(\nu_S[D]\) cellwise with calibrated noise, for example via the Gaussian mechanism \citep{dwork2014algorithmic}, to obtain privatized marginals \(\hat{\nu}_S\), and then generate \(D_{\mathrm{syn}}\) so that \(\nu_S[D_{\mathrm{syn}}] \approx \hat{\nu}_S\) for all \(S \in \mathcal{S}\). Existing generators typically fit a probabilistic graphical model to \(\{\hat{\nu}_S\}_{S \in \mathcal{S}}\) and sample from it \citep{mckenna2019graphical}, whereas in Chapter~\ref{chap:privpgd} we optimize synthetic particles directly.
 
 \subsection{Optimal Transport}
 
@@ -108,8 +108,8 @@ An autoregressive language model \(\model\) maps a prompt \(x\) to a distributio
 At inference time, we generate text sequentially, either by sampling from \(\model(\cdot \mid y_{<t}, x)\) or by taking the highest-probability token at each step.
 
 \subsection{Memorization and Copyright}
-[PLEASE AVOID SO MANY PARAGRAPHS, ALSO IN PREVIOUS SECTIONS]
-Language models can memorize passages from their training corpora and reproduce them verbatim or near-verbatim \citep{carlini2021extracting,carlini2023quantifying,nasr2023scalable}. When training corpora include copyrighted works, this creates a risk of infringement \citep{sag66new,henderson2023foundation}. Existing defenses intervene before training (data filtering and deduplication \citep{lee2021deduplicating,min2023silo}), during training (differentially private optimization \citep{abadi2016deep} or loss modifications \citep{hans2024like}), or at inference time (exact-match output filters \citep{ippolito2023preventing}).
+
+Language models can memorize passages from their training corpora and reproduce them verbatim or near-verbatim \citep{carlini2021extracting,carlini2023quantifying,nasr2023scalable}. When training corpora include copyrighted works, this creates a risk of infringement \citep{sag66new,henderson2023foundation}. Existing defenses intervene at three stages: before training through data filtering and deduplication \citep{lee2021deduplicating,min2023silo}, during training through differentially private optimization \citep{abadi2016deep} or loss modifications \citep{hans2024like}, and at inference time through exact-match output filters \citep{ippolito2023preventing}.
 
 \subsection{A Formal Criterion for Copyright Protection}
 

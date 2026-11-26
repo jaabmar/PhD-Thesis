@@ -3,61 +3,64 @@
 
 When statistical and machine learning models inform decisions in medicine, public policy, or software engineering, predictive accuracy alone does not make them reliable or safe to deploy. Causal estimates drawn from observational health records can be biased by unmeasured confounders, released tabular datasets can expose sensitive information about individuals, and language models can reproduce copyrighted text or code from their training data.
 
-Formal frameworks exist for each of these problems, including unconfoundedness and sensitivity analysis in causal inference, differential privacy \citep{dp}, and formal copyright-protection criteria \citep{vyas2023provable}. Applying these definitions directly in practice, however, often creates a sharp tension with utility. [from now on it is slightly convoluted, be more clear]Binary validity tests reject even minor violations that would not change a conclusion, while strict protective mechanisms can scale poorly or degrade the quality of the released data or generated outputs. In this thesis, we develop statistical tests and algorithms that put these requirements into practice without giving up the usefulness of the analysis, dataset, or model.
-[in teh next section...]
+Formal frameworks exist for each of these problems, including unconfoundedness and sensitivity analysis in causal inference, differential privacy \citep{dp}, and formal copyright-protection criteria \citep{vyas2023provable}. In practice, however, applying these criteria often comes at a steep cost. Strict checks can reject usable studies over small biases, and rigid safeguards can be too slow to scale or hurt the quality of the released data and generated text. In this thesis, we design statistical tests and algorithms that address these limits while keeping the analysis, dataset, or model useful. In the next section, we outline the three research questions we study.
+
 \section{Research Questions}
 \label{sec:intro-settings}
-[enumerate each qustion/chapter]
-Post-marketing studies often evaluate treatments using observational data such as electronic health records. Nevertheless, causal conclusions for them usually suffer from biases coming from hidden confounding. Standard sensitivity analysis only asks how strong hidden confounding would have to be to overturn an observational finding. Critically, i in some settign swe also have acces to randomized trail on the same effect/popluation/ In Chapter~\ref{chap:confounding-test}, we ask:
 
-\begin{tcolorbox}[
-  colback=gray!4,
-  colframe=black!35,
-  boxrule=0.5pt,
-  arc=1.5pt,
-  left=10pt,
-  right=10pt,
-  top=5pt,
-  bottom=5pt,
-  before skip=6pt,
-  after skip=8pt
-]
-\centering\emph{Given the randomized trial, how can we quantify or lower-bound the strength of unobserved confounding in the observational study?}
-\end{tcolorbox}
+\begin{enumerate}[leftmargin=*, itemsep=0.6em, topsep=0.3em]
+  \item \textbf{Quantifying hidden confounding (Chapter~\ref{chap:confounding-test}).} Post-marketing studies often evaluate treatments using observational data such as electronic health records. Causal conclusions drawn from these data, however, are often biased by hidden confounding. Standard sensitivity analysis only asks how strong hidden confounding would have to be to overturn an observational finding. In many settings, we also have access to a randomized trial studying the same treatment and population. In Chapter~\ref{chap:confounding-test}, we ask:
 
-Releasing tabular data in healthcare or public policy often requires formal privacy guarantees to the individual, such as differential privacy. Most popular methods add noise to low-dimensional marginals and fit a graphical model to sample synthetic rows. This approach scales poorly when many marginals are used, ignores the ordering of numerical values, and makes domain constraints hard to include. In Chapter~\ref{chap:privpgd}, we ask:
+  \begin{tcolorbox}[
+    colback=gray!4,
+    colframe=black!35,
+    boxrule=0.5pt,
+    arc=1.5pt,
+    left=10pt,
+    right=10pt,
+    top=5pt,
+    bottom=5pt,
+    before skip=5pt,
+    after skip=2pt
+  ]
+  \centering\emph{Given the randomized trial, how can we quantify or lower-bound the strength of unobserved confounding in the observational study?}
+  \end{tcolorbox}
 
-\begin{tcolorbox}[
-  colback=gray!4,
-  colframe=black!35,
-  boxrule=0.5pt,
-  arc=1.5pt,
-  left=10pt,
-  right=10pt,
-  top=5pt,
-  bottom=5pt,
-  before skip=6pt,
-  after skip=8pt
-]
-\centering\emph{How can we generate synthetic tabular data at scale while preserving feature geometry and domain-specific requirements?}
-\end{tcolorbox}
+  \pagebreak
+  \item \textbf{Private tabular data synthesis (Chapter~\ref{chap:privpgd}).} Releasing tabular data in healthcare or public policy often requires formal privacy guarantees for individuals, such as differential privacy. Most popular methods add noise to low-dimensional marginals and fit a graphical model to sample synthetic rows. This approach scales poorly when many marginals are used, ignores the ordering of numerical values, and makes domain constraints hard to include. In Chapter~\ref{chap:privpgd}, we ask:
 
-Large language models can memorize training examples and reproduce long passages of copyrighted text or code verbatim when suers interact with them. Training-time defenses such as differential privacy are costly at scale, while simple decoding filters often break code syntax or hurt fluency. In Chapter~\ref{chap:cpfuse}, we ask:
+  \begin{tcolorbox}[
+    colback=gray!4,
+    colframe=black!35,
+    boxrule=0.5pt,
+    arc=1.5pt,
+    left=10pt,
+    right=10pt,
+    top=5pt,
+    bottom=5pt,
+    before skip=5pt,
+    after skip=2pt
+  ]
+  \centering\emph{How can we generate synthetic tabular data at scale while preserving feature geometry and domain-specific requirements?}
+  \end{tcolorbox}
 
-\begin{tcolorbox}[
-  colback=gray!4,
-  colframe=black!35,
-  boxrule=0.5pt,
-  arc=1.5pt,
-  left=10pt,
-  right=10pt,
-  top=5pt,
-  bottom=5pt,
-  before skip=6pt,
-  after skip=8pt
-]
-\centering\emph{How can we design an inference-time protection method to prevent the reproduction of copyrighted training data without losing generation quality?}
-\end{tcolorbox}
+  \item \textbf{Copyright-protected language generation (Chapter~\ref{chap:cpfuse}).} Large language models can memorize training examples and reproduce long passages of copyrighted text or code verbatim when users interact with them. Training-time defenses such as differential privacy are costly at scale, while simple decoding filters often break code syntax or hurt fluency. In Chapter~\ref{chap:cpfuse}, we ask:
+
+  \begin{tcolorbox}[
+    colback=gray!4,
+    colframe=black!35,
+    boxrule=0.5pt,
+    arc=1.5pt,
+    left=10pt,
+    right=10pt,
+    top=5pt,
+    bottom=5pt,
+    before skip=5pt,
+    after skip=2pt
+  ]
+  \centering\emph{How can we design an inference-time protection method to prevent the reproduction of copyrighted training data without losing generation quality?}
+  \end{tcolorbox}
+\end{enumerate}
 
 \section{Thesis Organization}
 \label{sec:intro-org}
